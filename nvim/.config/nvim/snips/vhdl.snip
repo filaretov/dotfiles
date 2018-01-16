@@ -1,0 +1,17 @@
+snippet with
+options indent
+    with ${1:condition_var} select ${2:assignee} <=
+        ${3:value} when ${4:condition},
+        ${5:#:default} when others;
+
+snippet when
+options indent
+    ${1:var} <= ${2:val} when ${3:condition} else
+                ${4:default} when others;
+
+snippet case
+options indent
+    case ${1:var} is
+        when ${2:value} => ${3:block};
+        when others => ${4:default};
+    end case;

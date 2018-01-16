@@ -1,0 +1,75 @@
+# vim: foldmethod=marker foldlevelstart=0:
+
+# zsh-newuser-install {{{
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.zsh/.zsh_history
+HISTSIZE=1000
+SAVEHIST=1000
+setopt autocd extendedglob
+bindkey -e
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename '/home/filaret/.zsh/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+# }}}
+
+# Modules {{{
+
+autoload add-zsh-hook
+autoload -U colors && colors # colored output
+autoload -Uz vcs_info # vcs module
+
+# }}}
+
+# Opts {{{
+
+setopt prompt_subst
+setopt prompt_percent
+setopt prompt_bang
+
+# }}}
+
+# Prompt {{{
+
+add-zsh-hook precmd vcs_info
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' formats '%F{7}%r->%b%f [%m%u%c] '
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr '%F{2}+%f'
+zstyle ':vcs_info:*' unstagedstr '%F{1}+%f'
+
+local pr_namespace="(%m-%n)"
+local pr_path="%{$fg[blue]%}(%3~)%{$reset_color%} "
+local pr_indic="%{$fg[blue]%}λ%{$reset_color%} "
+PROMPT='${pr_path}${vcs_info_msg_0_}${pr_indic}'
+RPROMPT='%(?..[%?])'
+
+# }}}
+
+if [ -f ~/.config/exercism/exercism_completion.zsh ]; then
+	  . ~/.config/exercism/exercism_completion.zsh
+fi
+
+
+if [[ -f "${ZDOTDIR}/zsh_aliases" ]]
+then
+	source "${ZDOTDIR}/zsh_aliases"
+fi
+
+if [[ -a "${ZDOTDIR}/zsh.${HOST}" ]]
+then
+	source "${ZDOTDIR}/zsh.${HOST}"
+fi
+
+# Path {{{
+
+PATH="$HOME/.local/bin:$PATH"
+
+export PATH
+# }}}
+
+export VISUAL=vim
+export EDITOR="$VISUAL"

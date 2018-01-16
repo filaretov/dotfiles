@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#remember terminal setup
+stty_config="$(stty -g)"
+
+# reset terminal setup on exit
+restore_tty() {
+    stty $stty_config
+    kill %1 # kill output subprocess
+    echo ""
+    exit
+}
+
+trap restore_tty HUP
+trap restore_tty INT
+trap restore_tty QUIT
+trap restore_tty ABRT
+trap restore_tty TERM
+
+#identify tty driver file
+tty=/dev/ttyUSB0
+[ "$#" -gt 0 ] && tty=$1
+
+#initi device
+tty_cfg="1:0:18b2:0:3:1c:7f:15:4:5:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0"
+stty -F "$tty" "$tty_cfg" > /dev/null 2>&1
+
+#start output process in background
+cat "$tty" &
+
+#start input process in foreground
+stty -icanon -echo && cat > "$tty"
+

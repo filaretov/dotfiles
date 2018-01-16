@@ -1,0 +1,51 @@
+! vim: set ft=xdefaults:
+! special
+!
+#define t_black #222626
+#define t_background #c8222626
+#define t_transparent #00000000
+#define t_red #f44f4f
+#define t_green #27ae60
+#define t_yellow #fdbc4b
+#define t_blue  #2980b9
+#define t_purple #8e44ad
+#define t_orange   #f67400
+#define t_cyan #69c0e9
+#define t_white #dfdfd2
+
+*.foreground: t_white
+*.background: t_black
+*.cursorColor: t_white
+
+! Black / Grey
+*.color0:       t_black
+*.color8:       t_black
+
+! Red / Bright Red
+*.color1:       t_red
+*.color9:       t_red
+
+! Green + Bright Green
+*.color2:       t_green
+*.color10:      t_green
+
+! Yellow (Orange) + Bright Yellow (Yellow)
+*.color3:       t_orange
+*.color11:      t_yellow
+
+! Blue + Bright Blue
+*.color4:       t_blue
+*.color12:      t_blue
+
+! Magenta (Purple) + Bright Magenta
+*.color5:       t_purple
+*.color13:      t_purple
+
+! Cyan (Aqua) + Bright Cyan
+*.color6:       t_cyan
+*.color14:      t_cyan
+
+! Light Grey (Selection) + White (Current Line)
+*.color7: t_white
+*.color15: t_white
+

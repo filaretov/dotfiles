@@ -1,0 +1,8 @@
+#!/bin/bash
+
+i3_path="$HOME/.config/i3"
+i3_config="$i3_path/config"
+cat "$i3_path/config.base"  \
+	"$i3_path/config.extra" > $i3_config
+
+i3-msg restart

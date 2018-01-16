@@ -1,0 +1,90 @@
+# vim: foldmethod=marker foldlevelstart=0:
+function zsource() {
+	source "${ZDOTDIR}/.zshrc"
+}
+alias .z="zsource"
+
+# Helper functions {{{
+
+function command_exists() {
+	hash "$1" 2>/dev/null;
+}
+
+# }}}
+
+# Editors {{{
+
+alias nano="vim"
+
+function nvim() {
+	if [ -z "${NVIM_LISTEN_ADDRESS+x}" ]
+	then
+		command nvim "$@"
+	else
+		nvr "$@"
+	fi
+}
+
+function vim(){
+	if command_exists nvim;
+	then
+		nvim "$@"
+	else
+		command vim "$@"
+	fi
+}
+
+# }}}
+
+# Package management {{{
+
+function search(){
+	if command_exists dnf; then
+		dnf search "$@"
+	elif command_exists pacman; then
+		pacman -Ss "$@"
+	elif command_exists apt; then
+		apt search "$@"
+	else
+		echo "Unknown package manager"
+	fi
+}
+
+function install(){
+	if command_exists dnf; then
+		sudo dnf install "$@"
+	elif command_exists pacman; then
+		sudo pacman \-S "$@"
+	elif command_exists apt; then
+		sudo apt install "$@"
+	else
+		echo "Unknown package manager"
+	fi
+}
+
+function update(){
+	if command_exists dnf; then
+		sudo dnf update "$@"
+	elif command_exists pacman; then
+		sudo pacman \-Syu "$@"
+	elif command_exists apt; then
+		sudo apt update "$@"
+	else
+		echo "Unknown package manager"
+	fi
+}
+
+function remove(){
+	if command_exists dnf; then
+		sudo dnf remove "$@"
+	elif command_exists pacman; then
+		echo "rtfm"
+		#sudo pacman \-Syu "$@"
+	elif command_exists apt; then
+		echo "rtfm"
+		#sudo apt update "$@"
+	else
+		echo "Unknown package manager"
+	fi
+}
+# }}}

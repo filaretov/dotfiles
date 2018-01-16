@@ -1,0 +1,8 @@
+bin/
+i3/.config/i3/config
+nvim/.config/nvim/sessions/
+nvim/.config/nvim/pack/
+vim/.vim/tmp/
+zsh/.zsh/.zsh_history
+fishd.*
+**/.zcompdump
