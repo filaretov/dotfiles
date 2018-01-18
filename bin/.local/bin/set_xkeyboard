@@ -1,4 +1,4 @@
-#!bash
+#!/bin/env bash
 setxkbmap -option
 setxkbmap -layout us,bg -variant ,phonetic -option caps:ctrl_modifier,grp:toggle,compose:prsc
 #xcape -e '#66=Escape'
