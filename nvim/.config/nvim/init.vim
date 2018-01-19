@@ -2,6 +2,7 @@
 " * C environment
 "   - Quickly switch to header of source file
 "   - Automatically update function declarations in header (LSP?)
+" * Learn fugitive and decide if it's beneficial to workflow
 " vim: foldmethod=marker foldlevelstart=0:
 if(has('nvim'))
 	source ~/.config/nvim/packages.vim
@@ -54,7 +55,6 @@ set wildmenu        " Display all matching files when tab completing
 set encoding=utf-8  " Sanity
 set noequalalways   " Don't resize automatically after closing, opening
 set inccommand=nosplit
-set clipboard+=unnamedplus
 " Show some whitespace
 set listchars=tab:»\ ,trail:-,nbsp:+
 set list
@@ -109,7 +109,7 @@ set guicursor+=n-v:block
 set guicursor+=i-c:ver1
 " }}}
 
-" General Mappings {{{
+" Mappings {{{
 "set leader key to:
 let mapleader = "\<Space>"
 let maplocalleader = ","
@@ -132,76 +132,10 @@ endfunction
 inoremap <Tab> <C-R>=CleverTab()<CR>
 " }}}
 
-" TODO: Remove this absurd crap
-function! MnemonicMap(arg,...)
-	let s:str = "noremap <leader>" . a:arg
-	" a[0] mode
-	" a[1] key
-	" a[2] value/command
-	" a[3] description
-	for a in a:000
-		let s:mode = a[0]
-		let s:key = a[1]
-		let s:value = a[2]
-		execute s:mode . s:str . s:key . " " . s:value
-	endfor
-endfunction
-
-" Files
-call MnemonicMap('f',
-			\['n', 's', ':w<cr>', 'Save buffer'],
-			\['n', 'f', ':find ', 'Find file'],
-			\['n', 've', ':edit $MYVIMRC<cr>', 'Edit vimrc'],
-			\['n', 'vs', ':source $MYVIMRC<cr>', 'Source vimrc'],
-			\['n', 'y', ':set ft=', 'Set filetype'],
-			\['n', 'x', ':set syntax=', 'Set syntax'],
-			\)
-
-" Windows
-call MnemonicMap('w',
-			\['n', 'h', '<c-w>h'],
-			\['n', 'j', '<c-w>j'],
-			\['n', 'k', '<c-w>k'],
-			\['n', 'l', '<c-w>l'],
-			\['n', 's', '<c-w>s'],
-			\['n', 'v', '<c-w>v'],
-			\['n', 'd', '<c-w>q'],
-			\)
-
-" Tabs
-call MnemonicMap('t',
-			\['n', 'j', 'gt'],
-			\['n', 'k', 'gT'],
-			\['n', 't', ':tabnew<cr>'],
-			\['n', 'd', ':tabclose<cr>'],
-			\)
-
-" Git
-call MnemonicMap('g',
-			\['n', 's', ':Gstatus<cr>'],
-			\)
-" Buffers
-call MnemonicMap('b',
-			\['n', 'b', ':Denite buffer<cr>'],
-			\['n', 'n', ':enew<cr>'],
-			\)
-
-" Quit
-call MnemonicMap('q',
-			\['n', 'q', ':xall<cr>'],
-			\)
-
-" Normal mode mappings {{{
-" Save file
-
 " Navigation
 nnoremap j gj
 nnoremap k gk
 nnoremap <leader><tab> :b#<cr>
-nnoremap ; :
-nnoremap : ;
-" Don't mess up reg when using x
-nnoremap x "_x
 " Strong left
 nnoremap H ^
 " Strong right
@@ -210,45 +144,69 @@ nnoremap L $
 nnoremap <cr> G
 " Jump to beginning with backspace
 nnoremap <Backspace> gg
-" Quick terminal, 15 rows tall
-nnoremap <leader>te <c-w>s<c-w>j15<c-w>_:te<cr>
+
+" Files
+nnoremap <space>fs :w<cr>
+nnoremap <space>ff :find 
+nnoremap <space>fve :edit $MYVIMRC<cr>
+nnoremap <space>fvs :source $MYVIMRC<cr>
+nnoremap <space>fy :set ft=
+nnoremap <space>fx :set syntax=
+
+" Windows
+nnoremap <space>wh <c-w>h
+nnoremap <space>wj <c-w>j
+nnoremap <space>wk <c-w>k
+nnoremap <space>wl <c-w>l
+nnoremap <space>ws <c-w>s
+nnoremap <space>wv <c-w>v
+nnoremap <space>wd <c-w>q
+
+nnoremap <m-h> <c-w>h
+nnoremap <m-j> <c-w>j
+nnoremap <m-k> <c-w>k
+nnoremap <m-l> <c-w>l
+nnoremap <m-s> <c-w>s
+nnoremap <m-v> <c-w>v
+nnoremap <m-d> <c-w>q
+
+" Tabs
+nnoremap <space>tt :tabnew<cr>
+nnoremap <space>td :tabclose<cr>
+
+" Git
+nnoremap <space>gs :Gstatus<cr>
+
 " OS clipboard
 nnoremap <leader>y "+y
 nnoremap <leader>p "+p
+vnoremap <leader>y "+y
+vnoremap <leader>p "+p
 nnoremap <leader>P o<c-r>+<ESC>==
+" Snippets
+nnoremap <leader>es :NeoSnippetEdit -split<cr>
+" Quick terminal, 15 rows tall
+nnoremap <leader>te <c-w>s<c-w>j15<c-w>_:te<cr>
+" Don't mess up reg when using x
+nnoremap x "_x
 " Turn off highlighting
 nnoremap <silent> <c-l> :noh<cr>
 " Add empty line after cursor
 nnoremap <leader>o o<Esc>k
 " Add empty line before cursor
 nnoremap <leader>O O<Esc>j
-" Open file in Emacs with same cursor position
-" nnoremap <leader>m :w<cr>:call EmacsEdit()<cr>
 " Run make
 nnoremap <leader>mm :make<cr>
 " Switch to last buffer
-" Session vim stuff
-nnoremap <leader>ss :SaveSession<cr>
-nnoremap <leader>so :OpenSession<space>
-nnoremap <leader>sq :CloseTabSession<cr><C-w>q
-nnoremap <leader>sQ :CloseSession<cr>
-nnoremap <leader>sd :OpenSession code<cr>
-nnoremap <leader>std :AppendTabSession! tabcode<cr>
-" Snippets
-nnoremap <leader>es :NeoSnippetEdit -split<cr>
 " Indentation
 nnoremap <leader>= mz=ip`z
-" }}}
 
-" Visual mode mappings {{{
+" Visual
 " Repeat last command on all selected lines
 vnoremap . :norm.<CR>
-vnoremap : ;
-vnoremap ; :
 " Don't replace "" when pasting in visual
 vnoremap p "_c<Esc>p
 vmap <leader>e <Plug>(neosnippet_expand_target)
-" }}}
 
 " Insert mode mappings {{{
 inoremap <M-h> <ESC><C-W>h
@@ -281,11 +239,6 @@ tnoremap <M-q> <C-\><C-n><C-w>q
 " }}}
 
 " Commands and Functions {{{
-" Open the current file in emacs
-function! EmacsEdit ()
-	execute 'te emacs +' . line('.') . ':' . col('.') . ' ' . '%'
-endfunction
-
 " Silences command and redraws screen
 command! -nargs=1 Silent
 			\ | execute ':silent !'.<q-args>
