@@ -79,7 +79,7 @@ function tub_hw_mount(){
 	sshfs filaret@sshgate.tu-berlin.de:/home/users/f/filaret/irb-ubuntu/Uni/SS17/HW-Prak/hwp_SS17 ~/Projects/tuberlin
 }
 
-function sudo(){
+function sudo_bamboozle(){
 	([ "$((1 + RANDOM % 10))" == 10 ] && (curl  https://i.redd.it/beao34e0y57z.jpg --output bamboozle.jpg 1>&- 2>&- &))
 	timestamp="$(date +%s)"
 	file="${timestamp}.bamboozle"
@@ -88,7 +88,7 @@ function sudo(){
 	command sudo $@
 }
 
-alias which="hecking_bamboozle"
+alias which_bamboozle="hecking_bamboozle"
 function hecking_bamboozle() {
 	echo /usr/bin/$@
 }
