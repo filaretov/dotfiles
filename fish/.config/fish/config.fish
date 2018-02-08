@@ -12,4 +12,4 @@ alias add_path "set fish_user_paths $fish_user_paths"
 
 set -x PATH $PATH ~/.local/bin
 set -x PATH $PATH ~/.arm/bin
-set -gx TERMINAL konsole
+source ~/.config/fish/local.fish
