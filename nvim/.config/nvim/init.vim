@@ -153,15 +153,6 @@ nnoremap <space>fvs :source $MYVIMRC<cr>
 nnoremap <space>fy :set ft=
 nnoremap <space>fx :set syntax=
 
-" Windows
-nnoremap <space>wh <c-w>h
-nnoremap <space>wj <c-w>j
-nnoremap <space>wk <c-w>k
-nnoremap <space>wl <c-w>l
-nnoremap <space>ws <c-w>s
-nnoremap <space>wv <c-w>v
-nnoremap <space>wd <c-w>q
-
 nnoremap <m-h> <c-w>h
 nnoremap <m-j> <c-w>j
 nnoremap <m-k> <c-w>k
