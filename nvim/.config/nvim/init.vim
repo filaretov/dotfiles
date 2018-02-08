@@ -1,9 +1,9 @@
+" vim: foldmethod=marker foldlevelstart=0:
 " TODO:
 " * C environment
 "   - Quickly switch to header of source file
 "   - Automatically update function declarations in header (LSP?)
 " * Learn fugitive and decide if it's beneficial to workflow
-" vim: foldmethod=marker foldlevelstart=0:
 if(has('nvim'))
 	source ~/.config/nvim/packages.vim
 endif
