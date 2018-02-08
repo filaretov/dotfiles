@@ -12,4 +12,11 @@ alias add_path "set fish_user_paths $fish_user_paths"
 
 set -x PATH $PATH ~/.local/bin
 set -x PATH $PATH ~/.arm/bin
-__source_local_fish_file
+
+# Find local fish file
+set lc_file "~/.config/fish"(hostname)".fish"
+if test -e $lc_file
+    source $lc_file
+else
+    echo "No local fish file"
+end
