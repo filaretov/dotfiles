@@ -30,7 +30,6 @@ set softtabstop=4
 set backspace=indent,eol,start
 
 " Set directories for swap and undo files
-set backupdir=~/.vim/tmp/backup//
 set directory=~/.vim/tmp/swap//
 set undodir=~/.vim/tmp/undo//
 
