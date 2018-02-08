@@ -6,3 +6,4 @@ vim/.vim/tmp/
 zsh/.zsh/.zsh_history
 fishd.*
 **/.zcompdump
+local.fish
