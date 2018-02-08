@@ -39,3 +39,6 @@ assign [class="Zeal"]        $ws6
 assign [class="Nautilus"]    $ws7
 assign [class="Thunderbird"] $ws8
 assign [class="Telegram"]    $ws9
+
+exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
+exec_always --no-startup-id gnome-power-manager
