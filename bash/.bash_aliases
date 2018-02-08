@@ -93,3 +93,7 @@ function hecking_bamboozle() {
 	echo /usr/bin/$@
 }
 
+function copy() {
+	xclip -sel clip < $@
+}
+
