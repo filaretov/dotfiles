@@ -10,14 +10,8 @@ endif
 
 " Plugin Settings {{{
 
-" Colorizer - useful, but damn slow
-let g:colorizer_startup = 0
-
-" Deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#complete_method = "complete"
-let g:deoplete#disable_auto_complete = 1
-let g:deoplete#enable_smart_case = 1
+" GitGutter
+let g:gitgutter_map_keys = 0
 
 " Ale
 let g:ale_linters = {
@@ -55,6 +49,7 @@ set wildmenu        " Display all matching files when tab completing
 set encoding=utf-8  " Sanity
 set noequalalways   " Don't resize automatically after closing, opening
 set inccommand=nosplit
+set updatetime=50   " Note: affects GitGutter
 " Show some whitespace
 set listchars=tab:»\ ,trail:-,nbsp:+
 set list
@@ -73,6 +68,8 @@ let g:tex_flavor='latex'
 " Colourscheme
 set termguicolors
 set background=dark
+let g:nord_italic_comments = 1
+let g:nord_italic = 1
 colorscheme nord
 
 augroup vimrcEx
@@ -145,28 +142,12 @@ nnoremap <cr> G
 " Jump to beginning with backspace
 nnoremap <Backspace> gg
 
-" Files
-nnoremap <space>fs :w<cr>
-nnoremap <space>ff :find 
-nnoremap <space>fve :edit $MYVIMRC<cr>
-nnoremap <space>fvs :source $MYVIMRC<cr>
-nnoremap <space>fy :set ft=
-nnoremap <space>fx :set syntax=
+" vimrc
+nnoremap <leader>ev :edit $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
-nnoremap <m-h> <c-w>h
-nnoremap <m-j> <c-w>j
-nnoremap <m-k> <c-w>k
-nnoremap <m-l> <c-w>l
-nnoremap <m-s> <c-w>s
-nnoremap <m-v> <c-w>v
-nnoremap <m-d> <c-w>q
-
-" Tabs
-nnoremap <space>tt :tabnew<cr>
-nnoremap <space>td :tabclose<cr>
-
-" Git
-nnoremap <space>gs :Gstatus<cr>
+" Quicksave
+nnoremap <leader>w :w<cr>
 
 " OS clipboard
 nnoremap <leader>y "+y
@@ -177,7 +158,7 @@ nnoremap <leader>P o<c-r>+<ESC>==
 " Snippets
 nnoremap <leader>es :NeoSnippetEdit -split<cr>
 " Quick terminal, 15 rows tall
-nnoremap <leader>te <c-w>s<c-w>j15<c-w>_:te<cr>
+nnoremap <leader>t <c-w>s<c-w>j15<c-w>_:te<cr>
 " Don't mess up reg when using x
 nnoremap x "_x
 " Turn off highlighting
@@ -187,17 +168,19 @@ nnoremap <leader>o o<Esc>k
 " Add empty line before cursor
 nnoremap <leader>O O<Esc>j
 " Run make
-nnoremap <leader>mm :make<cr>
+nnoremap <leader>m :make<cr>
 " Switch to last buffer
 " Indentation
 nnoremap <leader>= mz=ip`z
 
-" Visual
+" Visual {{{
 " Repeat last command on all selected lines
 vnoremap . :norm.<CR>
 " Don't replace "" when pasting in visual
 vnoremap p "_c<Esc>p
 vmap <leader>e <Plug>(neosnippet_expand_target)
+
+" }}}
 
 " Insert mode mappings {{{
 inoremap <M-h> <ESC><C-W>h
@@ -267,26 +250,6 @@ augroup wiki_ext
 	autocmd BufNewFile,BufRead *.wiki set filetype=pandoc
 	autocmd BufNewFile,BufRead *.page set filetype=pandoc
 augroup end
-" }}}
-
-" Terminal colours {{{
-" lucius colors
-let g:terminal_color_0 = '#444444'
-let g:terminal_color_1 = '#af0000'
-let g:terminal_color_2 = '#008700'
-let g:terminal_color_3 = '#af5f00'
-let g:terminal_color_4 = '#005faf'
-let g:terminal_color_5 = '#870087'
-let g:terminal_color_6 = '#008787'
-let g:terminal_color_7 = '#eeeeee'
-let g:terminal_color_8 = '#444444'
-let g:terminal_color_9 = '#af0000'
-let g:terminal_color_10 = '#008700'
-let g:terminal_color_11 = '#af5f00'
-let g:terminal_color_12 = '#005faf'
-let g:terminal_color_13 = '#870087'
-let g:terminal_color_14 = '#008787'
-let g:terminal_color_15 = '#eeeeee'
 " }}}
 
 " Neovim specific {{{
