@@ -10,8 +10,10 @@ bar {
 	font pango: Fira Mono Medium 11
 	colors {
 		background #2E3440
+		statusline #D8DEE9
 		focused_workspace  #2E3440 #81A1C1 #ECEFF4
 		inactive_workspace #2E3440 #2E3440 #ECEFF4
+		urgent_workspace   #2E3440 #BF616A #ECEFF4
 	}
 	tray_output primary
 	strip_workspace_numbers no
