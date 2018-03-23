@@ -30,6 +30,29 @@ import time
 from subprocess import check_output
 from time import localtime, strftime
 
+nord_colors = {
+          "nord0"  : "#2E3440"
+        , "nord1"  : "#3B4252"
+        , "nord2"  : "#434C5E"
+        , "nord3"  : "#4C566A"
+        , "nord4"  : "#D8DEE9"
+        , "nord5"  : "#E5E9F0"
+        , "nord6"  : "#ECEFF4"
+        , "nord7"  : "#8FBCBB"
+        , "nord8"  : "#88C0D0"
+        , "nord9"  : "#81A1C1"
+        , "nord10" : "#5E81AC"
+        , "nord11" : "#BF616A"
+        , "nord12" : "#D08770"
+        , "nord13" : "#EBCB8B"
+        , "nord14" : "#A3BE8C"
+        , "nord15" : "#B48EAD"
+        }
+colors = {
+        "foreground" : "#ffffff"
+        ,
+        }
+
 def i3_json(name, text, color=None, bg=None, border=None, min_width=None,
         align=None, urgent=None, instance=None,
         separator=None, separator_block_width=None):
@@ -52,14 +75,14 @@ def plugged():
     acpi_output = check_output(["acpi", "-a"]).decode().replace('\n', '')
     plugged_in = "on" in acpi_output
     text = "" if plugged_in else ""
-    return i3_json("plugged", text, color="#fedf4b", separator=False)
+    return i3_json("plugged", text, color=nord_colors["nord13"], separator=False)
 
 def battery():
     raw_acpi_output = check_output(["acpi", "-b"]).decode()
     acpi_output = raw_acpi_output.replace('\n', '').partition('%')[0]
     battery = int(acpi_output.split(' ')[-1])
     text = " "
-    color = "#2980b9"
+    color = nord_colors["nord8"]
     if battery < 90:
         text = " "
         color = "#95da4c"
