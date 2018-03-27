@@ -75,8 +75,8 @@ alias tmns="tmux new -s"
 # show progress of dd, run in a separate terminal
 alias ddprog="sudo kill -USR1 $(pgrep ^dd)"
 
-function tub_hw_mount(){
-	sshfs filaret@sshgate.tu-berlin.de:/home/users/f/filaret/irb-ubuntu/Uni/SS17/HW-Prak/hwp_SS17 ~/Projects/tuberlin
+function tub_mount(){
+	sshfs filaret@sshgate.tu-berlin.de:/home/users/f/filaret/irb-ubuntu/ ~/Projects/tuberlin
 }
 
 function sudo_bamboozle(){
