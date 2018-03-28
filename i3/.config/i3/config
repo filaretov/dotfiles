@@ -196,13 +196,17 @@ bar {
 	colors {
 		background #2E3440
 		statusline #D8DEE9
-		focused_workspace  #2E3440 #81A1C1 #ECEFF4
+		focused_workspace  #2E3440 #ECEFF4 #2E3440
 		inactive_workspace #2E3440 #2E3440 #ECEFF4
-		urgent_workspace   #2E3440 #BF616A #ECEFF4
+		urgent_workspace   #2E3440 #BF616A #2E3440
 	}
 	tray_output primary
 	strip_workspace_numbers no
 }
+
+# Gaps
+gaps inner 10
+gaps outer 5
 
 # Multi monitor
 workspace $ws1 output VGA-1

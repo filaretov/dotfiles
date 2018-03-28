@@ -48,14 +48,15 @@ nord_colors = {
         , "nord14" : "#A3BE8C"
         , "nord15" : "#B48EAD"
         }
-colors = {
-        "foreground" : "#ffffff"
-        ,
-        }
+
+bottom = 2
 
 def i3_json(name, text, color=None, bg=None, border=None, min_width=None,
         align=None, urgent=None, instance=None,
-        separator=None, separator_block_width=None):
+        separator=None, separator_block_width=None,
+        background=None, border_bottom=None,
+        border_left=None, border_right=None,
+        border_top=None):
     i3_block = {
             "name": name,
             "full_text" : text
@@ -69,21 +70,34 @@ def i3_json(name, text, color=None, bg=None, border=None, min_width=None,
     if instance is not None: i3_block['instance'] = instance
     if separator is not None: i3_block['separator'] = separator
     if separator_block_width is not None: i3_block['separator_block_width'] = separator_block_width
+    if background is not None: i3_block['background'] = background
+    i3_block['border_bottom'] = bottom if border_bottom is None else border_bottom
+    i3_block['border_top'] = 0 if border_top is None else border_top
+    i3_block['border_left'] = 0 if border_left is None else border_left
+    i3_block['border_right'] = 0 if border_right is None else border_right
     return i3_block
 
 def plugged():
     acpi_output = check_output(["acpi", "-a"]).decode().replace('\n', '')
     plugged_in = "on" in acpi_output
     text = "" if plugged_in else ""
-    return i3_json("plugged", text, color=nord_colors["nord13"], separator=False)
+    return i3_json("plugged", text, color=nord_colors["nord13"], separator=False, border=nord_colors['nord4'])
+
+def _plugged():
+    acpi_output = check_output(["acpi", "-a"]).decode().replace('\n', '')
+    return "on" in acpi_output
 
 def battery():
-    raw_acpi_output = check_output(["acpi", "-b"]).decode()
-    acpi_output = raw_acpi_output.replace('\n', '').partition('%')[0]
+    raw_acpi_output = check_output(["acpi", "-b"]).decode().replace('\n', '')
+    acpi_output = raw_acpi_output.partition('%')[0]
+    plugged = _plugged()
     battery = int(acpi_output.split(' ')[-1])
     text = " "
     color = nord_colors["nord8"]
-    if battery < 90:
+    if plugged:
+        text = ""
+        color = nord_colors["nord13"]
+    elif battery < 90:
         text = " "
         color = "#95da4c"
     elif battery < 60:
@@ -98,17 +112,20 @@ def battery():
     elif battery < 10:
         text = "! "
         color = "#f44f4f"
-    return i3_json("battery", text, color=color)
+    text = text + " " + str(battery)
+    return i3_json("battery", text, border=color)
 
 
 def xkb_layout():
     output = check_output(["xkb-switch"]).decode()
     text = output.replace('\n', '').partition('(')[0]
-    return i3_json("xkblayout", text)
+    text = ' ' + text
+    return i3_json("xkblayout", text, border=nord_colors['nord15'])
 
 def clock():
-    text = strftime("%Y-%m-%d %H:%M", localtime())
-    return i3_json("clock", text)
+    date, time = strftime("%Y-%m-%d %H:%M", localtime()).split(' ')
+    text = ' ' + date + '  ' + time
+    return i3_json("clock", text, border=nord_colors['nord7'])
 
 def print_line(message):
     """ Non-buffered printing to stdout. """
@@ -134,7 +151,7 @@ if __name__ == '__main__':
     print_line('[]')
 
     while True:
-        modules = [xkb_layout(), plugged(), battery(), clock()]
+        modules = [xkb_layout(), battery(), clock()]
         line = []
         # insert information into the start of the json, but could be anywhere
         # CHANGE THIS LINE TO INSERT SOMETHING ELSE
