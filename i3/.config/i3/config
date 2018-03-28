@@ -96,17 +96,24 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-# Variables
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws0 "10"
+# Workspace Variables
+set $ws1 "1:  "
+set $ws2 "2:  "
+set $ws3 "3:  "
+set $ws4 "4:  "
+set $ws5 "5:  "
+set $ws6 "6:  "
+set $ws7 "7: 1 "
+set $ws8 "8: 2 "
+set $ws9 "9: 3 "
+set $ws0 "10:  "
+
+set $home_ws $ws1
+set $browser_ws $ws2
+set $file_ws $ws3
+set $pdf_ws $ws5
+set $mail_ws $ws8
+set $chat_ws $ws9
 
 
 # switch to workspace
@@ -201,7 +208,7 @@ bar {
 		urgent_workspace   #2E3440 #BF616A #2E3440
 	}
 	tray_output primary
-	strip_workspace_numbers no
+	strip_workspace_numbers yes
 }
 
 # Gaps
@@ -224,12 +231,12 @@ bindsym $mod+m move scratchpad
 bindsym $mod+Shift+m scratchpad show
 
 # Assign programs to ws
-assign [class="Firefox"]     $ws2
-assign [class="Evince"]      $ws5
+assign [class="Firefox"]     $browser_ws
+assign [class="Evince"]      $pdf_ws
 assign [class="Zeal"]        $ws6
-assign [class="Nautilus"]    $ws7
-assign [class="Thunderbird"] $ws8
-assign [class="Telegram"]    $ws9
+assign [class="Nautilus"]    $file_ws
+assign [class="Thunderbird"] $mail_ws
+assign [class="Telegram"]    $chat_ws
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
 exec_always --no-startup-id gnome-power-manager
