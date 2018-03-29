@@ -3,10 +3,42 @@
 " * C environment
 "   - Quickly switch to header of source file
 "   - Automatically update function declarations in header (LSP?)
-" * Learn fugitive and decide if it's beneficial to workflow
-if(has('nvim'))
-	source ~/.config/nvim/packages.vim
+
+" Plugins {{{
+
+command! PackUpdate packadd minpac | source $MYVIMRC | redraw | call minpac#update()
+command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
+
+if exists('*minpac#init')
+
+	call minpac#init()
+	call minpac#add('k-takata/minpac', {'type': 'opt'})
+
+	call minpac#add('equalsraf/neovim-gui-shim')
+	call minpac#add('kana/vim-textobj-entire')
+	call minpac#add('kana/vim-textobj-user')
+	call minpac#add('kballard/vim-fish')
+	call minpac#add('rust-lang/rust.vim')
+	call minpac#add('Shougo/neosnippet.vim')
+	call minpac#add('tommcdo/vim-exchange')
+	call minpac#add('tpope/vim-repeat')
+	call minpac#add('tpope/vim-eunuch')
+	call minpac#add('tpope/vim-surround')
+	call minpac#add('tpope/vim-vinegar')
+	call minpac#add('tpope/vim-rsi')
+	call minpac#add('tpope/vim-unimpaired')
+	call minpac#add('tpope/vim-obsession')
+	call minpac#add('tpope/vim-speeddating')
+	call minpac#add('tpope/vim-abolish')
+	call minpac#add('vim-pandoc/vim-pandoc')
+	call minpac#add('vim-pandoc/vim-pandoc-syntax')
+	call minpac#add('w0rp/ale')
+	call minpac#add('arcticicestudio/nord-vim')
+	call minpac#add('airblade/vim-gitgutter')
+
 endif
+
+" }}}
 
 " Plugin Settings {{{
 
@@ -145,6 +177,7 @@ nnoremap <Backspace> gg
 " vimrc
 nnoremap <leader>ev :edit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>ep :edit $MYVIMRC<cr>
 
 " Quicksave
 nnoremap <leader>w :w<cr>
