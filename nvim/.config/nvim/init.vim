@@ -30,17 +30,41 @@ if exists('*minpac#init')
 	call minpac#add('tpope/vim-obsession')
 	call minpac#add('tpope/vim-speeddating')
 	call minpac#add('tpope/vim-abolish')
+	call minpac#add('justinmk/vim-sneak')
 	call minpac#add('vim-pandoc/vim-pandoc')
 	call minpac#add('vim-pandoc/vim-pandoc-syntax')
-	call minpac#add('w0rp/ale')
+	"call minpac#add('w0rp/ale')
 	call minpac#add('arcticicestudio/nord-vim')
 	call minpac#add('airblade/vim-gitgutter')
-
+	call minpac#add('autozimu/LanguageClient-neovim', {
+				\'do' : {-> system('bash install.sh')},
+				\'branch' : 'next'
+				\})
+	call minpac#add('junegunn/fzf')
+	call minpac#add('roxma/nvim-completion-manager')
 endif
 
 " }}}
 
 " Plugin Settings {{{
+
+" LanguageClient
+
+let g:LanguageClient_serverCommands = {
+			\ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
+			\ 'c': ['cquery', '--log-file=/tmp/cq.log']
+			\}
+
+let g:LanguageClient_loadSettings = 1
+let g:LanguageClient_settingsPath = '/home/h.filaretov/.config/nvim/settings.json'
+set completefunc=LanguageClient#complete
+set formatexpr=LanguageClient_textDocument_rangeFormatting()
+nnoremap <silent> gR :call LanguageClient_textDocument_rename()<CR>
+nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
+nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+
+
 
 " GitGutter
 let g:gitgutter_map_keys = 0
@@ -48,13 +72,13 @@ let g:gitgutter_map_keys = 0
 " Ale
 let g:ale_linters = {
 			\'asm': ['gcc -mcpu=cortex-a7'],
-			\'c'  : ['gcc -std=gnu99'],
+			\'c': ['gcc -std=gnu99'],
 			\}
 
 " Neosnippets
 let g:neosnippet#snippets_directory=$HOME.'/.config/nvim/snips/'
 let g:neosnippet#disable_runtime_snippets = {
-			\   '_' : 1,
+			\   '_': 1,
 			\ }
 
 " Pandoc
