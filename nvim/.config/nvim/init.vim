@@ -52,7 +52,8 @@ endif
 
 let g:LanguageClient_serverCommands = {
 			\ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
-			\ 'c': ['cquery', '--log-file=/tmp/cq.log']
+			\ 'c': ['cquery', '--log-file=/tmp/cq.log'],
+			\ 'python': ['pyls', '-v', '--log-file=/tmp/pyls.log']
 			\}
 
 let g:LanguageClient_loadSettings = 1
