@@ -1,0 +1,32 @@
+[user]
+	name = Hristo Filaretov
+	email = h.filaretov@protonmail.com
+
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	st = status --short
+	co = checkout
+	cb = checkout -b
+
+[diff "odf"]
+	binary = true
+	textconv = odt2txt
+
+[diff "pdf"]
+	binary = true
+	textconv =
+
+[push]
+	default = simple
+
+[color]
+	ui = auto
+
+[column]
+	ui = auto
+
+[diff]
+	algorithm = histogram
+
+[commit]
+	verbose = true
