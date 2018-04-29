@@ -34,7 +34,7 @@ floating_modifier $mod
 bindsym $mod+Return exec i3-sensible-terminal
 
 # kill focused window
-bindsym $mod+Shift+q kill
+bindsym $mod+q kill
 
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # There also is the (new) i3-dmenu-desktop which only displays applications
@@ -112,6 +112,7 @@ set $ws0 "10:  "
 assign [class="Firefox"]     $ws2
 assign [class="Nautilus"]    $ws3
 assign [class="Evince"]      $ws5
+assign [class="okular"]      $ws5
 assign [class="Thunderbird"] $ws6
 assign [class="Telegram"]    $ws0
 
@@ -146,7 +147,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r exec "i3-msg restart"
 # exit i3 (logs you out of your X session)
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+Shift+e "i3-msg exit"
+bindsym $mod+Shift+e exec "i3-msg exit"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
