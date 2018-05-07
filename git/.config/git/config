@@ -9,6 +9,7 @@
 	cb = checkout -b
 	ci = commit
 	cia = commit -a
+	aa = add --all
 
 [diff "odf"]
 	binary = true
