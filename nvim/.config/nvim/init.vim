@@ -13,10 +13,6 @@ if exists('*minpac#init')
 
 	call minpac#init()
 	call minpac#add('k-takata/minpac', {'type': 'opt'})
-
-	call minpac#add('equalsraf/neovim-gui-shim')
-	call minpac#add('kana/vim-textobj-entire')
-	call minpac#add('kana/vim-textobj-user')
 	call minpac#add('kballard/vim-fish')
 	call minpac#add('rust-lang/rust.vim')
 	call minpac#add('Shougo/neosnippet.vim')
@@ -33,14 +29,12 @@ if exists('*minpac#init')
 	call minpac#add('justinmk/vim-sneak')
 	call minpac#add('vim-pandoc/vim-pandoc')
 	call minpac#add('vim-pandoc/vim-pandoc-syntax')
-	"call minpac#add('w0rp/ale')
+	call minpac#add('w0rp/ale')
 	call minpac#add('arcticicestudio/nord-vim')
-	call minpac#add('airblade/vim-gitgutter')
 	call minpac#add('autozimu/LanguageClient-neovim', {
 				\'do' : {-> system('bash install.sh')},
 				\'branch' : 'next'
 				\})
-	call minpac#add('junegunn/fzf')
 	call minpac#add('roxma/nvim-completion-manager')
 endif
 
@@ -57,18 +51,13 @@ let g:LanguageClient_serverCommands = {
 			\}
 
 let g:LanguageClient_loadSettings = 1
-let g:LanguageClient_settingsPath = '/home/h.filaretov/.config/nvim/settings.json'
+let g:LanguageClient_settingsPath = $HOME.'/.config/nvim/settings.json'
 set completefunc=LanguageClient#complete
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
 nnoremap <silent> gR :call LanguageClient_textDocument_rename()<CR>
 nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
 nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-
-
-
-" GitGutter
-let g:gitgutter_map_keys = 0
 
 " Ale
 let g:ale_linters = {
@@ -96,7 +85,6 @@ set ignorecase      " ignores case when searching
 set smartcase       " case-sensitive when using capital in search
 set number          " show linenumber
 set history=1000
-set incsearch       " do incremental searching
 set scrolloff=4     " scroll page once 4 lines from top/bottom
 set relativenumber  " use relative numbers
 set backspace=2
@@ -106,15 +94,13 @@ set wildmenu        " Display all matching files when tab completing
 set encoding=utf-8  " Sanity
 set noequalalways   " Don't resize automatically after closing, opening
 set inccommand=nosplit
-set updatetime=50   " Note: affects GitGutter
 " Show some whitespace
-set listchars=tab:»\ ,trail:-,nbsp:+
+set listchars=tab:\|\ ,trail:-,nbsp:+
 set list
 " Tab settings
-let indent_len=8
-let &tabstop=8
-let &shiftwidth=indent_len
-let &softtabstop=indent_len
+set tabstop=8
+set shiftwidth=8
+set softtabstop=8
 
 set undofile
 set swapfile
@@ -123,10 +109,7 @@ set gdefault
 let g:tex_flavor='latex'
 
 " Colourscheme
-set termguicolors
 set background=dark
-let g:nord_italic_comments = 1
-let g:nord_italic = 1
 colorscheme nord
 
 augroup vimrcEx
@@ -171,19 +154,6 @@ let maplocalleader = ","
 " Completion options {{{
 set completeopt=menu,preview,longest,noselect
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Smart tab
-function! CleverTab()
-	if pumvisible()
-		return "\<C-N>"
-	endif
-	if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
-		return "\<Tab>"
-	else
-		return "\<C-N>"
-	endif
-endfunction
-inoremap <Tab> <C-R>=CleverTab()<CR>
 " }}}
 
 " Navigation
@@ -255,8 +225,8 @@ inoremap <C-l> <ESC>o
 inoremap <C-j> <down>
 
 " Snippets
-imap <C-e> <Plug>(neosnippet_expand_or_jump)
-smap <C-e> <Plug>(neosnippet_expand_or_jump)
+imap <C-i> <Plug>(neosnippet_expand_or_jump)
+smap <C-i> <Plug>(neosnippet_expand_or_jump)
 " }}}
 
 " Terminal mode mappings {{{
