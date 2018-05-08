@@ -58,22 +58,12 @@ nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
 nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 
-" Ale
-let g:ale_linters = {
-                        \'asm': ['gcc -mcpu=cortex-a7'],
-                        \'c': ['gcc -std=gnu99'],
-                        \}
-
 " Neosnippets
 let g:neosnippet#disable_select_mode_mappings=1
 let g:neosnippet#snippets_directory=$HOME.'/.config/nvim/snips/'
 let g:neosnippet#disable_runtime_snippets = {
                         \   '_': 1,
                         \ }
-
-" Pandoc
-let g:pandoc#folding#level=0
-
 " }}}
 
 " Basic Settings {{{
