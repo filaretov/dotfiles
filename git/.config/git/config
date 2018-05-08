@@ -8,8 +8,9 @@
 	co = checkout
 	cb = checkout -b
 	ci = commit
-	cia = commit -a
+	cia = commit --amend
 	aa = add --all
+	rc = rebase --continue
 
 [diff "odf"]
 	binary = true
