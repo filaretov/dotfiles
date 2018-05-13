@@ -1,8 +1,4 @@
 " vim: foldmethod=marker foldlevelstart=0:
-" TODO:
-" * C environment
-"   - Quickly switch to header of source file
-"   - Automatically update function declarations in header (LSP?)
 
 " Plugins {{{
 
@@ -29,7 +25,6 @@ if exists('*minpac#init')
         call minpac#add('tpope/vim-abolish')
         call minpac#add('justinmk/vim-sneak')
         call minpac#add('vim-pandoc/vim-pandoc-syntax')
-        call minpac#add('arcticicestudio/nord-vim')
         call minpac#add('autozimu/LanguageClient-neovim', {
                                 \'do' : {-> system('bash install.sh')},
                                 \'branch' : 'next'
@@ -101,8 +96,9 @@ set gdefault
 let g:tex_flavor='latex'
 
 " Colourscheme
-set background=dark
-colorscheme kuchen
+set termguicolors
+set background=light
+colorscheme vetinari
 
 augroup vimrcEx
         au!
@@ -233,13 +229,6 @@ tnoremap <M-q> <C-\><C-n><C-w>q
 " }}}
 " }}}
 
-" Commands and Functions {{{
-" Silences command and redraws screen
-command! -nargs=1 Silent
-                        \ | execute ':silent !'.<q-args>
-                        \ | execute ':redraw!'
-" }}}
-
 " Text FileType Settings {{{ augroup filetype_txt
 augroup filetype_text
         autocmd!
@@ -279,6 +268,7 @@ if has('nvim') && executable('nvr')
 endif
 " }}}
 
+" Helper functions {{{
 function! SynStack()
         if !exists("*synstack")
                 return
@@ -290,6 +280,4 @@ function! SynGroup()
         let l:s = synID(line('.'), col('.'), 1)
         echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
-
-nnoremap <space>c :call SynStack()<cr>
-nnoremap <space>s :call SynGroup()<cr>
+" }}}
