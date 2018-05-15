@@ -11,30 +11,30 @@ command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 if exists('*minpac#init')
 
-        call minpac#init()
-        call minpac#add('k-takata/minpac', {'type': 'opt'})
-        call minpac#add('kballard/vim-fish')
-        call minpac#add('rust-lang/rust.vim')
-        call minpac#add('chrisbra/Colorizer')
-        call minpac#add('Shougo/neosnippet.vim')
-        call minpac#add('tommcdo/vim-exchange')
-        call minpac#add('tpope/vim-repeat')
-        call minpac#add('tpope/vim-eunuch')
-        call minpac#add('tpope/vim-surround')
-        call minpac#add('tpope/vim-vinegar')
-        call minpac#add('tpope/vim-rsi')
-        call minpac#add('tpope/vim-unimpaired')
-        call minpac#add('tpope/vim-obsession')
-        call minpac#add('tpope/vim-speeddating')
-        call minpac#add('tpope/vim-abolish')
-        call minpac#add('justinmk/vim-sneak')
-        call minpac#add('vim-pandoc/vim-pandoc-syntax')
-        call minpac#add('arcticicestudio/nord-vim')
-        call minpac#add('autozimu/LanguageClient-neovim', {
-                                \'do' : {-> system('bash install.sh')},
-                                \'branch' : 'next'
-                                \})
-        call minpac#add('roxma/nvim-completion-manager')
+  call minpac#init()
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
+  call minpac#add('kballard/vim-fish')
+  call minpac#add('rust-lang/rust.vim')
+  call minpac#add('chrisbra/Colorizer')
+  call minpac#add('Shougo/neosnippet.vim')
+  call minpac#add('tommcdo/vim-exchange')
+  call minpac#add('tpope/vim-repeat')
+  call minpac#add('tpope/vim-eunuch')
+  call minpac#add('tpope/vim-surround')
+  call minpac#add('tpope/vim-vinegar')
+  call minpac#add('tpope/vim-rsi')
+  call minpac#add('tpope/vim-unimpaired')
+  call minpac#add('tpope/vim-obsession')
+  call minpac#add('tpope/vim-speeddating')
+  call minpac#add('tpope/vim-abolish')
+  call minpac#add('justinmk/vim-sneak')
+  call minpac#add('vim-pandoc/vim-pandoc-syntax')
+  call minpac#add('arcticicestudio/nord-vim')
+  call minpac#add('autozimu/LanguageClient-neovim', {
+        \'do' : {-> system('bash install.sh')},
+        \'branch' : 'next'
+        \})
+  call minpac#add('roxma/nvim-completion-manager')
 endif
 
 " }}}
@@ -44,10 +44,10 @@ endif
 " LanguageClient
 
 let g:LanguageClient_serverCommands = {
-                        \ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
-                        \ 'c': ['cquery', '--log-file=/tmp/cq.log'],
-                        \ 'python': ['pyls', '-v', '--log-file=/tmp/pyls.log']
-                        \}
+      \ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
+      \ 'c': ['cquery', '--log-file=/tmp/cq.log'],
+      \ 'python': ['pyls', '-v', '--log-file=/tmp/pyls.log']
+      \}
 
 let g:LanguageClient_loadSettings = 1
 let g:LanguageClient_settingsPath = $HOME.'/.config/nvim/settings.json'
@@ -62,8 +62,8 @@ nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 let g:neosnippet#disable_select_mode_mappings=1
 let g:neosnippet#snippets_directory=$HOME.'/.config/nvim/snips/'
 let g:neosnippet#disable_runtime_snippets = {
-                        \   '_': 1,
-                        \ }
+      \   '_': 1,
+      \ }
 " }}}
 
 " Basic Settings {{{
@@ -101,18 +101,19 @@ set gdefault
 let g:tex_flavor='latex'
 
 " Colourscheme
-set background=dark
-colorscheme kuchen
+set background=light
+set termguicolors
+colorscheme vetinari
 
 augroup vimrcEx
-        au!
-        " When editing a file, always jump to the last known cursor position.
-        " Don't do it when the position is invalid or when inside an event handler
-        " (happens when dropping a file on gvim).
-        autocmd BufReadPost *
-                                \ if line("'\"") >= 1 && line("'\"") <= line("$") |
-                                \   exe "normal! g`\"" |
-                                \ endif
+  au!
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+        \ if line("'\"") >= 1 && line("'\"") <= line("$") |
+        \   exe "normal! g`\"" |
+        \ endif
 augroup end
 
 " }}}
@@ -236,59 +237,59 @@ tnoremap <M-q> <C-\><C-n><C-w>q
 " Commands and Functions {{{
 " Silences command and redraws screen
 command! -nargs=1 Silent
-                        \ | execute ':silent !'.<q-args>
-                        \ | execute ':redraw!'
+      \ | execute ':silent !'.<q-args>
+      \ | execute ':redraw!'
 " }}}
 
 " Text FileType Settings {{{ augroup filetype_txt
 augroup filetype_text
-        autocmd!
-        " For all text files set 'textwidth' to 78 characters.
-        autocmd FileType text setlocal textwidth=78
+  autocmd!
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
 augroup end
 " }}}
 
 " Filetype augroups {{{
 augroup c_headers
-        autocmd!
-        autocmd BufNewFile,BufRead *.h set filetype=c
+  autocmd!
+  autocmd BufNewFile,BufRead *.h set filetype=c
 augroup end
 
 augroup filetype_term
-        autocmd!
-        autocmd BufEnter term://* startinsert
+  autocmd!
+  autocmd BufEnter term://* startinsert
 augroup end
 
 "Include md as markdown file extension
 augroup md_extensions
-        autocmd!
-        autocmd BufNewFile,BufRead *.md set filetype=markdown
+  autocmd!
+  autocmd BufNewFile,BufRead *.md set filetype=markdown
 augroup end
 
 " Wiki filetype
 augroup wiki_ext
-        autocmd!
-        autocmd BufNewFile,BufRead *.wiki set filetype=pandoc
-        autocmd BufNewFile,BufRead *.page set filetype=pandoc
+  autocmd!
+  autocmd BufNewFile,BufRead *.wiki set filetype=pandoc
+  autocmd BufNewFile,BufRead *.page set filetype=pandoc
 augroup end
 " }}}
 
 " Neovim specific {{{
 if has('nvim') && executable('nvr')
-        let $VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+  let $VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
 endif
 " }}}
 
 function! SynStack()
-        if !exists("*synstack")
-                return
-        endif
-        echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
 function! SynGroup()
-        let l:s = synID(line('.'), col('.'), 1)
-        echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+  let l:s = synID(line('.'), col('.'), 1)
+  echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
 
 nnoremap <space>c :call SynStack()<cr>
