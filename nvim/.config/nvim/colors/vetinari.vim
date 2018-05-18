@@ -1,31 +1,3 @@
-<<<<<<< HEAD
-" Vetinari - "Si non confectus, non reficiat"
-
-hi clear
-if exists("syntax_on")
-  syntax reset
-endif
-
-let g:colors_name = "vetinari"
-
-if(&background == "dark")
-    hi Normal        guibg=#000000 guifg=#cfcfc2 gui=NONE
-else
-    hi Normal        guibg=#232629 guifg=#cfcfc2 gui=NONE
-endif
-
-hi LineNr        guibg=#31363b guifg=#7a7c7d gui=NONE
-hi FoldColumn    guibg=#31363b guifg=#7a7c7d gui=NONE
-hi Folded        guibg=#31363b guifg=#7a7c7d gui=NONE
-hi MatchParen    guibg=#8e44ad guifg=#cfcfc2 gui=NONE
-hi signColumn    guibg=#31363b guifg=#7a7c7d gui=NONE
-
-hi Comment        guibg=NONE    guifg=#7a7c7d gui=NONE
-hi Conceal        guibg=NONE    guifg=#cfcfc2 gui=NONE
-hi Constant       guibg=NONE    guifg=#f67400 gui=NONE
-hi Boolean        guibg=NONE    guifg=#27aeae gui=NONE
-hi Debug          guibg=NONE    guifg=#a5a6a8 gui=bold
-=======
 highlight clear
 if exists('syntax_on')
     syntax reset
@@ -50,35 +22,24 @@ hi Conceal        guibg=NONE    guifg=#d0d0d8 gui=NONE
 hi Constant       guibg=NONE    guifg=#f67400 gui=NONE
 hi Boolean        guibg=NONE    guifg=#27aeae gui=NONE
 hi Debug          guibg=NONE    guifg=#a8a9ab gui=bold
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 hi Error          guibg=#4d1f24 guifg=#95da4c gui=bold
 hi Identifier     guibg=NONE    guifg=#8e44ad gui=NONE
 hi Ignore         guibg=NONE    guifg=NONE    gui=NONE
-hi Operator       guibg=NONE    guifg=NONE    gui=bold
+hi Operator       guibg=NONE    guifg=#fdbc4b gui=bold
 hi PreProc        guibg=NONE    guifg=#27ae60 gui=NONE
 hi Special        guibg=NONE    guifg=#3daee9 gui=NONE
-<<<<<<< HEAD
-hi SpecialComment guibg=NONE    guifg=#a5a6a8 gui=NONE
-=======
 hi SpecialComment guibg=NONE    guifg=#a8a9ab gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 hi Statement      guibg=NONE    guifg=#fdbc4b gui=bold
 hi String         guibg=NONE    guifg=#f44f4f gui=NONE
 hi Todo           guibg=#451e1a guifg=#ca9219 gui=NONE
 hi Type           guibg=NONE    guifg=#2980b9 gui=NONE
 hi Underlined     guibg=NONE    guifg=#27ae60 gui=underline
 
-hi NonText       guibg=NONE    guifg=#7a7c7d gui=NONE
+hi NonText       guibg=NONE    guifg=#9a9c9d gui=NONE
 
-<<<<<<< HEAD
-hi Pmenu         guibg=#31363b guifg=#cfcfc2 gui=NONE
-hi PmenuSbar     guibg=#606365 guifg=NONE    gui=NONE
-hi PmenuSel      guibg=#2d5c76 guifg=#cfcfc2 gui=NONE
-=======
 hi Pmenu         guibg=#2a2e32 guifg=#d0d0d8 gui=NONE
 hi PmenuSbar     guibg=#606365 guifg=NONE    gui=NONE
 hi PmenuSel      guibg=#2d5c76 guifg=#d0d0d8 gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 hi PmenuThumb    guibg=#a8a9ab guifg=#a8a9ab gui=NONE
 
 hi ErrorMsg      guibg=#4d1f24 guifg=#95da4c gui=bold
@@ -87,33 +48,21 @@ hi MoreMsg       guibg=NONE    guifg=#fdbc4b gui=bold
 hi Question      guibg=NONE    guifg=#fdbc4b gui=bold
 hi WarningMsg    guibg=NONE    guifg=#ffffff gui=NONE
 
-<<<<<<< HEAD
-hi TabLine       guibg=#31363b guifg=#7a7c7d gui=NONE
-hi TabLineFill   guibg=#31363b guifg=NONE    gui=NONE
-=======
-hi TabLine       guibg=#2a2e32 guifg=#7a7c7d gui=NONE
+hi TabLine       guibg=#31363b guifg=#9a9c9d gui=NONE
 hi TabLineFill   guibg=#2a2e32 guifg=NONE    gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 hi TabLineSel    guibg=#2d5c76 guifg=NONE    gui=NONE
 
 hi Cursor        guibg=NONE    guifg=NONE    gui=reverse
 hi CursorColumn  guibg=#2a2e32 guifg=NONE    gui=NONE
-<<<<<<< HEAD
-hi CursorLineNr  guibg=#31363b guifg=#a5a6a8 gui=NONE
-=======
 hi CursorLineNr  guibg=#2a2e32 guifg=#a8a9ab gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 hi CursorLine    guibg=#2a2e32 guifg=NONE    gui=NONE
 
 hi helpLeadBlank guibg=NONE    guifg=NONE    gui=NONE
 hi helpNormal    guibg=NONE    guifg=NONE    gui=NONE
 
 hi StatusLine    guibg=#2d5c76 guifg=NONE    gui=NONE
-<<<<<<< HEAD
-hi StatusLineNC  guibg=#31363b guifg=#7a7c7d gui=NONE
-=======
 hi StatusLineNC  guibg=#2a2e32 guifg=#7a7c7d gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
+hi StatusLineNC  guibg=#31363b guifg=#9a9c9d gui=NONE
 
 hi Visual        guibg=#2d5c76 guifg=NONE    gui=NONE
 hi VisualNOS     guibg=NONE    guifg=NONE    gui=underline
@@ -121,25 +70,16 @@ hi VisualNOS     guibg=NONE    guifg=NONE    gui=underline
 hi VertSplit     guibg=#2d5c76 guifg=#2d5c76 gui=NONE
 hi WildMenu      guibg=NONE    guifg=NONE    gui=NONE
 
-hi SpecialKey    guibg=NONE    guifg=#7a7c7d gui=NONE
+hi SpecialKey    guibg=NONE    guifg=#9a9c9d gui=NONE
 hi Title         guibg=NONE    guifg=#ffffff gui=NONE
 
-<<<<<<< HEAD
-hi DiffAdd       guibg=#123723 guifg=NONE    gui=NONE
-=======
 hi DiffAdd       guibg=#2a2e32 guifg=NONE    gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 hi DiffChange    guibg=#424218 guifg=NONE    gui=NONE
 hi DiffDelete    guibg=#4d1f24 guifg=NONE    gui=NONE
 hi DiffText      guibg=NONE    guifg=NONE    gui=reverse
 
-<<<<<<< HEAD
-hi IncSearch     guibg=#808021 guifg=#cfcfc2 gui=NONE
-hi Search        guibg=#218058 guifg=#cfcfc2 gui=NONE
-=======
 hi IncSearch     guibg=#808021 guifg=#d0d0d8 gui=NONE
 hi Search        guibg=#218058 guifg=#d0d0d8 gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 
 hi Directory     guibg=NONE    guifg=#ffffff gui=NONE
 
@@ -219,7 +159,7 @@ hi markdownH3         guibg=NONE guifg=#8e44ad gui=bold
 hi markdownH4         guibg=NONE guifg=#8e44ad gui=bold
 hi markdownH5         guibg=NONE guifg=#8e44ad gui=bold
 hi markdownH6         guibg=NONE guifg=#8e44ad gui=bold
-hi markdownLineBreak  guibg=NONE guifg=#7a7c7d gui=underline
+hi markdownLineBreak  guibg=NONE guifg=#9a9c9d gui=underline
 hi markdownItalic     guibg=NONE guifg=NONE    gui=italic
 hi markdownBold       guibg=NONE guifg=NONE    gui=bold
 hi markdownBoldItalic guibg=NONE guifg=NONE    gui=bold,italic
@@ -236,14 +176,11 @@ hi link markdownBlockquote        Special
 hi link markdownRule              Special
 
 " python ---------------------------------------------------------------------
-<<<<<<< HEAD
-hi pythonBuiltin guibg=NONE guifg=#7f8c8d gui=NONE
-=======
 hi link pythonBuiltin       Statement
->>>>>>> 297beb7181bed588c69eef591c27703574f62512
 hi link pythonImport        PreProc
 hi link pythonFunction      Normal
 hi link pythonExceptions    PreProc
+hi link pythonOperator      Operator
 
 " custom:
 hi pythonMagic    guibg=NONE guifg=#8e44ad gui=NONE
@@ -260,10 +197,5 @@ hi link cIncluded cInclude
 
 " PLUGINS --------------------------------------------------------------------
 
-<<<<<<< HEAD
-hi AleErrorSign   guibg=#31363b guifg=#f67400 gui=NONE
-hi AleWarningSign guibg=#31363b guifg=#fdbc4b gui=NONE
-=======
 hi AleErrorSign   guibg=#2a2e32 guifg=#f67400 gui=NONE
 hi AleWarningSign guibg=#2a2e32 guifg=#fdbc4b gui=NONE
->>>>>>> 297beb7181bed588c69eef591c27703574f62512

@@ -187,7 +187,6 @@ nnoremap <leader>o o<Esc>k
 nnoremap <leader>O O<Esc>j
 " Run make
 nnoremap <leader>m :make<cr>
-" Switch to last buffer
 " Indentation
 nnoremap <leader>= mz=ip`z
 
@@ -211,7 +210,7 @@ inoremap <C-f>u ü
 inoremap <C-f>a ä
 inoremap <C-f>s ß
 " Newlines
-inoremap <C-l> <ESC>o
+inoremap <C-l> <Del>
 
 " Snippets
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
@@ -280,4 +279,6 @@ function! SynGroup()
   let l:s = synID(line('.'), col('.'), 1)
   echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfun
+
+nnoremap <space>s :<c-u>call SynGroup()<cr>
 " }}}
