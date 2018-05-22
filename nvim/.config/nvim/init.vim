@@ -12,6 +12,7 @@ if exists('*minpac#init')
         call minpac#add('kballard/vim-fish')
         call minpac#add('rust-lang/rust.vim')
         call minpac#add('chrisbra/Colorizer')
+        call minpac#add('romainl/flattened')
         call minpac#add('Shougo/neosnippet.vim')
         call minpac#add('tommcdo/vim-exchange')
         call minpac#add('tpope/vim-repeat')
@@ -23,7 +24,6 @@ if exists('*minpac#init')
         call minpac#add('tpope/vim-obsession')
         call minpac#add('tpope/vim-speeddating')
         call minpac#add('tpope/vim-abolish')
-        call minpac#add('justinmk/vim-sneak')
         call minpac#add('vim-pandoc/vim-pandoc-syntax')
         call minpac#add('autozimu/LanguageClient-neovim', {
                                 \'do' : {-> system('bash install.sh')},
@@ -96,9 +96,8 @@ set gdefault
 let g:tex_flavor='latex'
 
 " Colourscheme
-set background=light
 set termguicolors
-colorscheme vetinari
+colorscheme flattened_light
 
 augroup vimrcEx
   au!
@@ -140,10 +139,7 @@ let mapleader = "\<Space>"
 let maplocalleader = ","
 
 " Completion options {{{
-set completeopt=menu,preview,longest,noselect
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+set completeopt=menu,preview,noinsert
 " }}}
 
 " Navigation
@@ -273,12 +269,12 @@ function! SynStack()
     return
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
+endfunction
 
 function! SynGroup()
   let l:s = synID(line('.'), col('.'), 1)
   echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-endfun
+endfunction
 
 nnoremap <space>s :<c-u>call SynGroup()<cr>
 " }}}
