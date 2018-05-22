@@ -7,3 +7,4 @@ a.out
 *.zip
 *.rar
 *.tar.*
+Session.vim
