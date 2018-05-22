@@ -4,6 +4,12 @@ options indent
         ${2:TARGET}
     }
 
+snippet wh
+options indent
+    while (${1:condition}) {
+        ${2:TARGET}
+    }
+
 snippet sin
     #include <${0}>
 
@@ -11,15 +17,18 @@ snippet hin
     #include "${0}"
 
 snippet main
-    int main () {
+    int main(int argc, char** argv)
+    {
         ${0};
         return 0;
     }
 
 snippet f
 options head
-    ${1:type} ${2:function} (${4:#:}) {
-        ${0};
+    ${1} ${2}(${4:#:})
+    {
+        ${0}
+        return 0;
     }
 
 snippet pf
@@ -37,3 +46,7 @@ snippet hg
                 ${0}
 
         #endif /* `toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g'))` */
+
+snippet cm
+options indent
+        /* ${0} */
