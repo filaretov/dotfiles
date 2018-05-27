@@ -25,33 +25,11 @@ if exists('*minpac#init')
         call minpac#add('tpope/vim-speeddating')
         call minpac#add('tpope/vim-abolish')
         call minpac#add('vim-pandoc/vim-pandoc-syntax')
-        call minpac#add('autozimu/LanguageClient-neovim', {
-                                \'do' : {-> system('bash install.sh')},
-                                \'branch' : 'next'
-                                \})
-        call minpac#add('roxma/nvim-completion-manager')
 endif
 
 " }}}
 
 " Plugin Settings {{{
-
-" LanguageClient
-
-let g:LanguageClient_serverCommands = {
-      \ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
-      \ 'c': ['cquery', '--log-file=/tmp/cq.log'],
-      \ 'python': ['pyls', '-v', '--log-file=/tmp/pyls.log']
-      \}
-
-let g:LanguageClient_loadSettings = 1
-let g:LanguageClient_settingsPath = $HOME.'/.config/nvim/settings.json'
-set completefunc=LanguageClient#complete
-set formatexpr=LanguageClient_textDocument_rangeFormatting()
-nnoremap <silent> gR :call LanguageClient_textDocument_rename()<CR>
-nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
-nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 
 " Neosnippets
 let g:neosnippet#disable_select_mode_mappings=1
@@ -94,6 +72,10 @@ set swapfile
 set gdefault
 
 let g:tex_flavor='latex'
+
+" Neovim path
+  let g:python3_host_prog = $HOME.'/.miniconda3/envs/neovim/bin/python'
+  let g:python_host_prog = '/usr/bin/python2'
 
 " Colourscheme
 set termguicolors
@@ -139,7 +121,10 @@ let mapleader = "\<Space>"
 let maplocalleader = ","
 
 " Completion options {{{
-set completeopt=menu,preview,noinsert
+set completeopt=menu,preview
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " }}}
 
 " Navigation
