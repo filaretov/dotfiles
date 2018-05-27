@@ -60,6 +60,8 @@ set nowrap
 " Show some whitespace
 set listchars=tab:\│\ ,trail:·,nbsp:+
 set list
+" Filler
+set fillchars=vert:│
 " Tab settings
 set tabstop=8
 set shiftwidth=8
@@ -71,9 +73,9 @@ set gdefault
 
 let g:tex_flavor='latex'
 
-" Neovim path
-  let g:python3_host_prog = $HOME.'/.miniconda3/envs/neovim/bin/python'
-  let g:python_host_prog = '/usr/bin/python2'
+" Python neovim path
+let g:python3_host_prog = $HOME.'/.miniconda3/envs/neovim/bin/python'
+let g:python_host_prog = '/usr/bin/python2'
 
 " Colourscheme
 set termguicolors
