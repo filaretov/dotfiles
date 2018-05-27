@@ -11,8 +11,6 @@ if exists('*minpac#init')
         call minpac#add('k-takata/minpac', {'type': 'opt'})
         call minpac#add('kballard/vim-fish')
         call minpac#add('rust-lang/rust.vim')
-        call minpac#add('chrisbra/Colorizer')
-        call minpac#add('romainl/flattened')
         call minpac#add('Shougo/neosnippet.vim')
         call minpac#add('tommcdo/vim-exchange')
         call minpac#add('tpope/vim-repeat')
@@ -79,7 +77,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-colorscheme flattened_light
+colorscheme vetinari
 
 augroup vimrcEx
   au!

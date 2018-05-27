@@ -20,6 +20,7 @@ highlight Visual          guibg=#d0e0f0
 highlight Cursor          guifg=#0000ff     guibg=#424242
 highlight Special         guifg=#424242     guibg=#f1f1f1
 highlight Comment         guifg=#aaaaaa     guibg=#f1f1f1 gui=italic
+highlight NonText         guifg=#aaaaaa     guibg=#f1f1f1 gui=NONE
 highlight Whitespace      guifg=#aaaaaa     guibg=#f1f1f1 gui=NONE
 highlight Type            guifg=#424242     guibg=#f1f1f1 gui=NONE
 highlight Statement       guifg=#424242     guibg=#f1f1f1 gui=bold
