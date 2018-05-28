@@ -1,0 +1,24 @@
+{
+  "name": "Vetinari",
+  "author": "Hristo Filaretov <h.filaretov@protonmail.com>",
+  "color": [
+    "#424242",
+    "#e04040",
+    "#20a060",
+    "#f0d060",
+    "#2060a0",
+    "#a060a0",
+    "#20c0c0",
+    "#f1f1f1",
+    "#a0a0a0",
+    "#e04040",
+    "#20a060",
+    "#f0d060",
+    "#2060a0",
+    "#a060a0",
+    "#20c0c0",
+    "#f1f1f1"
+  ],
+  "foreground": "#424242",
+  "background": "#f1f1f1"
+}
