@@ -7,22 +7,22 @@ command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 if exists('*minpac#init')
 
-        call minpac#init()
-        call minpac#add('k-takata/minpac', {'type': 'opt'})
-        call minpac#add('kballard/vim-fish')
-        call minpac#add('rust-lang/rust.vim')
-        call minpac#add('Shougo/neosnippet.vim')
-        call minpac#add('tommcdo/vim-exchange')
-        call minpac#add('tpope/vim-repeat')
-        call minpac#add('tpope/vim-eunuch')
-        call minpac#add('tpope/vim-surround')
-        call minpac#add('tpope/vim-vinegar')
-        call minpac#add('tpope/vim-rsi')
-        call minpac#add('tpope/vim-unimpaired')
-        call minpac#add('tpope/vim-obsession')
-        call minpac#add('tpope/vim-speeddating')
-        call minpac#add('tpope/vim-abolish')
-        call minpac#add('vim-pandoc/vim-pandoc-syntax')
+  call minpac#init()
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
+  call minpac#add('kballard/vim-fish')
+  call minpac#add('rust-lang/rust.vim')
+  call minpac#add('Shougo/neosnippet.vim')
+  call minpac#add('tommcdo/vim-exchange')
+  call minpac#add('tpope/vim-repeat')
+  call minpac#add('tpope/vim-eunuch')
+  call minpac#add('tpope/vim-surround')
+  call minpac#add('tpope/vim-vinegar')
+  call minpac#add('tpope/vim-rsi')
+  call minpac#add('tpope/vim-unimpaired')
+  call minpac#add('tpope/vim-obsession')
+  call minpac#add('tpope/vim-speeddating')
+  call minpac#add('tpope/vim-abolish')
+  call minpac#add('vim-pandoc/vim-pandoc-syntax')
 endif
 
 " }}}
@@ -33,23 +33,23 @@ let s:nvim_config = $HOME.'/.config/nvim'
 
 " Obsession
 
-function! ManiaPath()
-        let l:project_dir = substitute(getcwd(), $HOME.'/', "", "")
-        let l:project_name = substitute(l:project_dir, "/", "_", "g")
-        let l:obsession_path = s:nvim_config . '/sessions/' . l:project_name . '.vim'
-        return l:obsession_path
+function! SessionPath()
+  let l:project_dir = substitute(getcwd(), $HOME.'/', "", "")
+  let l:project_name = substitute(l:project_dir, "/", "_", "g")
+  let l:obsession_path = s:nvim_config . '/sessions/' . l:project_name . '.vim'
+  return l:obsession_path
 endfunction
 
-function! ManiaTrack()
-        exec "Obsession " . ManiaPath()
+function! SessionStart()
+  exec "Obsession " . SessionPath()
 endfunction
 
-function! ManiaLoad()
-        exec "source " . ManiaPath()
+function! SessionLoad()
+  exec "silent! source " . SessionPath()
 endfunction
 
-command! Mania call ManiaTrack()
-command! ManiaLoad call ManiaLoad()
+command! SessionStart call SessionStart()
+command! SessionLoad call SessionLoad()
 
 " Neosnippets
 let g:neosnippet#disable_select_mode_mappings=1
