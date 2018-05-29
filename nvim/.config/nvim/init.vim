@@ -29,6 +29,28 @@ endif
 
 " Plugin Settings {{{
 
+let s:nvim_config = $HOME.'/.config/nvim'
+
+" Obsession
+
+function! ManiaPath()
+        let l:project_dir = substitute(getcwd(), $HOME.'/', "", "")
+        let l:project_name = substitute(l:project_dir, "/", "_", "g")
+        let l:obsession_path = s:nvim_config . '/sessions/' . l:project_name . '.vim'
+        return l:obsession_path
+endfunction
+
+function! ManiaTrack()
+        exec "Obsession " . ManiaPath()
+endfunction
+
+function! ManiaLoad()
+        exec "source " . ManiaPath()
+endfunction
+
+command! Mania call ManiaTrack()
+command! ManiaLoad call ManiaLoad()
+
 " Neosnippets
 let g:neosnippet#disable_select_mode_mappings=1
 let g:neosnippet#snippets_directory=$HOME.'/.config/nvim/snips/'
