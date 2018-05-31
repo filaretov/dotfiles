@@ -6,7 +6,6 @@ command! PackUpdate packadd minpac | source $MYVIMRC | redraw | call minpac#upda
 command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 if exists('*minpac#init')
-
   call minpac#init()
   call minpac#add('k-takata/minpac', {'type': 'opt'})
   call minpac#add('kballard/vim-fish')
@@ -20,7 +19,6 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-rsi')
   call minpac#add('tpope/vim-unimpaired')
   call minpac#add('tpope/vim-obsession')
-  call minpac#add('tpope/vim-speeddating')
   call minpac#add('tpope/vim-abolish')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
 endif
@@ -53,7 +51,7 @@ command! SessionLoad call SessionLoad()
 
 " Neosnippets
 let g:neosnippet#disable_select_mode_mappings=1
-let g:neosnippet#snippets_directory=$HOME.'/.config/nvim/snips/'
+let g:neosnippet#snippets_directory= s:nvim_config . '/snips/'
 let g:neosnippet#disable_runtime_snippets = {
       \   '_': 1,
       \ }
@@ -61,18 +59,17 @@ let g:neosnippet#disable_runtime_snippets = {
 
 " Basic Settings {{{
 
-filetype plugin indent on " use filetype settings
-syntax enable " syntax highlighting
+filetype plugin indent on
+syntax enable
 
 set ignorecase      " ignores case when searching
 set smartcase       " case-sensitive when using capital in search
-set number          " show linenumber
+set number
 set history=1000
 set scrolloff=4     " scroll page once 4 lines from top/bottom
-set relativenumber  " use relative numbers
 set backspace=2
 set hidden          " allow closing unsaved buffers
-set path+=**        " useful for using :find
+set path=,,.,**     " useful for using :find
 set wildmenu        " Display all matching files when tab completing
 set wildignorecase  " Wild menu ignores case
 set encoding=utf-8  " Sanity
