@@ -51,6 +51,7 @@ highlight Special         guifg=#c0a040     guibg=#f1f1f1
 " Magenta
 
 " Interface
+highlight Cursor          guifg=#aaaaaa     guibg=#f1f1f1  gui=NONE
 highlight LineNr          guifg=#bababa     guibg=#f1f1f1
 highlight CursorLineNr    guifg=#bababa     guibg=#f1f1f1
 highlight Pmenu           guifg=#f1f1f1     guibg=#424242
