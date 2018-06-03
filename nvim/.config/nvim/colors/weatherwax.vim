@@ -1,5 +1,22 @@
 " Vim color file
 " Maintainer: Hristo Filaretov <h.filaretov@protonmail.com>
+" Colors
+" #424242 black
+" #802020 red
+" #108040 green
+" #e08040 yellow
+" #2060a0 blue
+" #704070 magenta
+" #2090b0 cyan
+" #bababa light grey
+" #808080 grey
+" #e04040 light red
+" #20a060 light green
+" #c0a040 light yellow
+" #80aaee light blue
+" #a060a0 ligt magenta
+" #20c0c0 light cyan
+" #fafafa white
 
 set background=light
 highlight clear
@@ -16,7 +33,7 @@ highlight Normal          guifg=#424242     guibg=#fafafa  gui=NONE
 highlight Search          guifg=#424242     guibg=#ffff88
 highlight IncSearch       guifg=#424242     guibg=#ffff88  gui=NONE
 
-highlight Visual          guibg=#a0d0f0
+highlight Visual          guibg=#bababa
 
 highlight Cursor          guifg=#0000ff     guibg=#424242
 
@@ -38,8 +55,8 @@ highlight MatchParen      guifg=#2060a0     guibg=#fafafa gui=bold
 highlight Underlined      guifg=#2060a0     guibg=#fafafa gui=underline,NONE
 
 " Green
-highlight Todo            guifg=#20a060     guibg=#fafafa gui=italic
-highlight Type            guifg=#20a060     guibg=#fafafa gui=NONE
+highlight Todo            guifg=#108040     guibg=#fafafa gui=italic
+highlight Type            guifg=#108040     guibg=#fafafa gui=NONE
 
 " Red
 highlight ErrorMsg        guifg=#e04040     guibg=#fafafa gui=reverse
