@@ -43,8 +43,6 @@ highlight Whitespace      guifg=#aaaaaa     guibg=#fafafa gui=NONE
 
 " Bold
 highlight Title           guifg=#424242     guibg=#fafafa gui=bold
-highlight Statement       guifg=#424242     guibg=#fafafa gui=bold
-highlight Identifier      guifg=#424242     guibg=#fafafa gui=bold
 
 " Blue
 highlight PreProc         guifg=#2060a0     guibg=#fafafa
@@ -59,12 +57,17 @@ highlight Todo            guifg=#108040     guibg=#fafafa gui=italic
 highlight Type            guifg=#108040     guibg=#fafafa gui=NONE
 
 " Red
-highlight ErrorMsg        guifg=#e04040     guibg=#fafafa gui=reverse
+highlight Error           guifg=#e04040     guibg=#fafafa gui=NONE
+highlight ErrorMsg        guifg=#e04040     guibg=#fafafa gui=NONE
 
-" Yellow
+" Light Yellow
 highlight Special         guifg=#c0a040     guibg=#fafafa
 
+" Yellow
+highlight Statement       guifg=#704070     guibg=#fafafa gui=NONE
+
 " Magenta
+highlight Identifier      guifg=#e08040     guibg=#fafafa gui=NONE
 
 " Interface
 highlight Cursor          guifg=#aaaaaa     guibg=#fafafa  gui=NONE
@@ -72,9 +75,9 @@ highlight LineNr          guifg=#bababa     guibg=#fafafa
 highlight CursorLineNr    guifg=#bababa     guibg=#fafafa
 highlight Pmenu           guifg=#fafafa     guibg=#424242
 highlight Folded          guifg=#424242     guibg=#fafafa  gui=bold
-highlight StatusLine      guifg=#424242     guibg=#fafafa  gui=bold,underline
-highlight StatusLineNC    guifg=#bababa     guibg=#fafafa  gui=underline
-highlight VertSplit       guifg=#424242     guibg=#fafafa  gui=NONE
+highlight StatusLine      guifg=#fafafa     guibg=#808080  gui=bold
+highlight StatusLineNC    guifg=#808080     guibg=#e0e0e0  gui=none
+highlight VertSplit       guifg=#424242     guibg=#fafafa  gui=none
 highlight WildMenu        guifg=#424242     guibg=#ffff88  gui=bold
 highlight SignColumn      guifg=#424242     guibg=#fafafa  gui=bold
 
