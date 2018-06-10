@@ -21,6 +21,7 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-unimpaired')
   call minpac#add('tpope/vim-obsession')
   call minpac#add('tpope/vim-abolish')
+  call minpac#add('tpope/vim-fugitive')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
 endif
 
@@ -241,11 +242,6 @@ augroup end
 augroup c_headers
   autocmd!
   autocmd BufNewFile,BufRead *.h set filetype=c
-augroup end
-
-augroup filetype_term
-  autocmd!
-  autocmd BufEnter term://* startinsert
 augroup end
 
 "Include md as markdown file extension
