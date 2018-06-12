@@ -16,12 +16,12 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-repeat')
   call minpac#add('tpope/vim-eunuch')
   call minpac#add('tpope/vim-surround')
-  call minpac#add('tpope/vim-vinegar')
   call minpac#add('tpope/vim-rsi')
   call minpac#add('tpope/vim-unimpaired')
   call minpac#add('tpope/vim-obsession')
   call minpac#add('tpope/vim-abolish')
   call minpac#add('tpope/vim-fugitive')
+  call minpac#add('justinmk/vim-dirvish')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
 endif
 
@@ -29,6 +29,7 @@ endif
 
 " Plugin Settings {{{
 
+let g:pandoc#syntax#conceal#use = 0
 let s:nvim_config = $HOME.'/.config/nvim'
 
 " Obsession
@@ -71,7 +72,7 @@ set history=1000
 set scrolloff=4     " scroll page once 4 lines from top/bottom
 set backspace=2
 set hidden          " allow closing unsaved buffers
-set path=,,.,**     " useful for using :find et al.
+set path+=**        " useful for using :find et al.
 set wildmenu        " Display all matching files when tab completing
 set wildignorecase  " Wild menu ignores case
 set encoding=utf-8
@@ -91,6 +92,24 @@ set softtabstop=8
 set undofile
 set swapfile
 set gdefault
+
+" Grepping
+
+function! BuildGrepExclude()
+  let s:exclude = ""
+  if filereadable('.gitignore')
+          let s:exclude = s:exclude . " --exclude-from='.gitignore'"
+  endif
+  let s:global_gitignore = $HOME . "/.config/git/ignore"
+  if filereadable(s:global_gitignore)
+    let s:exclude = s:exclude . " --exclude-from=" . s:global_gitignore
+  endif
+  return s:exclude
+endfunction
+
+let g:grepprg_string="grep -n " . BuildGrepExclude() . " $*"
+let &grepprg=g:grepprg_string
+
 
 let g:tex_flavor='latex'
 
@@ -277,5 +296,5 @@ function! SynGroup()
   echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfunction
 
-nnoremap <space>s :<c-u>call SynGroup()<cr>
+nnoremap <space>c :<c-u>call SynGroup()<cr>
 " }}}
