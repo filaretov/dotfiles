@@ -94,7 +94,7 @@ set undofile
 set swapfile
 set gdefault
 
-" Grepping
+" Grepping {{{
 
 function! BuildGrepExclude()
   let s:exclude = ""
@@ -110,6 +110,10 @@ endfunction
 
 let g:grepprg_string="grep -n " . BuildGrepExclude() . " $*"
 let &grepprg=g:grepprg_string
+
+command! -nargs=+ Grep execute 'silent grep! -r <args>' | copen 10
+
+" }}}
 
 
 let g:tex_flavor='latex'
@@ -137,7 +141,7 @@ augroup end
 
 " Indentation settings {{{
 " Don't indent namespaces
-set cino=N-s
+set cino=N-s,i0,g0
 " }}}
 
 " Status Line {{{

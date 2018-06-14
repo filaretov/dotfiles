@@ -1,25 +1,4 @@
-# if statement
-snippet if
-options indent
-    if (${1:condition}) {
-        ${2:TARGET}
-    }
-
-# System include
-snippet sin
-    #include <${0}>
-
-# Header file include
-snippet hin
-    #include "${0}"
-
-# Standard main class
-snippet main
-    int main ()
-    {
-        ${0};
-        return 0;
-    }
+include c.snip
 
 # Function declaration
 snippet f
@@ -32,9 +11,9 @@ options head
 snippet st
 abbr    st
 options indent
-    struct ${1:Struct} {
-        ${2};
-    };
+    typedef struct {
+        ${1};
+    }${0};
 
 # Class
 snippet cl
@@ -51,12 +30,6 @@ options indent
     namespace ${1:namespace} {
         ${2}
     } // namespace $1
-
-# printf
-snippet pf
-abbr    pf
-options indent
-    printf("${1}\n"${2:#:});
 
 # ifdef
 snippet ifnd
