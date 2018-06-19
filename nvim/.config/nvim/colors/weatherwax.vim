@@ -66,8 +66,12 @@ highlight Special         guifg=#c0a040     guibg=#fafafa
 " Yellow
 highlight Identifier      guifg=#e08040     guibg=#fafafa gui=none
 
-" Light Magenta
-highlight Statement       guifg=#a060a0     guibg=#fafafa gui=bold
+" Magenta
+highlight Statement       guifg=#704070     guibg=#fafafa gui=NONE
+
+" Yellow
+highlight Identifier      guifg=#e08040     guibg=#fafafa gui=NONE
+highlight Todo            guifg=#e08040     guibg=#fafafa gui=italic
 
 " Interface
 highlight Cursor          guifg=#aaaaaa     guibg=#fafafa  gui=none
@@ -84,13 +88,20 @@ highlight SignColumn      guifg=#424242     guibg=#fafafa  gui=bold
 " HTML
 highlight htmlBold        guifg=#424242     guibg=#fafafa gui=bold
 
-
 " Neovim
 let g:terminal_color_0 = "#424242"
-let g:terminal_color_1 = "#e04040"
-let g:terminal_color_2 = "#20a060"
-let g:terminal_color_3 = "#f0d060"
+let g:terminal_color_1 = "#802020"
+let g:terminal_color_2 = "#108040"
+let g:terminal_color_3 = "#e08040"
 let g:terminal_color_4 = "#2060a0"
-let g:terminal_color_5 = "#a060a0"
-let g:terminal_color_6 = "#20c0c0"
-let g:terminal_color_7 = "#fafafa"
+let g:terminal_color_5 = "#704070"
+let g:terminal_color_6 = "#2090b0"
+let g:terminal_color_7 = "#bababa"
+let g:terminal_color_8 = "#808080"
+let g:terminal_color_9 = "#e04040"
+let g:terminal_color_10 = "#20a060"
+let g:terminal_color_11 = "#c0a040"
+let g:terminal_color_12 = "#80aaee"
+let g:terminal_color_13 = "#a060a0"
+let g:terminal_color_14 = "#20c0c0"
+let g:terminal_color_15 = "#fafafa"
