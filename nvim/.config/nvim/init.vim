@@ -11,6 +11,7 @@ if exists('*minpac#init')
   call minpac#add('justinmk/vim-dirvish')
   call minpac#add('kballard/vim-fish')
   call minpac#add('rust-lang/rust.vim')
+  call minpac#add('romainl/flattened')
   call minpac#add('sgur/vim-editorconfig')
   call minpac#add('Shougo/neosnippet.vim')
   call minpac#add('tommcdo/vim-exchange')
@@ -124,7 +125,7 @@ let g:python_host_prog = '/usr/bin/python2'
 
 " Colourscheme
 set termguicolors
-colorscheme weatherwax
+colorscheme flattened_light
 
 augroup vimrcEx
   au!
