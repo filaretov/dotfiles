@@ -274,6 +274,13 @@ augroup terminal
   autocmd TermOpen * setlocal nonumber
 augroup END
 
+augroup pandoc
+  au!
+  au BufNewFile,BufRead README set filetype=pandoc
+  au BufNewFile,BufRead *.markdown,*.mkd,*.md set filetype=pandoc
+augroup END
+
+
 " Helper functions {{{
 function! SynStack()
   if !exists("*synstack")
