@@ -7,11 +7,12 @@ command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 if exists('*minpac#init')
   call minpac#init()
-  call minpac#add('k-takata/minpac', {'type': 'opt'})
   call minpac#add('justinmk/vim-dirvish')
   call minpac#add('kballard/vim-fish')
-  call minpac#add('rust-lang/rust.vim')
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
+  call minpac#add('lervag/vimtex')
   call minpac#add('romainl/flattened')
+  call minpac#add('rust-lang/rust.vim')
   call minpac#add('sgur/vim-editorconfig')
   call minpac#add('Shougo/neosnippet.vim')
   call minpac#add('tommcdo/vim-exchange')
@@ -38,7 +39,7 @@ let s:nvim_config = $HOME.'/.config/nvim'
 
 function! SessionPath()
   let l:project_dir = substitute(getcwd(), $HOME.'/', "", "")
-  let l:project_name = substitute(l:project_dir, "/", "_", "g")
+  let l:project_name = substitute(l:project_dir, "/", '\\%', "g")
   let l:obsession_path = s:nvim_config . '/sessions/' . l:project_name . '.vim'
   return l:obsession_path
 endfunction
@@ -82,10 +83,8 @@ set noequalalways   " Don't resize automatically after closing, opening
 set inccommand=nosplit
 set nowrap
 " Show some whitespace
-set listchars=tab:\│\ ,trail:·,nbsp:+
+set listchars=tab:\ \ ,trail:·,nbsp:+
 set list
-" Filler
-set fillchars=vert:│
 " Tab settings
 set tabstop=8
 set shiftwidth=8
@@ -181,18 +180,13 @@ nnoremap <leader><Tab> :b#<cr>
 nnoremap H ^
 " Strong right
 nnoremap L $
-" Jump to line number with Enter
-nnoremap <cr> G
-" Jump to beginning with backspace
-nnoremap <Backspace> gg
+nnoremap <cr> o<esc>
+" Saving
+nnoremap <C-s> :w<cr>
 
 " vimrc
 nnoremap <leader>ev :edit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
-nnoremap <leader>ep :edit $MYVIMRC<cr>
-
-" Quicksave
-nnoremap <leader>w :w<cr>
 
 " OS clipboard
 nnoremap <leader>y "+y
@@ -212,8 +206,9 @@ nnoremap <silent> <c-l> :noh<cr>
 nnoremap <leader>o o<Esc>k
 " Add empty line before cursor
 nnoremap <leader>O O<Esc>j
-" Run make
-nnoremap <leader>m :make<cr>
+" making things
+nnoremap <C-m> :!make<cr>
+nnoremap <C-c> :!make clean<cr>
 " Indentation
 nnoremap <leader>= mz=ip`z
 
@@ -275,12 +270,6 @@ augroup md_extensions
   autocmd BufNewFile,BufRead *.md set filetype=markdown
 augroup end
 
-" Wiki filetype
-augroup wiki_ext
-  autocmd!
-  autocmd BufNewFile,BufRead *.wiki set filetype=pandoc
-  autocmd BufNewFile,BufRead *.page set filetype=pandoc
-augroup end
 " }}}
 
 " Neovim specific {{{
@@ -288,6 +277,11 @@ if has('nvim') && executable('nvr')
   let $VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
 endif
 " }}}
+
+augroup terminal
+  autocmd!
+  autocmd TermOpen * setlocal nonumber
+augroup END
 
 " Helper functions {{{
 function! SynStack()
