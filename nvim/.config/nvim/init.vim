@@ -25,6 +25,7 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-rsi')
   call minpac#add('tpope/vim-surround')
   call minpac#add('tpope/vim-unimpaired')
+  call minpac#add('romainl/flattened')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
 endif
 
@@ -222,17 +223,12 @@ vmap <leader>e <Plug>(neosnippet_expand_target)
 " }}}
 
 " Insert mode mappings {{{
-inoremap <M-h> <ESC><C-W>h
-inoremap <M-j> <ESC><C-W>j
-inoremap <M-k> <ESC><C-W>k
-inoremap <M-l> <ESC><C-W>l
 " Umlaut
 inoremap <C-f>o ö
 inoremap <C-f>u ü
 inoremap <C-f>a ä
 inoremap <C-f>s ß
-" Newlines
-inoremap <C-l> <Del>
+inoremap <C-t> <C-r>=strftime("%Y-%m-%d")<cr>
 
 " Snippets
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
