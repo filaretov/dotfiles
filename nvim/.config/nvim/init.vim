@@ -223,12 +223,9 @@ vmap <leader>e <Plug>(neosnippet_expand_target)
 " }}}
 
 " Insert mode mappings {{{
-" Umlaut
-inoremap <C-f>o ö
-inoremap <C-f>u ü
-inoremap <C-f>a ä
-inoremap <C-f>s ß
-inoremap <C-t> <C-r>=strftime("%Y-%m-%d")<cr>
+" I don't use <C-i>, so I'll use it as a leader for 'insert' maps
+" Insert today
+inoremap <C-i>t <C-r>=strftime("%Y-%m-%d")<cr>
 
 " Snippets
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
