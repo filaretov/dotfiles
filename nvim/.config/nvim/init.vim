@@ -169,8 +169,6 @@ let maplocalleader = ","
 " Completion options {{{
 set completeopt=menu,preview
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " }}}
 
 " Navigation
@@ -223,9 +221,9 @@ vmap <leader>e <Plug>(neosnippet_expand_target)
 " }}}
 
 " Insert mode mappings {{{
-" I don't use <C-i>, so I'll use it as a leader for 'insert' maps
+" I'm stupid and <C-i> is actually the same as Tab
 " Insert today
-inoremap <C-i>t <C-r>=strftime("%Y-%m-%d")<cr>
+inoremap <C-j><C-t> <C-r>=strftime("%Y-%m-%d")<cr>
 
 " Snippets
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
