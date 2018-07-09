@@ -25,6 +25,8 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-rsi')
   call minpac#add('tpope/vim-surround')
   call minpac#add('tpope/vim-unimpaired')
+  call minpac#add('filaretov/vim-todo')
+  call minpac#add('filaretov/vim-orgzly')
   call minpac#add('romainl/flattened')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
 endif
