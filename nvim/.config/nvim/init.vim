@@ -29,6 +29,8 @@ if exists('*minpac#init')
   call minpac#add('filaretov/vim-orgzly')
   call minpac#add('romainl/flattened')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
+  call minpac#add('roxma/nvim-yarp')
+  call minpac#add('ncm2/ncm2')
 endif
 
 " }}}
@@ -169,7 +171,7 @@ let mapleader = "\<Space>"
 let maplocalleader = ","
 
 " Completion options {{{
-set completeopt=menu,preview
+set completeopt=noinsert,longest,menu,preview
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " }}}
 
