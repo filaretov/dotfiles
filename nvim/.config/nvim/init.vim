@@ -31,6 +31,7 @@ if exists('*minpac#init')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
   call minpac#add('roxma/nvim-yarp')
   call minpac#add('ncm2/ncm2')
+  call minpac#add('dracula/vim', {'name' : 'vim-dracula'})
 endif
 
 " }}}
@@ -178,7 +179,6 @@ inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Navigation
 nnoremap j gj
 nnoremap k gk
-nnoremap <leader><Tab> :b#<cr>
 " Strong left
 nnoremap H ^
 " Strong right
