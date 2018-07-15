@@ -31,6 +31,10 @@ if exists('*minpac#init')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
   call minpac#add('roxma/nvim-yarp')
   call minpac#add('ncm2/ncm2')
+  call minpac#add('ncm2/ncm2-bufword')
+  call minpac#add('ncm2/ncm2-path')
+  call minpac#add('ncm2/ncm2-jedi')
+  call minpac#add('filipekiss/ncm2-look.vim')
   call minpac#add('dracula/vim', {'name' : 'vim-dracula'})
 endif
 
@@ -172,18 +176,17 @@ let mapleader = "\<Space>"
 let maplocalleader = ","
 
 " Completion options {{{
-set completeopt=noinsert,longest,menu,preview
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+set completeopt=noinsert,menuone,noselect
 " }}}
 
 " Navigation
 nnoremap j gj
 nnoremap k gk
+nnoremap <CR> G
 " Strong left
 nnoremap H ^
 " Strong right
 nnoremap L $
-nnoremap <cr> o<esc>
 " Saving
 nnoremap <C-s> :w<cr>
 
@@ -210,8 +213,8 @@ nnoremap <leader>o o<Esc>k
 " Add empty line before cursor
 nnoremap <leader>O O<Esc>j
 " making things
-nnoremap <C-m> :!make<cr>
-nnoremap <C-c> :!make clean<cr>
+nnoremap <space>m :!make<cr>
+nnoremap <space>c :!make clean<cr>
 " Indentation
 nnoremap <leader>= mz=ip`z
 
@@ -226,8 +229,9 @@ vmap <leader>e <Plug>(neosnippet_expand_target)
 
 " Insert mode mappings {{{
 " I'm stupid and <C-i> is actually the same as Tab
+" I'm stupid and <C-j> is used a few lines below for neosnippet
 " Insert today
-inoremap <C-j><C-t> <C-r>=strftime("%Y-%m-%d")<cr>
+inoremap <C-k><C-t> <C-r>=strftime("%Y-%m-%d")<cr>
 
 " Snippets
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
@@ -284,6 +288,21 @@ augroup pandoc
   au BufNewFile,BufRead *.markdown,*.mkd,*.md set filetype=pandoc
 augroup END
 
+augroup ncm2
+  au!
+  au BufEnter * call ncm2#enable_for_buffer()
+  au User Ncm2Plugin call ncm2#register_source({
+          \ 'name' : 'vimtex',
+          \ 'priority': 9,
+          \ 'subscope_enable': 1,
+          \ 'complete_length': 1,
+          \ 'scope': ['tex'],
+          \ 'mark': 'tex',
+          \ 'word_pattern': '\w+',
+          \ 'complete_pattern': g:vimtex#re#ncm,
+          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+          \ })
+augroup END
 
 " Helper functions {{{
 function! SynStack()
@@ -298,5 +317,5 @@ function! SynGroup()
   echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfunction
 
-nnoremap <space>c :<c-u>call SynGroup()<cr>
+nnoremap <space>h :<c-u>call SynGroup()<cr>
 " }}}
