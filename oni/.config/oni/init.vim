@@ -1,5 +1,7 @@
 " vim: foldmethod=marker foldlevelstart=0:
 
+set background=dark
+
 " Plugins {{{
 
 command! PackUpdate packadd minpac | source $MYVIMRC | redraw | call minpac#update()
@@ -27,7 +29,6 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-unimpaired')
   call minpac#add('filaretov/vim-todo')
   call minpac#add('filaretov/vim-orgzly')
-  call minpac#add('romainl/flattened')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
   call minpac#add('roxma/nvim-yarp')
   call minpac#add('ncm2/ncm2')

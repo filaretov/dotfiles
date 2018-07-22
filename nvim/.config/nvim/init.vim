@@ -319,3 +319,22 @@ endfunction
 
 nnoremap <space>h :<c-u>call SynGroup()<cr>
 " }}}
+
+
+if exists('gui_oni')
+  set nocompatible              " be iMproved, required
+  filetype off                  " required
+
+  set number
+  set noswapfile
+  set smartcase
+
+  " Enable GUI mouse behavior
+  set mouse=a
+
+  " If using Oni's externalized statusline, hide vim's native statusline, 
+  set noshowmode
+  set noruler
+  set laststatus=0
+  set noshowcmd
+endif
