@@ -16,6 +16,7 @@ if exists('*minpac#init')
   call minpac#add('sgur/vim-editorconfig')
   call minpac#add('Shougo/neosnippet.vim')
   call minpac#add('tommcdo/vim-exchange')
+  call minpac#add('fneu/breezy')
   call minpac#add('tpope/vim-abolish')
   call minpac#add('tpope/vim-commentary')
   call minpac#add('tpope/vim-eunuch')
@@ -134,7 +135,8 @@ let g:python_host_prog = '/usr/bin/python2'
 
 " Colourscheme
 set termguicolors
-colorscheme flattened_light
+set background=light
+colorscheme breezy
 
 augroup vimrcEx
   au!

@@ -20,11 +20,11 @@ exports.deactivate = function(oni) {
 
 exports.configuration = {
   //add custom config here, such as
-  "ui.colorscheme": "gruvbox",
+  "ui.colorscheme": "nord",
   "oni.loadInitVim": "$HOME/.config/oni/init.vim",
   "oni.hideMenu": true,
   "editor.fontSize": "14px",
-  "editor.fontFamily": "Fira Mono",
+  "editor.fontFamily": "Fira Mono Medium",
   "ui.animations.enabled": true,
   "ui.fontSmoothing": "auto",
   "sidebar.enabled": false, // sidebar ui is gone
