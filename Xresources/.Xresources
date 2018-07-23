@@ -1,59 +1,97 @@
-! vim: set ft=xdefaults:
-! Copyright (c) 2016-present Arctic Ice Studio <development@arcticicestudio.com>
-! Copyright (c) 2016-present Sven Greb <code@svengreb.de>
+! black
+#define col0 #002b36
+#define col8 #657b83
+#define black col0
+#define bblack col8
 
-! Project:    Nord XResources
-! Version:    0.1.0
-! Repository: https://github.com/arcticicestudio/nord-xresources
-! License:    MIT
+! red
+#define col1 #dc322f
+#define col9 #dc322f
+#define red col1
+#define bred col9
 
-#define nord0 #2E3440
-#define nord1 #3B4252
-#define nord2 #434C5E
-#define nord3 #4C566A
-#define nord4 #D8DEE9
-#define nord5 #E5E9F0
-#define nord6 #ECEFF4
-#define nord7 #8FBCBB
-#define nord8 #88C0D0
-#define nord9 #81A1C1
-#define nord10 #5E81AC
-#define nord11 #BF616A
-#define nord12 #D08770
-#define nord13 #EBCB8B
-#define nord14 #A3BE8C
-#define nord15 #B48EAD
+! green
+#define col2 #859900
+#define col10 #859900
+#define green col2
+#define bgreen col10
 
-*.foreground:   nord4
-*.background:   nord0
-*.cursorColor:  nord4
-*fading: 35
-*fadeColor: nord3
+! yellow
+#define col3 #b58900
+#define col11 #b58900
+#define yellow col3
+#define byellow col11
 
-*.color0: nord1
-*.color1: nord11
-*.color2: nord14
-*.color3: nord13
-*.color4: nord9
-*.color5: nord15
-*.color6: nord8
-*.color7: nord5
-*.color8: nord3
-*.color9: nord11
-*.color10: nord14
-*.color11: nord13
-*.color12: nord9
-*.color13: nord15
-*.color14: nord7
-*.color15: nord6
+! blue
+#define col4 #268bd2
+#define col12 #268bd2
+#define blue col4
+#define bblue col12
+
+! magenta
+#define col5 #6c71c4
+#define col13 #6c71c4
+#define magenta col5
+#define bmagenta col13
+
+! cyan
+#define col6 #2aa198
+#define col14 #2aa198
+#define cyan col6
+#define bcyan col14
+
+! white
+#define col7 #93a1a1
+#define col15 #fdf6e3
+#define white col7
+#define bwhite col15
+
+*.color0: col0
+*.color1: col1
+*.color2: col2
+*.color3: col3
+*.color4: col4
+*.color5: col5
+*.color6: col6
+*.color7: col7
+*.color8: col8
+*.color9: col9
+*.color10: col10
+*.color11: col11
+*.color12: col12
+*.color13: col13
+*.color14: col14
+*.color15: col15
+
+*.black: col0
+*.red: col1
+*.green: col2
+*.yellow: col3
+*.blue: col4
+*.magenta: col5
+*.cyan: col6
+*.white: col7
+*.bblack: col8
+*.bred: col9
+*.bgreen: col10
+*.byellow: col11
+*.bblue: col12
+*.bmagenta: col13
+*.bcyan: col14
+*.bwhite: col15
+
+! special
+*.foreground:   #586e75
+*.background:   #fdf6e3
+*.cursorColor:  #586e75
 
 ! Rofi
 rofi.modi:                           window,run,ssh,drun
 rofi.lines:                          4
 rofi.columns:                        1
-rofi.font:                           Overpass Regular 12
-rofi.color-normal:                   nord0,nord4,nord0,nord9,nord4
-rofi.color-window:                   nord0,nord4
+rofi.font:                           Fira Mono 10
+rofi.color-normal:                   bwhite,black,bwhite,blue,black
+rofi.color-window:                   bwhite,black
 rofi.bw:                             2
 rofi.eh:                             1
 rofi.separator-style:                solid
