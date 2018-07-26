@@ -67,11 +67,15 @@ command! SessionStart call SessionStart()
 command! SessionLoad call SessionLoad()
 
 " Neosnippets
-let g:neosnippet#disable_select_mode_mappings=1
+let g:neosnippet#disable_select_mode_mappings = 1
 let g:neosnippet#snippets_directory= s:nvim_config . '/snips/'
 let g:neosnippet#disable_runtime_snippets = {
       \   '_': 1,
       \ }
+
+" Vimtex
+let g:vimtex_fold_enabled = 1
+
 " }}}
 
 " Basic Settings {{{
