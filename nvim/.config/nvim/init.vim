@@ -139,7 +139,8 @@ let g:python_host_prog = '/usr/bin/python2'
 
 " Colourscheme
 set termguicolors
-colorscheme flattened_light
+set background=light
+colorscheme breezy
 
 augroup vimrcEx
   au!
