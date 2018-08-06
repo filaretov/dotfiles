@@ -28,7 +28,6 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-unimpaired')
   call minpac#add('filaretov/vim-todo')
   call minpac#add('filaretov/vim-orgzly')
-  call minpac#add('romainl/flattened')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
   call minpac#add('roxma/nvim-yarp')
   call minpac#add('ncm2/ncm2')
@@ -139,7 +138,7 @@ let g:python_host_prog = '/usr/bin/python2'
 
 " Colourscheme
 set termguicolors
-colorscheme flattened_dark
+colorscheme flattened_light
 
 augroup vimrcEx
   au!

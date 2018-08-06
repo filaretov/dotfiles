@@ -2,6 +2,7 @@ __pycache__/
 tags
 *.swp
 *~
+*#
 a.out
 *.pyc
 *.zip
