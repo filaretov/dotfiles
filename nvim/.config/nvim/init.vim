@@ -139,8 +139,7 @@ let g:python_host_prog = '/usr/bin/python2'
 
 " Colourscheme
 set termguicolors
-set background=light
-colorscheme breezy
+colorscheme flattened_dark
 
 augroup vimrcEx
   au!
@@ -283,6 +282,7 @@ if has('nvim') && executable('nvr')
 endif
 " }}}
 
+" augroups {{{
 augroup terminal
   autocmd!
   autocmd TermOpen * setlocal nonumber
@@ -309,6 +309,7 @@ augroup ncm2
           \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
           \ })
 augroup END
+" }}}
 
 " Helper functions {{{
 function! SynStack()
