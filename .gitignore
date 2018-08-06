@@ -8,3 +8,6 @@ fishd.*
 **/.zcompdump
 local.fish
 **/.netrwhist
+
+emacs/.emacs.d/elpa/
+emacs/.emacs.d/auto-save-list/
