@@ -20,6 +20,12 @@
 (use-package magit
   :ensure t)
 
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . markdown-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode)))
+
 (use-package re-builder
   :config
   (setq reb-re-syntax 'string)
@@ -35,7 +41,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(default-input-method "TeX")
  '(menu-bar-mode nil)
- '(package-selected-packages (quote (magit which-key evil use-package)))
+ '(package-selected-packages (quote (markdown-mode magit which-key evil use-package)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vc-follow-symlinks t))
@@ -59,8 +65,7 @@
 
 (setq eshell-visual-commands '(top))
 
-(setq next-line-add-newlines t
-      enable-recursive-minibuffers t)
+(setq enable-recursive-minibuffers t)
 
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
