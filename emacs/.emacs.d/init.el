@@ -1,8 +1,9 @@
 ;; Look, mom, I'm lisping!
 (require 'package)
 
-(add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+	("melpa" . "https://melpa.org/packages/")))
 
 (package-initialize)
 
@@ -31,6 +32,14 @@
   (setq reb-re-syntax 'string)
   :bind (("C-c R" . re-builder)))
 
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page))
+
+(use-package interleave
+  :ensure t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -38,10 +47,12 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+    ("aaffceb9b0f539b6ad6becb8e96a04f2140c8faa1de8039a343a4f1e009174fb" "ef98b560dcbd6af86fbe7fd15d56454f3e6046a3a0abd25314cfaaefd3744a9e" "c856158cc996d52e2f48190b02f6b6f26b7a9abd5fea0c6ffca6740a1003b333" "7d2e7a9a7944fbde74be3e133fc607f59fdbbab798d13bd7a05e38d35ce0db8d" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(default-input-method "TeX")
  '(menu-bar-mode nil)
- '(package-selected-packages (quote (markdown-mode magit which-key evil use-package)))
+ '(package-selected-packages
+   (quote
+    (dracula-theme interleave pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vc-follow-symlinks t))
@@ -53,7 +64,7 @@
  ;; If there is more than one, they won't work right.
  )
 
-(load-theme 'solarized-light t)
+(load-theme 'dracula t)
 
 (ido-mode 1)
 (global-hl-line-mode 1)
@@ -67,7 +78,17 @@
 
 (setq enable-recursive-minibuffers t)
 
+;;; Keybindings
+(global-set-key (kbd "M-o") 'other-window)
+
+(global-set-key (kbd "M-i") 'imenu)
+
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+
+;;; Filetype hooks
+(add-hook 'tex-mode-hook
+	  #'(lambda () (setq ispell-parser 'tex)))
+
+;;; General hooks
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
-
-(define-key global-map (kbd "RET") 'newline-and-indent)
