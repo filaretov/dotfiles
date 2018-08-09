@@ -64,7 +64,9 @@
  ;; If there is more than one, they won't work right.
  )
 
-(load-theme 'dracula t)
+(setq solarized-high-contrast-mode-line t)
+(setq x-underline-at-descent-line t)
+(load-theme 'solarized-light t)
 
 (ido-mode 1)
 (global-hl-line-mode 1)
