@@ -90,7 +90,9 @@
 
 ;;; Filetype hooks
 (add-hook 'tex-mode-hook
-	  #'(lambda () (setq ispell-parser 'tex)))
+	  #'(lambda ()
+	      ((setq ispell-parser 'tex)
+	       (auto-fill-mode)))
 
 (add-hook 'org-mode-hook
 	  #'(lambda () (auto-fill-mode)))
@@ -100,6 +102,7 @@
 	  'executable-make-buffer-file-executable-if-script-p)
 
 (defun edit-or-load-user-init-file ()
+  "Find the user init file if it's not the current buffer, otherwise load it."
   (interactive)
   (if (string-equal (buffer-file-name) (file-truename user-init-file))
       (load-file user-init-file)
