@@ -49,6 +49,7 @@
    (quote
     ("aaffceb9b0f539b6ad6becb8e96a04f2140c8faa1de8039a343a4f1e009174fb" "ef98b560dcbd6af86fbe7fd15d56454f3e6046a3a0abd25314cfaaefd3744a9e" "c856158cc996d52e2f48190b02f6b6f26b7a9abd5fea0c6ffca6740a1003b333" "7d2e7a9a7944fbde74be3e133fc607f59fdbbab798d13bd7a05e38d35ce0db8d" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(default-input-method "TeX")
+ '(fill-column 79)
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
@@ -91,6 +92,17 @@
 (add-hook 'tex-mode-hook
 	  #'(lambda () (setq ispell-parser 'tex)))
 
+(add-hook 'org-mode-hook
+	  #'(lambda () (auto-fill-mode)))
+
 ;;; General hooks
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
+
+(defun edit-or-load-user-init-file ()
+  (interactive)
+  (if (string-equal (buffer-file-name) (file-truename user-init-file))
+      (load-file user-init-file)
+    (find-file user-init-file)))
+
+(global-set-key (kbd "C-.") 'edit-or-load-user-init-file)
