@@ -191,7 +191,7 @@ bindsym $mod+r mode "resize"
 exec_always feh --bg-scale ~/.background
 exec_always ~/.local/bin/set_xkeyboard
 # start dmenu (a program launcher)
-bindsym $mod+o exec rofi -show drun
+bindsym $mod+o exec xfce4-appfinder --collapsed
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -211,5 +211,5 @@ workspace $ws0 output VGA-2
 bindsym $mod+m move scratchpad
 bindsym $mod+Shift+m scratchpad show
 
-exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
-exec_always --no-startup-id gnome-power-manager
+for_window [class="xfce4-appfinder"] floating enable
+for_window [class="Xfce4-appfinder"] floating enable
