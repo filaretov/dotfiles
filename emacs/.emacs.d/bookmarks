@@ -1,0 +1,12 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("(eintr) Practicing Evaluation"
+ (front-context-string . "2 Practicing Eva")
+ (rear-context-string . "sing,  Up: Top\n\n")
+ (position . 88202)
+ (filename . "/usr/share/info/eintr")
+ (info-node . "Practicing Evaluation")
+ (handler . Info-bookmark-jump))
+)
