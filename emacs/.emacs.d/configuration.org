@@ -1,0 +1,113 @@
+#+TITLE: Emacs Configuration
+#+AUTHOR: Hristo Filaretov
+#+EMAIL: h.filaretov@protonmail.com
+#+OPTIONS: toc:nil num:nil
+
+* Initialize =use-package=
+#+BEGIN_SRC emacs-lisp
+
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+	("melpa" . "https://melpa.org/packages/")))
+
+(package-initialize)
+
+(eval-when-compile
+  (require 'use-package))
+  
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1))
+
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+
+(use-package magit
+  :ensure t)
+
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . markdown-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode)))
+
+(use-package re-builder
+  :ensure t
+  :config
+  (setq reb-re-syntax 'string)
+  :bind (("C-c R" . re-builder)))
+
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page))
+  
+
+#+END_SRC
+
+* Color themes
+#+BEGIN_SRC emacs-lisp
+
+(setq solarized-high-contrast-mode-line t)
+(setq x-underline-at-descent-line t)
+(load-theme 'solarized-light t)
+
+(defun toggle-theme ()
+  "Toggle between solarized variants."
+  (interactive)
+  (if (equal (car custom-enabled-themes) 'solarized-dark)
+       (load-theme 'solarized-light)
+     (load-theme 'solarized-dark)))
+
+(global-set-key (kbd "C-c t") 'toggle-theme)
+
+#+END_SRC
+
+* I do, you do
+#+BEGIN_SRC emacs-lisp
+(ido-mode 1)
+(global-hl-line-mode 1)
+(setq ido-enable-flex-matching t
+      ido-everywhere t)
+
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
+
+(setq eshell-visual-commands '(top))
+
+(setq enable-recursive-minibuffers t)
+
+;;; Keybindings
+(global-set-key (kbd "M-o") 'other-window)
+
+(global-set-key (kbd "M-i") 'imenu)
+
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+
+;;; Filetype hooks
+(add-hook 'tex-mode-hook
+	  #'(lambda ()
+	      ((setq ispell-parser 'tex)
+	       (auto-fill-mode))))
+
+(add-hook 'org-mode-hook
+	  #'(lambda () (auto-fill-mode)))
+
+;;; General hooks
+(add-hook 'after-save-hook
+	  'executable-make-buffer-file-executable-if-script-p)
+
+(defun edit-or-load-user-init-file ()
+  "Find the user init file if it's not the current buffer, otherwise load it."
+  (interactive)
+  (if (string-equal (buffer-file-name) (file-truename user-init-file))
+      (load-file user-init-file)
+    (find-file user-init-file)))
+
+(global-set-key (kbd "C-.") 'edit-or-load-user-init-file)
+
+#+END_SRC
