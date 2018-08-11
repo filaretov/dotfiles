@@ -12,4 +12,5 @@ local.fish
 emacs/.emacs.d/elpa/
 emacs/.emacs.d/auto-save-list/
 emacs/.emacs.d/eshell/
+emacs/.emacs.d/url/
 emacs/.emacs.d/ido.last
