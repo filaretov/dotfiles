@@ -1,4 +1,6 @@
 ;; Look, mom, I'm lisping!
+(package-initialize)
+(require 'package)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -11,106 +13,12 @@
  '(default-input-method "TeX")
  '(fill-column 79)
  '(menu-bar-mode nil)
+ '(org-agenda-files (quote ("~/Documents/journal/learning-emacs.org")))
  '(package-selected-packages
    (quote
-    (dracula-theme interleave pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
+    (pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vc-follow-symlinks t))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-
-(require 'package)
-
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-	("melpa" . "https://melpa.org/packages/")))
-
-(package-initialize)
-
-(eval-when-compile
-  (require 'use-package))
-
-(use-package evil
-  :config
-  (evil-mode 0))
-
-(use-package which-key
-  :config
-  (which-key-mode))
-
-(use-package magit
-  :ensure t)
-
-(use-package markdown-mode
-  :ensure t
-  :mode (("README\\.md\\'" . markdown-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode)))
-
-(use-package re-builder
-  :config
-  (setq reb-re-syntax 'string)
-  :bind (("C-c R" . re-builder)))
-
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  (setq-default pdf-view-display-size 'fit-page))
-
-(use-package interleave
-  :ensure t)
-
-
-(setq solarized-high-contrast-mode-line t)
-(setq x-underline-at-descent-line t)
-(load-theme 'solarized-light t)
-
-
-(ido-mode 1)
-(global-hl-line-mode 1)
-(setq ido-enable-flex-matching t
-      ido-everywhere t)
-
-(setq inhibit-startup-message t
-      inhibit-startup-echo-area-message t)
-
-(setq eshell-visual-commands '(top))
-
-(setq enable-recursive-minibuffers t)
-
-;;; Keybindings
-(global-set-key (kbd "M-o") 'other-window)
-
-(global-set-key (kbd "M-i") 'imenu)
-
-(global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-;;; Filetype hooks
-(add-hook 'tex-mode-hook
-	  #'(lambda ()
-	      ((setq ispell-parser 'tex)
-	       (auto-fill-mode))))
-
-(add-hook 'org-mode-hook
-	  #'(lambda () (auto-fill-mode)))
-
-;;; General hooks
-(add-hook 'after-save-hook
-	  'executable-make-buffer-file-executable-if-script-p)
-
-(defun edit-or-load-user-init-file ()
-  "Find the user init file if it's not the current buffer, otherwise load it."
-  (interactive)
-  (if (string-equal (buffer-file-name) (file-truename user-init-file))
-      (load-file user-init-file)
-    (find-file user-init-file)))
-
-(global-set-key (kbd "C-.") 'edit-or-load-user-init-file)
-
+(org-babel-load-file "~/.emacs.d/configuration.org")
