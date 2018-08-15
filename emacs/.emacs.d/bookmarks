@@ -2,11 +2,11 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("(eintr) Practicing Evaluation"
- (front-context-string . "2 Practicing Eva")
- (rear-context-string . "sing,  Up: Top\n\n")
- (position . 88202)
+(("(eintr) defun"
+ (front-context-string . "3.1 The ‘defun’ ")
+ (rear-context-string . "Writing Defuns\n\n")
+ (position . 108235)
  (filename . "/usr/share/info/eintr")
- (info-node . "Practicing Evaluation")
+ (info-node . "defun")
  (handler . Info-bookmark-jump))
 )
