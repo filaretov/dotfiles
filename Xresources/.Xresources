@@ -1,97 +1,13 @@
-! black
-#define col0 #002b36
-#define col8 #657b83
-#define black col0
-#define bblack col8
-
-! red
-#define col1 #dc322f
-#define col9 #dc322f
-#define red col1
-#define bred col9
-
-! green
-#define col2 #859900
-#define col10 #859900
-#define green col2
-#define bgreen col10
-
-! yellow
-#define col3 #b58900
-#define col11 #b58900
-#define yellow col3
-#define byellow col11
-
-! blue
-#define col4 #268bd2
-#define col12 #268bd2
-#define blue col4
-#define bblue col12
-
-! magenta
-#define col5 #6c71c4
-#define col13 #6c71c4
-#define magenta col5
-#define bmagenta col13
-
-! cyan
-#define col6 #2aa198
-#define col14 #2aa198
-#define cyan col6
-#define bcyan col14
-
-! white
-#define col7 #93a1a1
-#define col15 #fdf6e3
-#define white col7
-#define bwhite col15
-
-*.color0: col0
-*.color1: col1
-*.color2: col2
-*.color3: col3
-*.color4: col4
-*.color5: col5
-*.color6: col6
-*.color7: col7
-*.color8: col8
-*.color9: col9
-*.color10: col10
-*.color11: col11
-*.color12: col12
-*.color13: col13
-*.color14: col14
-*.color15: col15
-
-*.black: col0
-*.red: col1
-*.green: col2
-*.yellow: col3
-*.blue: col4
-*.magenta: col5
-*.cyan: col6
-*.white: col7
-*.bblack: col8
-*.bred: col9
-*.bgreen: col10
-*.byellow: col11
-*.bblue: col12
-*.bmagenta: col13
-*.bcyan: col14
-*.bwhite: col15
-
-! special
-*.foreground:   #586e75
-*.background:   #fdf6e3
-*.cursorColor:  #586e75
+#include ".Xresources.d/solarized-dark.conf"
+!#include ".Xresources.d/solarized-light.conf"
 
 ! Rofi
 rofi.modi:                           window,run,ssh,drun
 rofi.lines:                          4
 rofi.columns:                        1
 rofi.font:                           Fira Mono 10
-rofi.color-normal:                   bwhite,black,bwhite,blue,black
-rofi.color-window:                   bwhite,black
+rofi.color-normal:                   #fdf6e3,#002b36,#fdf6e3,#268bd2,#002b36
+rofi.color-window:                   #fdf6e3,#002b36
 rofi.bw:                             2
 rofi.eh:                             1
 rofi.separator-style:                solid
