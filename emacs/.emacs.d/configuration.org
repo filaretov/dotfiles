@@ -4,7 +4,6 @@
 #+OPTIONS: toc:nil num:nil
 
 * Preamble
-  
 Literate programming sounds like a good thing for dotfile configuration, since
 it rarely changes and on rare occasions I might want to know why I did what I
 did. Also, it looks really nice.
@@ -14,7 +13,6 @@ myself, to shamelessly steal ideas and code (see [[https://www.youtube.com/watch
 Org-mode]]). His articles and talks are all great!
 
 * Meta
-
 #+BEGIN_QUOTE
 You see, yak shaving is what you are doing when you're doing some
 stupid, fiddly little task that bears no obvious relationship to what
@@ -23,7 +21,6 @@ relations links what you're doing to the original meta-task. -- Jeremy H. Brown
 #+END_QUOTE
 
 ** Customize options
-
 Keep settings set by =customize= out of =init.el=.
 
 #+BEGIN_SRC emacs-lisp
@@ -32,26 +29,22 @@ Keep settings set by =customize= out of =init.el=.
 #+END_SRC
 
 ** Quickly edit =configuration.org= and load settings
-
 I had an old function which simply loads the init file if I'm already in it,
 otherwise it finds it, but now that I'm using this literate programming
 thingamajig, I need to find the =org= file, but load the =init.el= file.
 
 #+BEGIN_SRC emacs-lisp
   (setq my-init-file "~/.emacs.d/configuration.org")
-
   (defun hgf/edit-or-load-user-init-file ()
     "Find the custom user init file if it's not the current buffer, otherwise load the proper one."
     (interactive)
     (if (string-equal (buffer-file-name) (file-truename my-init-file))
         (load-file user-init-file)
       (find-file my-init-file)))
-
   (global-set-key (kbd "C-c e") 'hgf/edit-or-load-user-init-file)
 #+END_SRC
 
 * Configure =use-package=
-
 These will one day be sorted. Probably. Maybe.
 
 #+BEGIN_SRC emacs-lisp
@@ -97,29 +90,24 @@ These will one day be sorted. Probably. Maybe.
 #+END_SRC
 
 * UI preferences
-
 ** Font preferences
 
 #+BEGIN_SRC emacs-lisp
   (setq hgf/default-font "Fira Mono")
   (setq hgf/default-font-size 11)
-
   (defun hgf/default-font-code ()
     "Return a string representing the default font (like \"Fira Mono-11\")."
     (concat hgf/default-font "-" (number-to-string hgf/default-font-size)))
-
   (defun hgf/set-font ()
     "Set the font settings for the current frame, and also make it the default
   for other, future frames."
     (let ((font-code (hgf/default-font-code)))
       (add-to-list 'default-frame-alist (cons 'font font-code))
       (set-frame-font font-code)))
-
   (hgf/set-font)
 #+END_SRC
 
 ** Color themes
-
 Keep all text the same size, I find it distracting otherwise. Also, let me
 easily switch between the solarized variants.
 
@@ -131,20 +119,19 @@ easily switch between the solarized variants.
         solarized-height-plus-2 1.0
         solarized-height-plus-3 1.0
         solarized-height-plus-4 1.0)
-  (load-theme 'solarized-dark t)
-
+  (setq dark-theme 'nord)
+  (setq light-theme 'solarized-light)
   (defun hgf/toggle-theme ()
     "Toggle between solarized variants."
     (interactive)
-    (if (equal (car custom-enabled-themes) 'solarized-dark)
-        (load-theme 'solarized-light)
-      (load-theme 'solarized-dark)))
-
+    (if (equal (car custom-enabled-themes) dark-theme)
+        (load-theme light-theme)
+      (load-theme dark-theme)))
   (global-set-key (kbd "C-c t") 'hgf/toggle-theme)
+  (load-theme dark-theme t)
 #+END_SRC
 
 ** Highlight current line
-
 Highlighting the current line is quite helpful, especially when switching
 windows quickly and when working on code with others.
 
@@ -159,27 +146,13 @@ windows quickly and when working on code with others.
   (ido-mode 1)
   (setq ido-enable-flex-matching t
         ido-everywhere t)
-
   (setq inhibit-startup-message t
         inhibit-startup-echo-area-message t)
-
-  (setq eshell-visual-commands '(top))
-
   (setq enable-recursive-minibuffers t)
-
   ;;; Keybindings
   (global-set-key (kbd "M-o") 'other-window)
-
   (global-set-key (kbd "M-i") 'imenu)
-
   (global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-  ;;; Filetype hooks
-  (add-hook 'tex-mode-hook
-            #'(lambda ()
-                ((setq ispell-parser 'tex)
-                 (auto-fill-mode))))
-
   ;;; General hooks
   (add-hook 'after-save-hook
             'executable-make-buffer-file-executable-if-script-p)
@@ -211,4 +184,30 @@ keybindings.
 #+BEGIN_SRC emacs-lisp
   (setq org-src-fontify-natively t
         org-src-tab-acts-natively t)
+#+END_SRC
+
+* Filetype configuration
+** Text
+I like my text neatly wrapped.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'text-mode-hook
+            #'(lambda () (auto-fill-mode)))
+#+END_SRC
+
+** Latex
+Latex is mostly like normal text.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'tex-mode-hook
+            #'(lambda ()
+                ((setq ispell-parser 'tex)
+                 (auto-fill-mode))))
+#+END_SRC
+
+* Eshell
+The Emacs Shell is actually quite nice.
+
+#+BEGIN_SRC emacs-lisp
+  (setq eshell-visual-commands '(top))
 #+END_SRC

@@ -4,9 +4,9 @@ set  fish_greeting "Don't panic!"
 
 alias install "sudo dnf install"
 alias search "dnf search"
-alias v "nvim"
 alias add_path "set fish_user_paths $fish_user_paths"
 alias trunk "tree -C | less -r"
+alias e "emacsclient -c"
 
 # Find local fish file
 set -l lc_file "$HOME/.config/fish/"(hostname)".fish"
