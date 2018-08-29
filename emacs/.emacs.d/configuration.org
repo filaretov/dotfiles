@@ -43,7 +43,6 @@ thingamajig, I need to find the =org= file, but load the =init.el= file.
       (find-file my-init-file)))
   (global-set-key (kbd "C-c e") 'hgf/edit-or-load-user-init-file)
 #+END_SRC
-
 * Configure =use-package=
 These will one day be sorted. Probably. Maybe.
 
@@ -139,7 +138,13 @@ windows quickly and when working on code with others.
   (when window-system
     (global-hl-line-mode))
 #+END_SRC
-
+** Keybindings
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-h") 'windmove-left)
+  (global-set-key (kbd "M-j") 'windmove-down)
+  (global-set-key (kbd "M-k") 'windmove-up)
+  (global-set-key (kbd "M-l") 'windmove-right)
+#+END_SRC
 * =ido=, you do
 
 #+BEGIN_SRC emacs-lisp
@@ -166,7 +171,8 @@ keybindings.
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :config
-    (evil-mode 1))
+    (evil-mode 1)
+    (evil-set-initial-state 'term-mode 'emacs))
 #+END_SRC
 
 * Configure =org-mode=
@@ -205,6 +211,16 @@ Latex is mostly like normal text.
                  (auto-fill-mode))))
 #+END_SRC
 
+** Shell
+*** Disable modes
+I find line highlighting misleading in shells, especially since it doesn't
+behave nicely in Emacs.
+
+Evil is also not necessary in =ansi-term=.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'term-mode-hook
+            '(lambda() (set (make-local-variable 'global-hl-line-mode) nil)))
+#+END_SRC
 * Eshell
 The Emacs Shell is actually quite nice.
 

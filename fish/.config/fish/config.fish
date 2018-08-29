@@ -15,3 +15,7 @@ if test -e $lc_file
 else
     echo "No local fish file in "(pwd)" $lc_file"
 end
+
+function fish_title
+  true
+end

@@ -132,10 +132,6 @@ command! -nargs=+ Grep execute 'silent grep! -r <args>' | copen 10
 
 let g:tex_flavor='latex'
 
-" Python neovim path
-let g:python3_host_prog = $HOME.'/.miniconda3/envs/neovim/bin/python'
-let g:python_host_prog = '/usr/bin/python2'
-
 " Colourscheme
 set termguicolors
 colorscheme flattened_light
