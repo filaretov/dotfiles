@@ -12,7 +12,7 @@
  '(org-agenda-files (quote ("~/Documents/journal/learning-emacs.org")))
  '(package-selected-packages
    (quote
-    (nord-theme htmlize pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
+    (comment-dwim-2 rich-minority nova-theme yaml-mode solarized-theme nord-theme htmlize pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(vc-follow-symlinks t))

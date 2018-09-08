@@ -11,6 +11,8 @@ did. Also, it looks really nice.
 Credit to [[https://harryrschwartz.com/][Harry Schwartz]] for the inspiration and for allowing others, like
 myself, to shamelessly steal ideas and code (see [[https://www.youtube.com/watch?v=SzA2YODtgK4][Getting Started with
 Org-mode]]). His articles and talks are all great!
+** Further reading
+- [[https://github.com/arecker/emacs.d][Alex Recker's config]]
 
 * Meta
 #+BEGIN_QUOTE
@@ -88,7 +90,18 @@ These will one day be sorted. Probably. Maybe.
         user-mail-address "h.filaretov@protonmail.com")
 #+END_SRC
 
-* UI preferences
+* UI
+** Defaults
+A few annoying defaults need a fixin'.
+#+BEGIN_SRC emacs-lisp
+  (setq make-backup-files nil
+        auto-save-default nil
+        indent-tabs-mode nil)
+
+  (menu-bar-mode 0)
+  (scroll-bar-mode 0)
+  (tool-bar-mode 0)
+#+END_SRC
 ** Font preferences
 
 #+BEGIN_SRC emacs-lisp
@@ -138,12 +151,20 @@ windows quickly and when working on code with others.
   (when window-system
     (global-hl-line-mode))
 #+END_SRC
-** Keybindings
+** Modeline
+Hide all minor modes.
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-h") 'windmove-left)
-  (global-set-key (kbd "M-j") 'windmove-down)
-  (global-set-key (kbd "M-k") 'windmove-up)
-  (global-set-key (kbd "M-l") 'windmove-right)
+  (use-package rich-minority
+    :ensure t
+    :init (rich-minority-mode 1)
+    :config (setq rm-blacklist ""))
+#+END_SRC
+** Comments
+Commenting, the sequel.
+#+BEGIN_SRC emacs-lisp
+  (use-package comment-dwim-2
+    :ensure t
+    :bind ("M-;" . comment-dwim-2))
 #+END_SRC
 * =ido=, you do
 
