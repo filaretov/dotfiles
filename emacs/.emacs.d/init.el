@@ -25,7 +25,6 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-
 ;; * Meta
 (setq my-config-file "~/.emacs.d/init.el")
 (defun hgf/edit-or-load-user-init-file ()
@@ -110,10 +109,6 @@
       ido-everywhere t)
 (setq enable-recursive-minibuffers t)
 (ido-mode 1)
-;; * Keybindings
-(global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "M-i") 'imenu)
-(global-set-key [remap dabbrev-expand] 'hippie-expand)
 ;; * General hooks
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
@@ -176,3 +171,12 @@
 ;; *** Keybindings
 (define-key evil-normal-state-map (kbd "<tab>") 'evil-toggle-fold)
 (define-key evil-normal-state-map (kbd "<backtab>") 'outline-cycle)
+(define-key evil-normal-state-map (kbd "M-j") 'outline-move-subtree-down)
+(define-key evil-normal-state-map (kbd "M-k") 'outline-move-subtree-up)
+(define-key evil-normal-state-map (kbd "M-h") 'outline-promote)
+(define-key evil-normal-state-map (kbd "M-l") 'outline-demote
+;; * Keybindings
+(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-i") 'imenu)
+(global-set-key (kbd "M-i") 'imenu)
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
