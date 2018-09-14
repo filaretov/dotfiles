@@ -36,6 +36,7 @@ if exists('*minpac#init')
   call minpac#add('ncm2/ncm2-jedi')
   call minpac#add('filipekiss/ncm2-look.vim')
   call minpac#add('dracula/vim', {'name' : 'vim-dracula'})
+  call minpac#add('https://gitlab.com/Lenovsky/nuake.git')
 endif
 
 " }}}
@@ -84,7 +85,7 @@ syntax enable
 
 set ignorecase      " ignores case when searching
 set smartcase       " case-sensitive when using capital in search
-set number
+" set number
 set history=1000
 set scrolloff=4     " scroll page once 4 lines from top/bottom
 set backspace=2
@@ -134,7 +135,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-colorscheme flattened_dark
+colorscheme flattened_light
 
 augroup vimrcEx
   au!
@@ -202,8 +203,8 @@ vnoremap <leader>p "+p
 nnoremap <leader>P o<c-r>+<ESC>==
 " Snippets
 nnoremap <leader>es :NeoSnippetEdit -split<cr>
-" Quick terminal, 15 rows tall
-nnoremap <leader>t <c-w>s<c-w>j15<c-w>_:te<cr>
+" Quick terminal
+nnoremap <M-q> :Nuake<cr>
 " Don't mess up reg when using x
 nnoremap x "_x
 " Turn off highlighting
@@ -217,6 +218,8 @@ nnoremap <space>m :!make<cr>
 nnoremap <space>c :!make clean<cr>
 " Indentation
 nnoremap <leader>= mz=ip`z
+" Folding
+nnoremap <tab> za
 
 " Visual {{{
 " Repeat last command on all selected lines
@@ -241,11 +244,8 @@ smap <C-j> <Plug>(neosnippet_expand_or_jump)
 " Terminal mode mappings {{{
 " Escape mode
 tnoremap <ESC> <C-\><C-n>
-tnoremap <M-h> <C-\><C-n><C-w>h
-tnoremap <M-j> <C-\><C-n><C-w>j
-tnoremap <M-k> <C-\><C-n><C-w>k
-tnoremap <M-l> <C-\><C-n><C-w>l
-tnoremap <M-q> <C-\><C-n><C-w>q
+tnoremap <M-q> <C-\><C-n>:Nuake<cr>
+inoremap <M-q> <ESC>:Nuake<cr>
 " }}}
 " }}}
 

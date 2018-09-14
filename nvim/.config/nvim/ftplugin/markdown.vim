@@ -1,6 +1,4 @@
-" Basic Options {{{
-set number
-"}}}
+" vim: foldmethod=marker foldlevelstart=0:
 
 "Syntax Options {{{
 syn region markdownEqn matchgroup=markdownEqnDelimiter start="\$" end="\$" keepend contains=markdownLineStart
