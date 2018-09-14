@@ -148,24 +148,9 @@
 (add-hook 'prog-mode-hook 'outline-minor-mode)
 
 (use-package outshine
-  :init
+  :config
   (defvar outline-minor-mode-prefix (kbd "M-#"))
   (add-hook 'outline-minor-mode-hook 'outshine-hook-function))
-
-;; *** Emacs Lisp
-
-;; Elisp can be a bit annoying when it comes to outlining.  First of all, I
-;; prefer using asterisks instead of stacking semicolons, because it looks much
-;; nicer and it's easier to keep track of things. Second of all, the matching
-;; regex had to be adapted to make sure I have a sane 1st lever heading.
-;; (add-hook 'emacs-lisp-mode-hook 'hgf/el-mode-outline-hook)
-
-(defun hgf/el-outline-level ()
-  (+ -3 (- (match-end 0) (match-beginning 0))))
-
-(defun hgf/el-mode-outline-hook ()
-  (setq outline-level 'hgf/el-outline-level)
-  (setq outline-regexp ";; [*]\\{1,8\\}"))
 
 ;; ** Evil
 ;; *** Init
