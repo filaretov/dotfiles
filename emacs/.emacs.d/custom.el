@@ -11,7 +11,7 @@
  '(org-agenda-files (quote ("~/Documents/journal/learning-emacs.org")))
  '(package-selected-packages
    (quote
-    (outshine outline-minor-mode shell-toggle olivetti evil-surround comment-dwim-2 yaml-mode solarized-theme htmlize pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
+    (fish-mode outshine outline-minor-mode shell-toggle olivetti evil-surround comment-dwim-2 yaml-mode solarized-theme htmlize pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
  '(vc-follow-symlinks t))
 
 (custom-set-faces

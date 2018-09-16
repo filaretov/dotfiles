@@ -8,7 +8,7 @@
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
+	("melpa" . "https://melpa.org/packages/")))
 
 (defun hgf/package-init ()
   "Initialize the package manager and install use-package."
@@ -33,7 +33,6 @@
   (if (string-equal (buffer-file-name) (file-truename my-config-file))
       (load-file user-init-file)
     (find-file my-config-file)))
-(global-set-key (kbd "C-c .") 'hgf/edit-or-load-user-init-file)
 
 ;; * Packages
 (use-package which-key
@@ -44,8 +43,8 @@
 
 (use-package markdown-mode
   :mode (("README\\.md\\'" . markdown-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)))
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode)))
 
 (use-package re-builder
   :config
@@ -109,14 +108,16 @@
       ido-everywhere t)
 (setq enable-recursive-minibuffers t)
 (ido-mode 1)
+;; ** Cursor
+(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 ;; * General hooks
 (add-hook 'after-save-hook
-          'executable-make-buffer-file-executable-if-script-p)
+	  'executable-make-buffer-file-executable-if-script-p)
 
 ;; * Major mode configuration
 ;; ** Org mode
 (add-hook 'org-mode-hook (lambda () (progn
-                                      (auto-fill-mode))))
+				      (auto-fill-mode))))
 
 (setq org-adapt-indentation nil
       org-hide-leading-stars t
@@ -126,17 +127,22 @@
 
 ;; ** Text mode
 (add-hook 'text-mode-hook
-          (lambda () (auto-fill-mode)))
+	  (lambda () (auto-fill-mode)))
 
 (add-hook 'tex-mode-hook
-          (lambda ()
-              (progn
-                (setq ispell-parser 'tex)
-                (auto-fill-mode))))
+	  (lambda ()
+	    (progn
+	      (setq ispell-parser 'tex)
+	      (auto-fill-mode))))
 
-;; ** Eshell
+;; ** Term
+;; *** Term
+(add-hook 'term-mode-hook (lambda ()
+				     (define-key evil-normal-state-local-map (kbd "i") 'evil-emacs-state)
+				     (define-key evil-normal-state-local-map (kbd "a") 'evil-emacs-state)))
+;; *** Eshell
 (setq eshell-visual-commands '(top))
-
+(defalias 'ff #'find-file)
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -152,9 +158,8 @@
 (use-package evil
   :config
   (evil-mode 1)
-  (evil-set-initial-state 'term-mode 'emacs))
-
-(defalias 'evil-insert-state 'evil-emacs-state)
+  (evil-set-initial-state 'term-mode 'emacs)
+  (setq evil-emacs-state-cursor '(bar)))
 
 ;; *** Additional evil packages
 (use-package evil-surround
@@ -163,20 +168,32 @@
 ;; *** Escape from Emacs state
 (global-set-key (kbd "<escape>") 'evil-normal-state)
 (when (window-system)
-  ;; Separate C-i and TAB when a window system is available
+  ;; Separate C-[ and ESC when a window system is available
   (progn
     (define-key input-decode-map [?\C-\[] (kbd "<C-[>"))
     (global-set-key (kbd "<C-[>") 'evil-normal-state)))
 
 ;; *** Keybindings
-(define-key evil-normal-state-map (kbd "<tab>") 'evil-toggle-fold)
-(define-key evil-normal-state-map (kbd "<backtab>") 'outline-cycle)
-(define-key evil-normal-state-map (kbd "M-j") 'outline-move-subtree-down)
-(define-key evil-normal-state-map (kbd "M-k") 'outline-move-subtree-up)
-(define-key evil-normal-state-map (kbd "M-h") 'outline-promote)
-(define-key evil-normal-state-map (kbd "M-l") 'outline-demote
+(defun hgf/outline-show-complete-outline ()
+  "Outline: show all, then hide body."
+  (interactive)
+  (outline-show-all)
+  (outline-hide-body))
 ;; * Keybindings
+;; ** Global
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "M-i") 'imenu)
 (global-set-key (kbd "M-i") 'imenu)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
+(global-set-key (kbd "C-c c") 'shell-toggle)
+(global-set-key (kbd "C-c .") 'hgf/edit-or-load-user-init-file)
+
+;; ** Evil
+;; *** Normal
+(define-key evil-normal-state-map (kbd "<tab>") 'evil-toggle-fold)
+(define-key evil-normal-state-map (kbd "<backtab>") 'hgf/outline-show-complete-outline)
+(add-hook 'outline-minor-mode-hook (lambda ()
+				     (define-key evil-normal-state-local-map (kbd "M-j") 'outline-move-subtree-down)
+				     (define-key evil-normal-state-local-map (kbd "M-k") 'outline-move-subtree-up)
+				     (define-key evil-normal-state-local-map (kbd "M-h") 'outline-promote)
+				     (define-key evil-normal-state-local-map (kbd "M-l") 'outline-demote)))

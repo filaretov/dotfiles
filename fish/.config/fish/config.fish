@@ -16,6 +16,10 @@ else
     echo "No local fish file in "(pwd)" $lc_file"
 end
 
+# quick ls
+bind \el 'hgf-ls'
+
+# Because of funky emacs ansi-term behaviour
 function fish_title
   true
 end
