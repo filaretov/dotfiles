@@ -3,7 +3,7 @@
 ;; you're supposed to be working on, but yet a chain of twelve causal
 ;; relations links what you're doing to the original meta-task. -- Jeremy H. Brown
 
-;; * Packaging init 
+;; * Packaging Preparation 
 (defun hgf/package-init ()
   "Initialize the package manager and install use-package."
   (package-initialize)
@@ -20,7 +20,7 @@
 (setq use-package-always-ensure t)
 
 
-;; * Custom file
+;; * Change Customfile
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -33,7 +33,7 @@
       (load-file user-init-file)
     (find-file my-config-file)))
 
-;; * Packages
+;; * Packages Proper
 (use-package which-key
   :config
   (which-key-mode))
@@ -54,24 +54,26 @@
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-page))
-
 ;; * UI preferences
 ;; ** Personal info
 (setq user-full-name "Hristo Filaretov"
       user-mail-address "h.filaretov@protonmail.com")
 
-;; ** Some annoying defaults
-(setq make-backup-files nil
-      auto-save-default nil
-      indent-tabs-mode nil)
+;; ** Startup
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
 
+;; ** Backups and saving
+(setq make-backup-files nil
+      auto-save-default nil)
+
+;; ** Disable GUI elements
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
 (tool-bar-mode 0)
-(fset 'yes-or-no-p 'y-or-n-p)
 
-(setq inhibit-startup-message t
-      inhibit-startup-echo-area-message t)
+;; ** Shorter Prompts
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; ** Fonts
 (set-face-attribute 'default nil :family "IBM Plex Mono" :height 120)
@@ -99,22 +101,30 @@
 
 (load-theme dark-theme t)
 
+;; ** Cursor
+(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+(blink-cursor-mode 0)
+
+;; * Typing Text
+;; ** Curious Characters
+(setq default-input-method "TeX")
+;; ** Filling
+(setq fill-column 79)
 ;; ** Commenting
 (use-package comment-dwim-2
   :ensure t
   :bind ("M-;" . comment-dwim-2))
+
+
+;; ** Scripts
+(add-hook 'after-save-hook
+	  'executable-make-buffer-file-executable-if-script-p)
 
 ;; ** ido, you do
 (setq ido-enable-flex-matching t
       ido-everywhere t)
 (setq enable-recursive-minibuffers t)
 (ido-mode 1)
-;; ** Cursor
-(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
-
-;; * General hooks
-(add-hook 'after-save-hook
-	  'executable-make-buffer-file-executable-if-script-p)
 
 ;; * Major mode configuration
 ;; ** Org mode
@@ -131,6 +141,7 @@
 (add-hook 'text-mode-hook
 	  (lambda () (auto-fill-mode)))
 
+;; ** Tex mode
 (add-hook 'tex-mode-hook
 	  (lambda ()
 	    (progn
