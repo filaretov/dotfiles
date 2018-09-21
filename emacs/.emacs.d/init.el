@@ -4,12 +4,6 @@
 ;; relations links what you're doing to the original meta-task. -- Jeremy H. Brown
 
 ;; * Packaging init 
-(require 'package)
-
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-	("melpa" . "https://melpa.org/packages/")))
-
 (defun hgf/package-init ()
   "Initialize the package manager and install use-package."
   (package-initialize)
@@ -17,9 +11,14 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
+
+(require 'package)
+(hgf/package-init)
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+	("melpa" . "https://melpa.org/packages/")))
 (setq use-package-always-ensure t)
 
-(hgf/package-init)
 
 ;; * Custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -69,9 +68,11 @@
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
 (tool-bar-mode 0)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (setq inhibit-startup-message t
       inhibit-startup-echo-area-message t)
+
 ;; ** Fonts
 (set-face-attribute 'default nil :family "IBM Plex Mono" :height 120)
 (set-face-attribute 'fixed-pitch nil :family "IBM Plex Mono" :height 120)
@@ -110,6 +111,7 @@
 (ido-mode 1)
 ;; ** Cursor
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+
 ;; * General hooks
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
@@ -139,7 +141,11 @@
 ;; *** Term
 (add-hook 'term-mode-hook (lambda ()
 				     (define-key evil-normal-state-local-map (kbd "i") 'evil-emacs-state)
-				     (define-key evil-normal-state-local-map (kbd "a") 'evil-emacs-state)))
+				     (define-key evil-normal-state-local-map (kbd "a") 'evil-emacs-state)
+				     ;; make em local
+				     (add-hook 'evil-normal-state-entry-hook 'term-line-mode nil 'make-it-local)
+				     (add-hook 'evil-normal-state-exit-hook 'term-char-mode nil 'make-it-local)))
+(global-set-key (kbd "C-c c") 'shell-toggle)
 ;; *** Eshell
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
@@ -151,7 +157,9 @@
 (use-package outshine
   :config
   (defvar outline-minor-mode-prefix (kbd "M-#"))
-  (add-hook 'outline-minor-mode-hook 'outshine-hook-function))
+  (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+  ;; Append, because otherwise some functionality might not be loaded yet
+  (add-hook 'outline-minor-mode-hook 'outline-hide-body 'append))
 
 ;; ** Evil
 ;; *** Init
@@ -185,7 +193,6 @@
 (global-set-key (kbd "M-i") 'imenu)
 (global-set-key (kbd "M-i") 'imenu)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-(global-set-key (kbd "C-c c") 'shell-toggle)
 (global-set-key (kbd "C-c .") 'hgf/edit-or-load-user-init-file)
 
 ;; ** Evil
