@@ -3,7 +3,7 @@
 ;; you're supposed to be working on, but yet a chain of twelve causal
 ;; relations links what you're doing to the original meta-task. -- Jeremy H. Brown
 
-;; * Packaging Preparation 
+;; * Packaging Preparation
 (defun hgf/package-init ()
   "Initialize the package manager and install use-package."
   (package-initialize)
@@ -170,7 +170,7 @@
   (defvar outline-minor-mode-prefix (kbd "M-#"))
   (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
   ;; Append, because otherwise some functionality might not be loaded yet
-  (add-hook 'outline-minor-mode-hook 'outline-hide-body 'append))
+  (add-hook 'outline-minor-mode-hook (lambda () (outline-hide-sublevels 1)) 'append))
 
 ;; ** Evil
 ;; *** Init
@@ -209,7 +209,7 @@
 ;; ** Evil
 ;; *** Normal
 (define-key evil-normal-state-map (kbd "<tab>") 'evil-toggle-fold)
-(define-key evil-normal-state-map (kbd "<backtab>") 'hgf/outline-show-complete-outline)
+(define-key evil-normal-state-map (kbd "<backtab>") 'outshine-cycle-buffer)
 (add-hook 'outline-minor-mode-hook (lambda ()
 				     (define-key evil-normal-state-local-map (kbd "M-j") 'outline-move-subtree-down)
 				     (define-key evil-normal-state-local-map (kbd "M-k") 'outline-move-subtree-up)
