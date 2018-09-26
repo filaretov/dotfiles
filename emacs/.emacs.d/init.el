@@ -11,12 +11,11 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
-
 (require 'package)
-(hgf/package-init)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
 	("melpa" . "https://melpa.org/packages/")))
+(hgf/package-init)
 (setq use-package-always-ensure t)
 
 
@@ -81,16 +80,18 @@
 (set-face-attribute 'variable-pitch nil :family "IBM Plex Serif" :height 120)
 
 ;; ** Theme
+(use-package solarized-theme
+  :config
+  (setq solarized-high-contrast-mode-line t
+	x-underline-at-descent-line t
+	solarized-use-variable-pitch nil
+	solarized-height-plus-1 1.0
+	solarized-height-plus-2 1.0
+	solarized-height-plus-3 1.0
+	solarized-height-plus-4 1.0))
+  
 (setq dark-theme 'solarized-dark)
 (setq light-theme 'solarized-light)
-
-(setq solarized-high-contrast-mode-line t
-      x-underline-at-descent-line t
-      solarized-use-variable-pitch nil
-      solarized-height-plus-1 1.0
-      solarized-height-plus-2 1.0
-      solarized-height-plus-3 1.0
-      solarized-height-plus-4 1.0)
 
 (defun hgf/toggle-theme ()
   "Toggle between solarized variants."
@@ -175,10 +176,18 @@
 ;; ** Evil
 ;; *** Init
 (use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
   :config
   (evil-mode 1)
-  (evil-set-initial-state 'term-mode 'emacs)
   (setq evil-emacs-state-cursor '(bar)))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 ;; *** Additional evil packages
 (use-package evil-surround
@@ -208,8 +217,8 @@
 
 ;; ** Evil
 ;; *** Normal
-(define-key evil-normal-state-map (kbd "<tab>") 'evil-toggle-fold)
-(define-key evil-normal-state-map (kbd "<backtab>") 'outshine-cycle-buffer)
+;; (define-key evil-normal-state-map (kbd "<tab>") 'evil-toggle-fold)
+;; (define-key evil-normal-state-map (kbd "<backtab>") 'outshine-cycle-buffer)
 (add-hook 'outline-minor-mode-hook (lambda ()
 				     (define-key evil-normal-state-local-map (kbd "M-j") 'outline-move-subtree-down)
 				     (define-key evil-normal-state-local-map (kbd "M-k") 'outline-move-subtree-up)
