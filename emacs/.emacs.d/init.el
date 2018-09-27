@@ -53,6 +53,8 @@
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-page))
+;; * Start server
+(server-mode 1)
 ;; * UI preferences
 ;; ** Personal info
 (setq user-full-name "Hristo Filaretov"
@@ -75,21 +77,27 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; ** Fonts
-(set-face-attribute 'default nil :family "IBM Plex Mono" :height 120)
-(set-face-attribute 'fixed-pitch nil :family "IBM Plex Mono" :height 120)
-(set-face-attribute 'variable-pitch nil :family "IBM Plex Serif" :height 120)
+(set-face-attribute 'default nil :family "IBM Plex Mono" :height 110)
+(set-face-attribute 'fixed-pitch nil :family "IBM Plex Mono" :height 110)
+(set-face-attribute 'variable-pitch nil :family "IBM Plex Serif" :height 110)
 
 ;; ** Theme
 (use-package solarized-theme
   :config
-  (setq solarized-high-contrast-mode-line t
-	x-underline-at-descent-line t
+  (let ((line (face-attribute 'mode-line :underline)))
+    (set-face-attribute 'mode-line          nil :overline   line)
+    (set-face-attribute 'mode-line-inactive nil :overline   line)
+    (set-face-attribute 'mode-line-inactive nil :underline  line)
+    (set-face-attribute 'mode-line          nil :box        nil)
+    (set-face-attribute 'mode-line-inactive nil :box        nil)
+    (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9"))
+  (setq x-underline-at-descent-line t
 	solarized-use-variable-pitch nil
 	solarized-height-plus-1 1.0
 	solarized-height-plus-2 1.0
 	solarized-height-plus-3 1.0
 	solarized-height-plus-4 1.0))
-  
+
 (setq dark-theme 'solarized-dark)
 (setq light-theme 'solarized-light)
 
@@ -100,12 +108,20 @@
       (load-theme light-theme)
     (load-theme dark-theme)))
 
-(load-theme dark-theme t)
+(load-theme light-theme t)
 
 ;; ** Cursor
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 (blink-cursor-mode 0)
 
+;; ** Modeline
+(use-package minions
+  :config (minions-mode 1))
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
@@ -224,3 +240,8 @@
 				     (define-key evil-normal-state-local-map (kbd "M-k") 'outline-move-subtree-up)
 				     (define-key evil-normal-state-local-map (kbd "M-h") 'outline-promote)
 				     (define-key evil-normal-state-local-map (kbd "M-l") 'outline-demote)))
+;; C-h would conflict with the help command
+(define-key evil-normal-state-local-map (kbd "C-w C-h") 'evil-window-left)
+(define-key evil-normal-state-local-map (kbd "C-w C-j") 'evil-window-down)
+(define-key evil-normal-state-local-map (kbd "C-w C-k") 'evil-window-up)
+(define-key evil-normal-state-local-map (kbd "C-w C-l") 'evil-window-right)

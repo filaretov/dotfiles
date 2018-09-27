@@ -191,6 +191,7 @@ exec_always ~/.local/bin/set_xkeyboard
 # start dmenu (a program launcher)
 bindsym $mod+Shift+o exec xfce4-appfinder --collapsed
 bindsym $mod+space exec rofi -show drun
+bindsym Mod1+space exec rofi -show drun
 bindsym Mod1+Tab exec rofi -show window
 
 # Start i3bar to display a workspace bar (plus the system information i3status
