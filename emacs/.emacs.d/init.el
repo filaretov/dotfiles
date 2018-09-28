@@ -33,26 +33,12 @@
     (find-file my-config-file)))
 
 ;; * Packages Proper
-(use-package which-key
-  :config
-  (which-key-mode))
-
-(use-package magit)
-
-(use-package markdown-mode
-  :mode (("README\\.md\\'" . markdown-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode)))
-
+;; These oughta be sorted
 (use-package re-builder
   :config
   (setq reb-re-syntax 'string)
   :bind (("C-c R" . re-builder)))
 
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  (setq-default pdf-view-display-size 'fit-page))
 ;; * Start server
 (server-mode 1)
 ;; * UI preferences
@@ -122,6 +108,11 @@
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
+;; ** Help me remember things
+(use-package which-key
+  :config
+  (which-key-mode))
+
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
@@ -136,12 +127,6 @@
 ;; ** Scripts
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
-
-;; ** ido, you do
-(setq ido-enable-flex-matching t
-      ido-everywhere t)
-(setq enable-recursive-minibuffers t)
-(ido-mode 1)
 
 ;; * Major mode configuration
 ;; ** Org mode
@@ -167,16 +152,28 @@
 
 ;; ** Term
 ;; *** Term
-(add-hook 'term-mode-hook (lambda ()
-				     (define-key evil-normal-state-local-map (kbd "i") 'evil-emacs-state)
-				     (define-key evil-normal-state-local-map (kbd "a") 'evil-emacs-state)
-				     ;; make em local
-				     (add-hook 'evil-normal-state-entry-hook 'term-line-mode nil 'make-it-local)
-				     (add-hook 'evil-normal-state-exit-hook 'term-char-mode nil 'make-it-local)))
+;; (add-hook 'term-mode-hook (lambda ()
+;; 				     (define-key evil-normal-state-local-map (kbd "i") 'evil-emacs-state)
+;; 				     (define-key evil-normal-state-local-map (kbd "a") 'evil-emacs-state)
+;; 				     ;; make em local
+;; 				     (add-hook 'evil-normal-state-entry-hook 'term-line-mode nil 'make-it-local)
+;; 				     (add-hook 'evil-normal-state-exit-hook 'term-char-mode nil 'make-it-local)))
 (global-set-key (kbd "C-c c") 'shell-toggle)
 ;; *** Eshell
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
+;; ** Markdown
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . markdown-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode)))
+
+;; ** PDF
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page))
+
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -205,7 +202,8 @@
   :config
   (evil-collection-init))
 
-;; *** Additional evil packages
+(use-package evil-magit)
+
 (use-package evil-surround
   :hook evil)
 
@@ -223,25 +221,39 @@
   (interactive)
   (outline-show-all)
   (outline-hide-body))
+;; ** ido, you do
+(setq ido-enable-flex-matching t
+      ido-everywhere t
+      ido-use-filename-at-point 'guess)
+(ido-mode 1)
+;; * Magit
+(use-package magit)
 ;; * Keybindings
 ;; ** Global
 (global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "M-i") 'imenu)
 (global-set-key (kbd "M-i") 'imenu)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 (global-set-key (kbd "C-c .") 'hgf/edit-or-load-user-init-file)
 
 ;; ** Evil
-;; *** Normal
-;; (define-key evil-normal-state-map (kbd "<tab>") 'evil-toggle-fold)
-;; (define-key evil-normal-state-map (kbd "<backtab>") 'outshine-cycle-buffer)
 (add-hook 'outline-minor-mode-hook (lambda ()
 				     (define-key evil-normal-state-local-map (kbd "M-j") 'outline-move-subtree-down)
 				     (define-key evil-normal-state-local-map (kbd "M-k") 'outline-move-subtree-up)
 				     (define-key evil-normal-state-local-map (kbd "M-h") 'outline-promote)
-				     (define-key evil-normal-state-local-map (kbd "M-l") 'outline-demote)))
-;; C-h would conflict with the help command
-(define-key evil-normal-state-local-map (kbd "C-w C-h") 'evil-window-left)
-(define-key evil-normal-state-local-map (kbd "C-w C-j") 'evil-window-down)
-(define-key evil-normal-state-local-map (kbd "C-w C-k") 'evil-window-up)
-(define-key evil-normal-state-local-map (kbd "C-w C-l") 'evil-window-right)
+				     (define-key evil-normal-state-local-map (kbd "M-l") 'outline-demote)
+				     (define-key evil-normal-state-local-map (kbd "<backtab>") 'outshine-cycle-buffer)))
+
+;; I like Emacs' C-x [1-3,0] commands
+(define-key evil-normal-state-map (kbd "C-w 1") 'delete-other-windows)
+(define-key evil-normal-state-map (kbd "C-w 2") 'split-window-below)
+(define-key evil-normal-state-map (kbd "C-w 3") 'split-window-right)
+(define-key evil-normal-state-map (kbd "C-w 0") 'delete-window)
+
+(define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
+(define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
+(define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
+
+(define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
+(define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
+(define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line)
+
