@@ -100,12 +100,16 @@
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 (blink-cursor-mode 0)
 
+;; ** Scrolling
+(use-package smooth-scrolling
+  :config
+  (smooth-scrolling-mode 1)
+  (setq smooth-scroll-margin 10))
 ;; ** Modeline
 (use-package minions
   :config (minions-mode 1))
 (use-package moody
   :config
-  (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 ;; ** Help me remember things
