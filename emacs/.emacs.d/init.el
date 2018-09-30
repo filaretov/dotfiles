@@ -117,6 +117,8 @@
   :config
   (which-key-mode))
 
+;; ** Parens
+(show-paren-mode 1)
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
