@@ -94,7 +94,7 @@
       (load-theme light-theme)
     (load-theme dark-theme)))
 
-(load-theme light-theme t)
+(load-theme dark-theme t)
 
 ;; ** Cursor
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
@@ -108,10 +108,7 @@
 ;; ** Modeline
 (use-package minions
   :config (minions-mode 1))
-(use-package moody
-  :config
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
+
 ;; ** Help me remember things
 (use-package which-key
   :config
@@ -193,6 +190,15 @@
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-page))
 
+;; ** Common Lisp
+(use-package slime
+  :mode (("\\.cl\\'" . common-lisp-mode))
+  :config
+  (setq inferior-lisp-program "/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
+;; ** Fish shell
+(use-package fish-mode)
+
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -224,7 +230,8 @@
 (use-package evil-magit)
 
 (use-package evil-surround
-  :hook evil)
+  :config
+  (add-hook 'evil-mode (lambda () (evil-surround-mode 1))))
 
 ;; *** Escape from Emacs state
 (global-set-key (kbd "<escape>") 'evil-normal-state)
@@ -276,3 +283,6 @@
 (define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
 (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line)
 
+(define-key evil-normal-state-map (kbd "C-k") 'kill-line)
+(define-key evil-visual-state-map (kbd "C-k") 'kill-line)
+(define-key evil-insert-state-map (kbd "C-k") 'kill-line)
