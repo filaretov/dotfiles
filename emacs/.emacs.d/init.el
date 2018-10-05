@@ -120,7 +120,7 @@
 ;; ** Curious Characters
 (setq default-input-method "TeX")
 ;; ** Filling
-(setq fill-column 79)
+(setq fill-column 120)
 ;; ** Commenting
 (use-package comment-dwim-2
   :ensure t
@@ -166,18 +166,10 @@
 	      (setq ispell-parser 'tex)
 	      (auto-fill-mode))))
 
-;; ** Term
-;; *** Term
-;; (add-hook 'term-mode-hook (lambda ()
-;; 				     (define-key evil-normal-state-local-map (kbd "i") 'evil-emacs-state)
-;; 				     (define-key evil-normal-state-local-map (kbd "a") 'evil-emacs-state)
-;; 				     ;; make em local
-;; 				     (add-hook 'evil-normal-state-entry-hook 'term-line-mode nil 'make-it-local)
-;; 				     (add-hook 'evil-normal-state-exit-hook 'term-char-mode nil 'make-it-local)))
-(global-set-key (kbd "C-c c") 'shell-toggle)
-;; *** Eshell
+;; ** Eshell
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
+
 ;; ** Markdown
 (use-package markdown-mode
   :mode (("README\\.md\\'" . markdown-mode)
@@ -252,14 +244,22 @@
       ido-everywhere t
       ido-use-filename-at-point 'guess)
 (ido-mode 1)
+
 ;; * Magit
 (use-package magit)
+
 ;; * Keybindings
 ;; ** Global
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "M-i") 'imenu)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-(global-set-key (kbd "C-c .") 'hgf/edit-or-load-user-init-file)
+(global-set-key (kbd "C-c e") 'hgf/edit-or-load-user-init-file)
+
+;; Buffering
+(global-set-key (kbd "C-x b") 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+
 
 ;; ** Evil
 (add-hook 'outline-minor-mode-hook (lambda ()
@@ -274,6 +274,9 @@
 (define-key evil-normal-state-map (kbd "C-w 2") 'split-window-below)
 (define-key evil-normal-state-map (kbd "C-w 3") 'split-window-right)
 (define-key evil-normal-state-map (kbd "C-w 0") 'delete-window)
+
+;; Comfortable scrolling (sorry universal-argument)
+(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
 
 (define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
