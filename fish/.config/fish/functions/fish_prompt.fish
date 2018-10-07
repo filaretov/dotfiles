@@ -35,11 +35,13 @@ function fish_prompt --description 'Write out the prompt'
     end
 
     # Git prompt settings
-    set -l git_repo (git rev-parse --is-inside-work-tree ^/dev/null)
-    # git repo exists and EMACS string is zero-length
-    if test "$git_repo" = "true" -a -z "$EMACS"
-        echo -n -s (set_color blue) (basename (git rev-parse --show-toplevel)) $normal
-        echo -n -s '->' (__fish_git_prompt "%s")
+    if test -z "$EMACS"
+	set -l git_repo (git rev-parse --is-inside-work-tree ^/dev/null)
+	# git repo exists and EMACS string is zero-length
+	if test "$git_repo" = "true"
+	    echo -n -s (set_color blue) (basename (git rev-parse --show-toplevel)) $normal
+	    echo -n -s '->' (__fish_git_prompt "%s")
+	end
     end
     # PWD
     echo -n -s "(" (prompt_pwd) ")" " "
