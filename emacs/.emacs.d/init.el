@@ -223,7 +223,7 @@
 
 (use-package evil-surround
   :config
-  (add-hook 'evil-mode (lambda () (evil-surround-mode 1))))
+  (global-evil-surround-mode 1))
 
 ;; *** Escape from Emacs state
 (global-set-key (kbd "<escape>") 'evil-normal-state)
