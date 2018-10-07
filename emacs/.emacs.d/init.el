@@ -70,19 +70,13 @@
 ;; ** Theme
 (use-package solarized-theme
   :config
-  (let ((line (face-attribute 'mode-line :underline)))
-    (set-face-attribute 'mode-line          nil :overline   line)
-    (set-face-attribute 'mode-line-inactive nil :overline   line)
-    (set-face-attribute 'mode-line-inactive nil :underline  line)
-    (set-face-attribute 'mode-line          nil :box        nil)
-    (set-face-attribute 'mode-line-inactive nil :box        nil)
-    (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9"))
   (setq x-underline-at-descent-line t
 	solarized-use-variable-pitch nil
 	solarized-height-plus-1 1.0
 	solarized-height-plus-2 1.0
 	solarized-height-plus-3 1.0
-	solarized-height-plus-4 1.0))
+	solarized-height-plus-4 1.0
+	solarized-high-contrast-mode-line t))
 
 (setq dark-theme 'solarized-dark)
 (setq light-theme 'solarized-light)
@@ -167,6 +161,10 @@
 	      (auto-fill-mode))))
 
 ;; ** Eshell
+(use-package conda
+  :config
+  (conda-env-initialize-eshell))
+
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
 
@@ -249,14 +247,24 @@
 (use-package magit)
 
 ;; * Keybindings
+;; ** Helpers
+(defun hgf/ansi-term-fish ()
+  (interactive)
+  (ansi-term "/bin/fish"))
+
+(defun hgf/term-fish ()
+  (interactive)
+  (term "/bin/fish"))
+
 ;; ** Global
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "M-i") 'imenu)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 (global-set-key (kbd "C-c e") 'hgf/edit-or-load-user-init-file)
+(global-set-key (kbd "C-c c") 'hgf/term-fish)
+(global-set-key (kbd "C-c C") 'hgf/ansi-term-fish)
 
 ;; Buffering
-(global-set-key (kbd "C-x b") 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 
