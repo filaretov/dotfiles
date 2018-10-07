@@ -168,6 +168,9 @@
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
 
+;; ** Term
+(add-hook 'term-mode-hook 'toggle-truncate-lines)
+
 ;; ** Markdown
 (use-package markdown-mode
   :mode (("README\\.md\\'" . markdown-mode)
@@ -186,7 +189,7 @@
   :config
   (setq inferior-lisp-program "/bin/sbcl")
   (setq slime-contribs '(slime-fancy)))
-;; ** Fish shell
+;; ** Fish
 (use-package fish-mode)
 
 ;; * Minor mode configuration
