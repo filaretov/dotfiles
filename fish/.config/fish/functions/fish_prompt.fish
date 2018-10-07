@@ -40,7 +40,6 @@ function fish_prompt --description 'Write out the prompt'
     if test "$git_repo" = "true" -a -z "$EMACS"
         echo -n -s (set_color blue) (basename (git rev-parse --show-toplevel)) $normal
         echo -n -s '->' (__fish_git_prompt "%s")
-        # echo -n -s (set_color green) (__fish_git_prompt_informative_status) $normal " "
     end
     # PWD
     echo -n -s "(" (prompt_pwd) ")" " "
