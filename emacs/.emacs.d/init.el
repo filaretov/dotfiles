@@ -161,10 +161,6 @@
 	      (auto-fill-mode))))
 
 ;; ** Eshell
-(use-package conda
-  :config
-  (conda-env-initialize-eshell))
-
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
 
