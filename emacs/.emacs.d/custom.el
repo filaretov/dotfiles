@@ -8,8 +8,7 @@
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (conda slime zenburn-theme badwolf-theme smooth-scrolling evil-magit evil-collection magit-lfs minions moody fish-mode outshine outline-minor-mode shell-toggle olivetti evil-surround comment-dwim-2 yaml-mode solarized-theme htmlize pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package)))
- '(vc-follow-symlinks t))
+    (slime smooth-scrolling evil-magit evil-collection magit-lfs minions fish-mode outshine outline-minor-mode shell-toggle olivetti evil-surround comment-dwim-2 yaml-mode solarized-theme htmlize pdf-tools whole-line-or-region markdown-mode magit which-key evil use-package))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
