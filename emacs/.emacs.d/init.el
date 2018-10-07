@@ -110,6 +110,9 @@
 
 ;; ** Parens
 (show-paren-mode 1)
+;; ** VC symlinks
+(setq vc-follow-symlinks t)
+
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
