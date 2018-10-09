@@ -4,6 +4,10 @@
 ;; relations links what you're doing to the original meta-task. -- Jeremy H. Brown
 
 ;; * Packaging Preparation
+;; ** Helpers
+(defun hgf/windows-os-p ()
+  (string= system-type "windows-nt"))
+
 (defun hgf/package-init ()
   "Initialize the package manager and install use-package."
   (package-initialize)
@@ -11,17 +15,27 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
+;; ** Blasphemy
+(when (hgf/windows-os-p)
+  (progn
+    (setq url-proxy-services
+	'(("http"     . "153.96.56.101:3128")
+          ("https"    . "153.96.56.101:3128")
+          ("ftp"      . "153.96.56.101:3128")
+          ("no_proxy" . "^.*153.96.56.101")))))
+
+;; ** Routine
 (require 'package)
 (setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
+      '(("gnu" . "https://elpa.gnu.org/packages/")
 	("melpa" . "https://melpa.org/packages/")))
 (hgf/package-init)
 (setq use-package-always-ensure t)
 
-
 ;; * Change Customfile
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file)
+
 
 ;; * Meta
 (setq my-config-file "~/.emacs.d/init.el")
@@ -174,10 +188,11 @@
 	 ("\\.markdown\\'" . markdown-mode)))
 
 ;; ** PDF
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  (setq-default pdf-view-display-size 'fit-page))
+(unless (hgf/windows-os-p)
+  (use-package pdf-tools
+    :config
+    (pdf-tools-install)
+    (setq-default pdf-view-display-size 'fit-page)))
 
 ;; ** Common Lisp
 (use-package slime
@@ -185,6 +200,7 @@
   :config
   (setq inferior-lisp-program "/bin/sbcl")
   (setq slime-contribs '(slime-fancy)))
+
 ;; ** Fish
 (use-package fish-mode)
 

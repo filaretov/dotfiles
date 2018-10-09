@@ -16,5 +16,6 @@ emacs/.emacs.d/url/
 emacs/.emacs.d/ido.last
 emacs/.emacs.d/configuration.el
 emacs/.emacs.d/tramp
+emacs/.emacs.d/custom.el
 
 fonts/.local/share/fonts/.uuid
