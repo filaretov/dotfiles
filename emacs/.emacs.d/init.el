@@ -99,9 +99,6 @@
   :config
   (smooth-scrolling-mode 1)
   (setq smooth-scroll-margin 10))
-;; ** Modeline
-(use-package minions
-  :config (minions-mode 1))
 
 ;; ** Help me remember things
 (use-package which-key
@@ -168,7 +165,7 @@
 (defalias 'ff #'find-file)
 
 ;; ** Term
-(add-hook 'term-mode-hook 'toggle-truncate-lines)
+(add-hook 'term-mode-hook (lambda () (toggle-truncate-lines 1)))
 
 ;; ** Markdown
 (use-package markdown-mode
@@ -299,3 +296,40 @@
 (define-key evil-normal-state-map (kbd "C-k") 'kill-line)
 (define-key evil-visual-state-map (kbd "C-k") 'kill-line)
 (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
+
+;; * Testing area
+(setq evil-normal-state-tag   (propertize " N " 'face '((:background "dark khaki" :foreground "black")))
+      evil-emacs-state-tag    (propertize " E " 'face '((:background "turquoise" :foreground "black")))
+      evil-insert-state-tag   (propertize " I " 'face '((:background "dark sea green" :foreground "black")))
+      evil-replace-state-tag  (propertize " R " 'face '((:background "dark orange" :foreground "black")))
+      evil-motion-state-tag   (propertize " M " 'face '((:background "khaki" :foreground "black")))
+      evil-visual-state-tag   (propertize " V " 'face '((:background "light salmon" :foreground "black")))
+      evil-operator-state-tag (propertize " O " 'face '((:background "sandy brown" :foreground "black"))))
+(setq evil-mode-line-format '(before . mode-line-front-space))
+(setq-default mode-line-format
+      (list
+       '#("%e")
+       'mode-line-front-space
+       'mode-line-buffer-identification
+       " "
+       ;; 'mode-line-mule-info
+       ;; 'mode-line-client
+       ;; 'mode-line-modified
+       '#("[%*]")
+       " "
+       "("
+       'mode-name
+       ")"
+       " "
+       '(vc-mode vc-mode)
+       'mode-line-end-spaces))
+		   ;; 'mode-line-remote
+		   ;; 'mode-line-frame-identification
+		   ;; "   "
+		   ;; "   "
+		   ;; 'mode-line-position
+		   ;; '(vc-mode vc-mode)
+		   ;; "  "
+		   ;; 'mode-line-modes
+		   ;; 'mode-line-misc-info
+		   ;; 'mode-line-end-spaces))))
