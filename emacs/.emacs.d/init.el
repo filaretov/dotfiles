@@ -34,17 +34,17 @@
 
 ;; * Change Customfile
 (setq custom-file (concat user-emacs-directory "custom.el"))
-(load custom-file)
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 
 ;; * Meta
-(setq my-config-file "~/.emacs.d/init.el")
 (defun hgf/edit-or-load-user-init-file ()
   "Find the custom user init file if it's not the current buffer, otherwise load the proper one."
   (interactive)
-  (if (string-equal (buffer-file-name) (file-truename my-config-file))
+  (if (string-equal (buffer-file-name) (file-truename user-init-file))
       (load-file user-init-file)
-    (find-file my-config-file)))
+    (find-file user-init-file)))
 
 ;; * Packages Proper
 ;; These oughta be sorted
@@ -77,9 +77,9 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; ** Fonts
-(set-face-attribute 'default nil :family "IBM Plex Mono" :height 110)
-(set-face-attribute 'fixed-pitch nil :family "IBM Plex Mono" :height 110)
-(set-face-attribute 'variable-pitch nil :family "IBM Plex Serif" :height 110)
+(if (hgf/windows-os-p)
+      (set-face-attribute 'default nil :family "Consolas" :height 120 )
+    (set-face-attribute 'default nil :family "IBM Plex Mono" :height 120))
 
 ;; ** Theme
 (use-package solarized-theme
@@ -121,6 +121,8 @@
 
 ;; ** Parens
 (show-paren-mode 1)
+;; ** Bells
+(setq ring-bell-function 'silent)
 ;; ** VC symlinks
 (setq vc-follow-symlinks t)
 
@@ -313,7 +315,7 @@
 (define-key evil-visual-state-map (kbd "C-k") 'kill-line)
 (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
 
-;; * Testing area
+;; * Mode-line
 (setq evil-normal-state-tag   (propertize " N " 'face '((:background "dark khaki" :foreground "black")))
       evil-emacs-state-tag    (propertize " E " 'face '((:background "turquoise" :foreground "black")))
       evil-insert-state-tag   (propertize " I " 'face '((:background "dark sea green" :foreground "black")))
