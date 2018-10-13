@@ -15,14 +15,21 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
-;; ** Blasphemy
-(when (hgf/windows-os-p)
-  (progn
+(defun hgf/proxy-on ()
+  (interactive)
     (setq url-proxy-services
 	'(("http"     . "153.96.56.101:3128")
           ("https"    . "153.96.56.101:3128")
           ("ftp"      . "153.96.56.101:3128")
-          ("no_proxy" . "^.*153.96.56.101")))))
+          ("no_proxy" . "^.*153.96.56.101"))))
+
+(defun hgf/proxy-off ()
+  (interactive)
+    (setq url-proxy-services nil))
+
+;; ** Blasphemy
+(when (hgf/windows-os-p)
+  (hgf/proxy-on))
 
 ;; ** Routine
 (require 'package)
@@ -122,7 +129,7 @@
 ;; ** Parens
 (show-paren-mode 1)
 ;; ** Bells
-(setq ring-bell-function 'silent)
+(setq ring-bell-function 'ignore)
 ;; ** VC symlinks
 (setq vc-follow-symlinks t)
 
@@ -299,6 +306,7 @@
 (define-key evil-normal-state-map (kbd "C-w 2") 'split-window-below)
 (define-key evil-normal-state-map (kbd "C-w 3") 'split-window-right)
 (define-key evil-normal-state-map (kbd "C-w 0") 'delete-window)
+(define-key evil-normal-state-map (kbd "C-w k") 'kill-this-buffer)
 
 ;; Comfortable scrolling (sorry universal-argument)
 (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
