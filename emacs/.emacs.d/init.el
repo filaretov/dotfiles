@@ -133,6 +133,42 @@
 ;; ** VC symlinks
 (setq vc-follow-symlinks t)
 
+;; ** Mode-line
+(setq evil-normal-state-tag   (propertize " N " 'face '((:background "dark khaki" :foreground "black")))
+      evil-emacs-state-tag    (propertize " E " 'face '((:background "turquoise" :foreground "black")))
+      evil-insert-state-tag   (propertize " I " 'face '((:background "dark sea green" :foreground "black")))
+      evil-replace-state-tag  (propertize " R " 'face '((:background "dark orange" :foreground "black")))
+      evil-motion-state-tag   (propertize " M " 'face '((:background "khaki" :foreground "black")))
+      evil-visual-state-tag   (propertize " V " 'face '((:background "light salmon" :foreground "black")))
+      evil-operator-state-tag (propertize " O " 'face '((:background "sandy brown" :foreground "black"))))
+(setq evil-mode-line-format '(before . mode-line-front-space))
+(setq-default mode-line-format
+      (list
+       '#("%e")
+       'mode-line-front-space
+       'mode-line-buffer-identification
+       " "
+       ;; 'mode-line-mule-info
+       ;; 'mode-line-client
+       ;; 'mode-line-modified
+       '#("[%*]")
+       " "
+       "("
+       'mode-name
+       ")"
+       " "
+       '(vc-mode vc-mode)
+       'mode-line-end-spaces))
+		   ;; 'mode-line-remote
+		   ;; 'mode-line-frame-identification
+		   ;; "   "
+		   ;; "   "
+		   ;; 'mode-line-position
+		   ;; '(vc-mode vc-mode)
+		   ;; "  "
+		   ;; 'mode-line-modes
+		   ;; 'mode-line-misc-info
+		   ;; 'mode-line-end-spaces))))
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
@@ -294,19 +330,13 @@
 
 
 ;; ** Evil
-(add-hook 'outline-minor-mode-hook (lambda ()
-				     (define-key evil-normal-state-local-map (kbd "M-j") 'outline-move-subtree-down)
-				     (define-key evil-normal-state-local-map (kbd "M-k") 'outline-move-subtree-up)
-				     (define-key evil-normal-state-local-map (kbd "M-h") 'outline-promote)
-				     (define-key evil-normal-state-local-map (kbd "M-l") 'outline-demote)
-				     (define-key evil-normal-state-local-map (kbd "<backtab>") 'outshine-cycle-buffer)))
-
+;; *** Global
 ;; I like Emacs' C-x [1-3,0] commands
 (define-key evil-normal-state-map (kbd "C-w 1") 'delete-other-windows)
 (define-key evil-normal-state-map (kbd "C-w 2") 'split-window-below)
 (define-key evil-normal-state-map (kbd "C-w 3") 'split-window-right)
 (define-key evil-normal-state-map (kbd "C-w 0") 'delete-window)
-(define-key evil-normal-state-map (kbd "C-w k") 'kill-this-buffer)
+(define-key evil-normal-state-map (kbd "C-w m") 'kill-this-buffer)
 
 ;; Comfortable scrolling (sorry universal-argument)
 (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
@@ -323,39 +353,17 @@
 (define-key evil-visual-state-map (kbd "C-k") 'kill-line)
 (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
 
-;; * Mode-line
-(setq evil-normal-state-tag   (propertize " N " 'face '((:background "dark khaki" :foreground "black")))
-      evil-emacs-state-tag    (propertize " E " 'face '((:background "turquoise" :foreground "black")))
-      evil-insert-state-tag   (propertize " I " 'face '((:background "dark sea green" :foreground "black")))
-      evil-replace-state-tag  (propertize " R " 'face '((:background "dark orange" :foreground "black")))
-      evil-motion-state-tag   (propertize " M " 'face '((:background "khaki" :foreground "black")))
-      evil-visual-state-tag   (propertize " V " 'face '((:background "light salmon" :foreground "black")))
-      evil-operator-state-tag (propertize " O " 'face '((:background "sandy brown" :foreground "black"))))
-(setq evil-mode-line-format '(before . mode-line-front-space))
-(setq-default mode-line-format
-      (list
-       '#("%e")
-       'mode-line-front-space
-       'mode-line-buffer-identification
-       " "
-       ;; 'mode-line-mule-info
-       ;; 'mode-line-client
-       ;; 'mode-line-modified
-       '#("[%*]")
-       " "
-       "("
-       'mode-name
-       ")"
-       " "
-       '(vc-mode vc-mode)
-       'mode-line-end-spaces))
-		   ;; 'mode-line-remote
-		   ;; 'mode-line-frame-identification
-		   ;; "   "
-		   ;; "   "
-		   ;; 'mode-line-position
-		   ;; '(vc-mode vc-mode)
-		   ;; "  "
-		   ;; 'mode-line-modes
-		   ;; 'mode-line-misc-info
-		   ;; 'mode-line-end-spaces))))
+;; *** Outline
+(evil-define-key 'normal outline-minor-mode-map (kbd "M-j") 'outline-move-subtree-down)
+(evil-define-key 'normal outline-minor-mode-map (kbd "M-k") 'outline-move-subtree-up)
+(evil-define-key 'normal outline-minor-mode-map (kbd "M-h") 'outline-promote)
+(evil-define-key 'normal outline-minor-mode-map (kbd "M-l") 'outline-demote)
+(evil-define-key 'normal outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
+
+;; *** Eshell
+(evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
+(evil-define-key 'insert eshell-mode-map (kbd "C-p") 'eshell-previous-matching-input-from-input)
+
+;; *** Org
+(evil-define-key 'normal org-mode-map (kbd ">") 'org-do-demote)
+(evil-define-key 'normal org-mode-map (kbd "<") 'org-do-promote)
