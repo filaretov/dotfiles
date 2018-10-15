@@ -112,7 +112,6 @@
 (load-theme dark-theme t)
 
 ;; ** Cursor
-(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 (blink-cursor-mode 0)
 
 ;; ** Scrolling
@@ -283,6 +282,10 @@
   :config
   (global-evil-surround-mode 1))
 
+(use-package evil-exchange
+  :config
+  (evil-exchange-cx-install))
+
 ;; *** Escape from Emacs state
 (global-set-key (kbd "<escape>") 'evil-normal-state)
 (when (window-system)
@@ -359,6 +362,7 @@
 (evil-define-key 'normal outline-minor-mode-map (kbd "M-h") 'outline-promote)
 (evil-define-key 'normal outline-minor-mode-map (kbd "M-l") 'outline-demote)
 (evil-define-key 'normal outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
+(evil-define-key 'normal outline-minor-mode-map (kbd "<tab>") 'evil-toggle-fold)
 
 ;; *** Eshell
 (evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
