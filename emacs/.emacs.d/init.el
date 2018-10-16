@@ -197,6 +197,29 @@
 					 try-complete-lisp-symbol))
 
 ;; * Major mode configuration
+;; ** C mode
+(defun c-lineup-arglist-tabs-only (ignored)
+  "Line up argument lists by tabs, not spaces"
+  (let* ((anchor (c-langelem-pos c-syntactic-element))
+	 (column (c-langelem-2nd-pos c-syntactic-element))
+	 (offset (- (1+ column) anchor))
+	 (steps (floor offset c-basic-offset)))
+    (* (max steps 1)
+       c-basic-offset)))
+
+(c-add-style
+ "linux-tabs-only"
+ '("linux" (c-offsets-alist
+	    (arglist-cont-nonempty
+	     c-lineup-gcc-asm-reg
+	     c-lineup-arglist-tabs-only))))
+
+(add-hook 'c-mode-hook
+	  (lambda ()
+		(setq indent-tabs-mode t)
+		(setq show-trailing-whitespace t)
+		(c-set-style "linux-tabs-only")))
+
 ;; ** Org mode
 (add-hook 'org-mode-hook (lambda () (progn
 				      (auto-fill-mode))))
