@@ -99,9 +99,6 @@
 	solarized-height-plus-4 1.0
 	solarized-high-contrast-mode-line t))
 
-(setq dark-theme 'solarized-dark)
-(setq light-theme 'solarized-light)
-
 (defun hgf/toggle-theme ()
   "Toggle between solarized variants."
   (interactive)
@@ -109,6 +106,8 @@
       (load-theme light-theme)
     (load-theme dark-theme)))
 
+(setq dark-theme 'solarized-dark)
+(setq light-theme 'solarized-light)
 (load-theme dark-theme t)
 
 ;; ** Cursor
@@ -271,6 +270,17 @@
 ;; ** Fish
 (use-package fish-mode)
 
+;; ** Python
+(use-package python-mode
+  :config
+  (setq py-shell-name "python3")
+  (setq python-shell-interpreter "python3"))
+
+(use-package elpy
+  :config (elpy-enable))
+
+(use-package company-jedi)
+
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -315,7 +325,7 @@
   ;; Separate C-[ and ESC when a window system is available
   (progn
     (define-key input-decode-map [?\C-\[] (kbd "<C-[>"))
-    (global-set-key (kbd "<C-[>") 'evil-normal-state)))
+    (define-key input-decode-map [?\C-i] (kbd "<C-i>"))))
 
 ;; *** Keybindings
 (defun hgf/outline-show-complete-outline ()
@@ -323,6 +333,17 @@
   (interactive)
   (outline-show-all)
   (outline-hide-body))
+;; ** Company
+;; *** Init
+(use-package company
+  :hook (after-init . global-company-mode))
+;; *** Add backends
+;; **** Global
+(add-to-list 'company-backends 'company-files)
+;; **** Python
+(add-hook 'python-mode-hook (lambda ()
+			      (add-to-list (make-local-variable 'company-backends)
+					   'company-jedi)))
 ;; ** ido, you do
 (setq ido-enable-flex-matching t
       ido-everywhere t
@@ -343,8 +364,12 @@
   (term "/bin/fish"))
 
 ;; ** Global
+;; Going back to evil from evil state
+(global-set-key (kbd "<C-[>") 'evil-normal-state)
+;; Completion
+(global-set-key (kbd "<C-i>") 'company-complete)
+
 (global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "M-i") 'imenu)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 (global-set-key (kbd "C-c e") 'hgf/edit-or-load-user-init-file)
 (global-set-key (kbd "C-c c") 'hgf/term-fish)
