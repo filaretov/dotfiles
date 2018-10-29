@@ -170,8 +170,6 @@
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
-;; ** Filling
-(setq fill-column 120)
 ;; ** Commenting
 (use-package comment-dwim-2
   :ensure t
@@ -195,6 +193,8 @@
 					 try-complete-lisp-symbol-partially
 					 try-complete-lisp-symbol))
 
+;; ** Being all fancy
+(use-package olivetti)
 ;; * Major mode configuration
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
@@ -220,18 +220,16 @@
 		(c-set-style "linux-tabs-only")))
 
 ;; ** Org mode
-(add-hook 'org-mode-hook (lambda () (progn
-				      (auto-fill-mode))))
+(add-hook 'org-mode-hook (lambda ()
+			   (toggle-truncate-lines 1)
+			   (setq fill-column 70)))
 
-(setq org-adapt-indentation nil
-      org-hide-leading-stars t
-      org-startup-indented t)
+(use-package htmlize)
+
+(setq org-adapt-indentation t
+      org-hide-leading-stars t)
 (setq org-src-fontify-natively t
       org-src-tab-acts-natively t)
-
-;; ** Text mode
-(add-hook 'text-mode-hook
-	  (lambda () (auto-fill-mode)))
 
 ;; ** Tex mode
 (add-hook 'tex-mode-hook
@@ -382,6 +380,8 @@
 
 ;; ** Evil
 ;; *** Global
+(global-set-key [remap evil-next-line] 'evil-next-visual-line)
+(global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
 ;; I like Emacs' C-x [1-3,0] commands
 (define-key evil-normal-state-map (kbd "C-w 1") 'delete-other-windows)
 (define-key evil-normal-state-map (kbd "C-w 2") 'split-window-below)
@@ -403,6 +403,8 @@
 (define-key evil-normal-state-map (kbd "C-k") 'kill-line)
 (define-key evil-visual-state-map (kbd "C-k") 'kill-line)
 (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
+
+(define-key evil-insert-state-map (kbd "C-y") 'evil-paste-after)
 
 ;; *** Outline
 (evil-define-key 'normal outline-minor-mode-map (kbd "M-j") 'outline-move-subtree-down)
