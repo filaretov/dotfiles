@@ -43,6 +43,7 @@
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
+(setq custom-theme-directory (concat user-emacs-directory "themes/"))
 
 
 ;; * Meta
@@ -108,7 +109,7 @@
 
 (setq dark-theme 'solarized-dark)
 (setq light-theme 'solarized-light)
-(load-theme dark-theme t)
+(load-theme 'rubric t)
 
 ;; ** Cursor
 (blink-cursor-mode 0)
@@ -279,6 +280,7 @@
 
 (use-package company-jedi)
 
+
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -348,6 +350,8 @@
       ido-use-filename-at-point 'guess)
 (ido-mode 1)
 
+;; ** Rainbow mode
+(use-package rainbow-mode)
 ;; * Magit
 (use-package magit)
 
