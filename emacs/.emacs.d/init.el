@@ -195,6 +195,9 @@
 
 ;; ** Being all fancy
 (use-package olivetti)
+;; *** Visual lines
+(global-visual-line-mode 1)
+(fringe-mode '(0 . 0))
 ;; * Major mode configuration
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
@@ -232,11 +235,35 @@
       org-src-tab-acts-natively t)
 
 ;; ** Tex mode
-(add-hook 'tex-mode-hook
+(use-package tex
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-master nil)
+  (setq TeX-PDF-mode t))
+
+(use-package auctex-latexmk
+  :config
+  (auctex-latexmk-setup)
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+
+(add-hook 'latex-mode-hook
 	  (lambda ()
 	    (progn
 	      (setq ispell-parser 'tex)
-	      (auto-fill-mode))))
+	      (auto-fill-mode 1))))
+
+(add-hook 'latex-mode-hook (lambda () (TeX-source-correlate-mode 1)))
+
+;; to use pdfview with auctex
+ (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+    TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+
+;; to have the buffer refresh after compilation
+ (add-hook 'TeX-after-compilation-finished-functions
+        #'TeX-revert-document-buffer)
 
 ;; ** Eshell
 (setq eshell-visual-commands '(top))
@@ -258,6 +285,10 @@
     (pdf-tools-install)
     (setq-default pdf-view-display-size 'fit-page)))
 
+(add-hook 'pdf-view-mode-hook (lambda () (progn
+					   (auto-revert-mode 1)
+					   (setq auto-revert-interval 0.1))))
+
 ;; ** Common Lisp
 (use-package slime
   :mode (("\\.cl\\'" . common-lisp-mode))
@@ -269,16 +300,23 @@
 (use-package fish-mode)
 
 ;; ** Python
-(use-package python-mode
-  :config
-  (setq py-shell-name "python3")
-  (setq python-shell-interpreter "python3"))
+(use-package python-mode)
+  ;; :config
+  ;; (setq py-shell-name "python3")
+  ;; (setq python-shell-interpreter "python3"))
 
 (use-package elpy
-  :config (elpy-enable))
+  :config
+  (elpy-enable)
+  (setq elpy-shell-use-project-root nil))
 
 (use-package company-jedi)
 
+(setenv "WORKON_HOME" "~/.miniconda/envs/")
+
+;; ** Racket
+(use-package racket-mode)
+(use-package scribble-mode)
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -365,7 +403,6 @@
 ;; Going back to evil from evil state
 (global-set-key (kbd "<C-[>") 'evil-normal-state)
 ;; Completion
-(global-set-key (kbd "<C-i>") 'company-complete)
 
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
@@ -375,8 +412,6 @@
 
 ;; Buffering
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-
-
 
 ;; ** Evil
 ;; *** Global
@@ -405,6 +440,7 @@
 (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
 
 (define-key evil-insert-state-map (kbd "C-y") 'evil-paste-after)
+(define-key evil-insert-state-map (kbd "C-i") 'company-complete)
 
 ;; *** Outline
 (evil-define-key 'normal outline-minor-mode-map (kbd "M-j") 'outline-move-subtree-down)
