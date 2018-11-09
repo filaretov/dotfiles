@@ -86,7 +86,7 @@
 
 ;; ** Fonts
 (if (hgf/windows-os-p)
-      (set-face-attribute 'default nil :family "Consolas" :height 120 )
+      (set-face-attribute 'default nil :family "Inconsolata" :height 120 )
     (set-face-attribute 'default nil :family "IBM Plex Mono" :height 120))
 
 ;; ** Theme
@@ -259,8 +259,9 @@
 (add-hook 'latex-mode-hook (lambda () (TeX-source-correlate-mode 1)))
 
 ;; to use pdfview with auctex
- (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-    TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+(unless (hgf/windows-os-p)
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+	TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))))
 
 ;; to have the buffer refresh after compilation
  (add-hook 'TeX-after-compilation-finished-functions
