@@ -87,13 +87,14 @@
 ;; ** Fonts
 (if (hgf/windows-os-p)
       (set-face-attribute 'default nil :family "Inconsolata" :height 120 )
-    (set-face-attribute 'default nil :family "IBM Plex Mono" :height 120))
+    (set-face-attribute 'default nil :family "Fira Mono" :height 110))
 
 ;; ** Theme
 (use-package solarized-theme
   :config
   (setq x-underline-at-descent-line t
 	solarized-use-variable-pitch nil
+	solarized-use-less-bold nil
 	solarized-height-plus-1 1.0
 	solarized-height-plus-2 1.0
 	solarized-height-plus-3 1.0
@@ -104,12 +105,16 @@
   "Toggle between solarized variants."
   (interactive)
   (if (equal (car custom-enabled-themes) dark-theme)
-      (load-theme light-theme)
-    (load-theme dark-theme)))
+      (progn
+	(disable-theme dark-theme)
+	(load-theme light-theme))
+    (progn
+      (disable-theme light-theme)
+      (load-theme dark-theme))))
 
 (setq dark-theme 'solarized-dark)
 (setq light-theme 'solarized-light)
-(load-theme 'rubric t)
+(load-theme dark-theme t)
 
 ;; ** Cursor
 (blink-cursor-mode 0)
@@ -199,6 +204,8 @@
 ;; *** Visual lines
 (global-visual-line-mode 1)
 (fringe-mode '(0 . 0))
+;; ** Filling
+(setq-default fill-column 90)
 ;; * Major mode configuration
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)

@@ -26,15 +26,25 @@
 (deftheme rubric
   "A minimal theme with contrasting comments")
 
+
 (let* ((black   "#404040")
        (white   "#ffffff")
-       (gray       "#909090")   ;; text, code
-       (gray255    "#eeeeee")   ;; fringe
-       (blue       "#40a0e0")   ;; fringe
-       (red        "#f06545")   ;; match
-       (orange     "#ff9000")   ;; match
-       (green      "#20c020")
-       (brown      "#c09040")
+       (gray      "#909090")   ;; text, code
+       (gray255   "#eeeeee")   ;; fringe
+       ;; (blue      "#40a0e0")   ;; fringe
+       (blue      "#268bd2")
+       ;; (red       "#f06545")   ;; match
+       (red       "#dc322f")
+       ;; (orange    "#ff9000")   ;; match
+       (orange    "#cb4b16")
+       ;; (green     "#20c020")
+       (brown     "#c09040")
+       ;; Solarized accented colors
+       (yellow    "#b58900")
+       (magenta   "#d33682")
+       (violet    "#6c71c4")
+       (cyan      "#2aa198")
+       (green     "#859900")
        (gray253    "#dadada")
        (soapy      "#eaffff")
        (strawberry "#f2e6e4")
