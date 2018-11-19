@@ -48,18 +48,11 @@
 
 ;; * Meta
 (defun hgf/edit-or-load-user-init-file ()
-  "Find the custom user init file if it's not the current buffer, otherwise load the proper one."
+  "Find the custom user init file if it's not the current buffer, otherwise load it."
   (interactive)
   (if (string-equal (buffer-file-name) (file-truename user-init-file))
       (load-file user-init-file)
     (find-file user-init-file)))
-
-;; * Packages Proper
-;; These oughta be sorted
-(use-package re-builder
-  :config
-  (setq reb-re-syntax 'string)
-  :bind (("C-c R" . re-builder)))
 
 ;; * Start server
 (server-mode 1)
@@ -132,6 +125,7 @@
 
 ;; ** Parens
 (show-paren-mode 1)
+
 ;; ** Bells
 (setq ring-bell-function 'ignore)
 ;; ** VC symlinks
@@ -181,7 +175,6 @@
   :ensure t
   :bind ("M-;" . comment-dwim-2))
 
-
 ;; ** Scripts
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
@@ -201,7 +194,7 @@
 
 ;; ** Being all fancy
 (use-package olivetti)
-;; *** Visual lines
+;; ** Visual lines
 (global-visual-line-mode 1)
 (fringe-mode '(0 . 0))
 ;; ** Filling
@@ -309,10 +302,10 @@
 (use-package fish-mode)
 
 ;; ** Python
-(use-package python-mode)
-  ;; :config
-  ;; (setq py-shell-name "python3")
-  ;; (setq python-shell-interpreter "python3"))
+(use-package python-mode
+  :config
+  (setq py-shell-name "python3")
+  (setq python-shell-interpreter "python3"))
 
 (use-package elpy
   :config
@@ -321,7 +314,7 @@
 
 (use-package company-jedi)
 
-(setenv "WORKON_HOME" "~/.miniconda/envs/")
+(setenv "WORKON_HOME" "~/.miniconda3/envs/")
 
 ;; ** Racket
 (use-package racket-mode)
