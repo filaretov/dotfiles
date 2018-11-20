@@ -194,11 +194,14 @@
 
 ;; ** Being all fancy
 (use-package olivetti)
+
 ;; ** Visual lines
 (global-visual-line-mode 1)
 (fringe-mode '(0 . 0))
+
 ;; ** Filling
 (setq-default fill-column 90)
+
 ;; * Major mode configuration
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
@@ -323,6 +326,11 @@
 
 ;; ** Rust
 (use-package rust-mode)
+(use-package racer)
+(use-package cargo)
+(add-hook 'rust-mode-hook 'racer-mode)
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
+
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -382,6 +390,7 @@
 ;; *** Add backends
 ;; **** Global
 (add-to-list 'company-backends 'company-files)
+
 ;; **** Python
 (add-hook 'python-mode-hook (lambda ()
 			      (add-to-list (make-local-variable 'company-backends)
