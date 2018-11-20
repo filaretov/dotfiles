@@ -313,6 +313,7 @@
   (setq elpy-shell-use-project-root nil))
 
 (use-package company-jedi)
+(use-package blacken)
 
 (setenv "WORKON_HOME" "~/.miniconda3/envs/")
 
@@ -320,6 +321,8 @@
 (use-package racket-mode)
 (use-package scribble-mode)
 
+;; ** Rust
+(use-package rust-mode)
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -445,7 +448,7 @@
 (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
 
 (define-key evil-insert-state-map (kbd "C-y") 'evil-paste-after)
-(define-key evil-insert-state-map (kbd "C-i") 'company-complete)
+(define-key evil-insert-state-map (kbd "<C-i>") 'company-complete)
 
 ;; *** Outline
 (evil-define-key 'normal outline-minor-mode-map (kbd "M-j") 'outline-move-subtree-down)
@@ -462,3 +465,5 @@
 ;; *** Org
 (evil-define-key 'normal org-mode-map (kbd ">") 'org-do-demote)
 (evil-define-key 'normal org-mode-map (kbd "<") 'org-do-promote)
+;; *** Python
+(evil-define-key 'normal python-mode-map (kbd "C-c C-=") 'blacken-buffer)

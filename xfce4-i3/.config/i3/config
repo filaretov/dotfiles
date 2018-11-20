@@ -96,32 +96,24 @@ bindsym $mod+a focus parent
 # Workspace Variables
 
 set $ws1 "1:  "
-set $ws2 "2:  "
+set $ws2 "2:  "
 set $ws3 "3:  "
-set $ws4 "4:  "
-set $ws5 "5:  "
-set $ws6 "6:  "
-set $ws7 "7: 1 "
-set $ws8 "8: 2 "
-set $ws9 "9: 3 "
-set $ws0 "10:  "
+set $ws8 "8:  "
+set $ws9 "9:  "
+set $ws0 "0:  "
 
 # Assign programs to ws
-assign [class="Firefox"]     $ws2
 assign [class="Nautilus"]    $ws3
-assign [class="Evince"]      $ws5
-assign [class="okular"]      $ws5
-assign [class="Thunderbird"] $ws6
-assign [class="Telegram"]    $ws0
+assign [class="Thunar"]      $ws3
+assign [class="Evince"]      $ws8
+assign [class="okular"]      $ws8
+assign [class="Telegram"]    $ws9
+assign [class="Firefox"]     $ws0
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
-bindsym $mod+4 workspace $ws4
-bindsym $mod+5 workspace $ws5
-bindsym $mod+6 workspace $ws6
-bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws0
@@ -130,13 +122,17 @@ bindsym $mod+0 workspace $ws0
 bindsym $mod+Shift+1 move container to workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2
 bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7
 bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws0
+
+# Multi monitor
+workspace $ws1 output VGA-1
+workspace $ws2 output VGA-1
+workspace $ws3 output VGA-1
+workspace $ws8 output VGA-2
+workspace $ws9 output VGA-2
+workspace $ws0 output VGA-2
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -216,18 +212,6 @@ bar {
 # Gaps
 gaps inner 10
 gaps outer 5
-
-# Multi monitor
-workspace $ws1 output VGA-1
-workspace $ws2 output VGA-1
-workspace $ws3 output VGA-1
-workspace $ws4 output VGA-1
-workspace $ws5 output VGA-1
-workspace $ws6 output VGA-2
-workspace $ws7 output VGA-2
-workspace $ws8 output VGA-2
-workspace $ws9 output VGA-2
-workspace $ws0 output VGA-2
 
 bindsym $mod+m move scratchpad
 bindsym $mod+Shift+m scratchpad show
