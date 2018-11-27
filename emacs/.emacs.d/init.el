@@ -313,7 +313,8 @@
 (use-package elpy
   :config
   (elpy-enable)
-  (setq elpy-shell-use-project-root nil))
+  (setq elpy-shell-use-project-root nil)
+  (delq 'elpy-module-highlight-indentation elpy-modules))
 
 (use-package company-jedi)
 (use-package blacken)
@@ -396,13 +397,23 @@
 			      (add-to-list (make-local-variable 'company-backends)
 					   'company-jedi)))
 ;; ** ido, you do
-(setq ido-enable-flex-matching t
-      ido-everywhere t
-      ido-use-filename-at-point 'guess)
-(ido-mode 1)
+;; (setq ido-enable-flex-matching t
+;;       ido-everywhere t
+;;       ido-use-filename-at-point 'guess)
+;; (ido-mode 1)
 
 ;; ** Rainbow mode
 (use-package rainbow-mode)
+;; ** Ivy
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t))
+
+(use-package counsel
+  :config
+  (counsel-mode 1))
 ;; * Magit
 (use-package magit)
 
