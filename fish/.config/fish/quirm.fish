@@ -9,3 +9,5 @@ set -gx HTTPS_PROXY $all_proxy
 set -gx no_proxy
 
 source ~/.miniconda/etc/fish/conf.d/conda.fish
+set -x PATH "~/.cargo/bin/" $PATH
+set -x PATH "~/.poetry/bin/" $PATH
