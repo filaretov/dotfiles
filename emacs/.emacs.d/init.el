@@ -227,10 +227,6 @@
 		(c-set-style "linux-tabs-only")))
 
 ;; ** Org mode
-(add-hook 'org-mode-hook (lambda ()
-			   (toggle-truncate-lines 1)
-			   (setq fill-column 70)))
-
 (use-package htmlize)
 
 (setq org-adapt-indentation t
@@ -418,6 +414,31 @@
 (use-package magit)
 
 ;; * Keybindings
+;; ** General.el
+(use-package general)
+
+(general-create-definer def-leader-key
+  :prefix "SPC"
+  :states 'normal
+  :keymaps 'override)
+
+(general-create-definer def-file-key
+  :prefix "SPC f"
+  :states 'normal)
+
+(general-create-definer def-mode-key
+  :prefix "SPC m"
+  :states 'normal)
+
+(def-file-key
+  "f" 'find-file
+  "s" 'save-buffer
+  "o" 'ivy-switch-buffer
+  "e" 'hgf/edit-or-load-user-init-file)
+
+(general-def 'normal
+  "SPC w" 'hydra-window/body)
+
 ;; ** Helpers
 (defun hgf/ansi-term-fish ()
   (interactive)
@@ -432,43 +453,43 @@
 (global-set-key (kbd "<C-[>") 'evil-normal-state)
 ;; Completion
 
-(global-set-key (kbd "M-o") 'other-window)
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-(global-set-key (kbd "C-c e") 'hgf/edit-or-load-user-init-file)
 (global-set-key (kbd "C-c c") 'hgf/term-fish)
 (global-set-key (kbd "C-c C") 'hgf/ansi-term-fish)
-
-;; Buffering
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; ** Evil
 ;; *** Global
 (global-set-key [remap evil-next-line] 'evil-next-visual-line)
 (global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
 ;; I like Emacs' C-x [1-3,0] commands
-(define-key evil-normal-state-map (kbd "C-w 1") 'delete-other-windows)
-(define-key evil-normal-state-map (kbd "C-w 2") 'split-window-below)
-(define-key evil-normal-state-map (kbd "C-w 3") 'split-window-right)
-(define-key evil-normal-state-map (kbd "C-w 0") 'delete-window)
-(define-key evil-normal-state-map (kbd "C-w m") 'kill-this-buffer)
+(evil-define-key 'normal 'global (kbd "C-w 1") 'delete-other-windows)
+(evil-define-key 'normal 'global (kbd "C-w 2") 'split-window-below)
+(evil-define-key 'normal 'global (kbd "C-w 3") 'split-window-right)
+(evil-define-key 'normal 'global (kbd "C-w 0") 'delete-window)
+(evil-define-key 'normal 'global (kbd "C-w m") 'kill-this-buffer)
 
 ;; Comfortable scrolling (sorry universal-argument)
-(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+(evil-define-key 'normal 'global (kbd "C-u") 'evil-scroll-up)
 
-(define-key evil-normal-state-map (kbd "C-e") 'end-of-line)
-(define-key evil-visual-state-map (kbd "C-e") 'end-of-line)
-(define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
+;; Emacsier
+(evil-define-key 'normal 'global (kbd "C-e") 'end-of-line)
+(evil-define-key 'visual 'global (kbd "C-e") 'end-of-line)
+(evil-define-key 'insert 'global (kbd "C-e") 'end-of-line)
 
-(define-key evil-normal-state-map (kbd "C-a") 'beginning-of-line)
-(define-key evil-visual-state-map (kbd "C-a") 'beginning-of-line)
-(define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line)
+(evil-define-key 'normal 'global (kbd "C-a") 'beginning-of-line)
+(evil-define-key 'visual 'global (kbd "C-a") 'beginning-of-line)
+(evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)
 
-(define-key evil-normal-state-map (kbd "C-k") 'kill-line)
-(define-key evil-visual-state-map (kbd "C-k") 'kill-line)
-(define-key evil-insert-state-map (kbd "C-k") 'kill-line)
+(evil-define-key 'normal 'global (kbd "C-k") 'kill-line)
+(evil-define-key 'visual 'global (kbd "C-k") 'kill-line)
+(evil-define-key 'insert 'global (kbd "C-k") 'kill-line)
 
-(define-key evil-insert-state-map (kbd "C-y") 'evil-paste-after)
-(define-key evil-insert-state-map (kbd "<C-i>") 'company-complete)
+(evil-define-key 'insert 'global (kbd "C-y") 'evil-paste-after)
+
+;; Why would I need two tabs?
+(evil-define-key 'insert 'global (kbd "<C-i>") 'company-complete)
+
+(evil-define-key 'normal 'global (kbd "C-c g") 'magit-dispatch-popup)
 
 ;; *** Outline
 (evil-define-key 'normal outline-minor-mode-map (kbd "M-j") 'outline-move-subtree-down)
@@ -485,5 +506,21 @@
 ;; *** Org
 (evil-define-key 'normal org-mode-map (kbd ">") 'org-do-demote)
 (evil-define-key 'normal org-mode-map (kbd "<") 'org-do-promote)
+(evil-define-key 'normal org-mode-map (kbd "gt") 'org-todo)
 ;; *** Python
 (evil-define-key 'normal python-mode-map (kbd "C-c C-=") 'blacken-buffer)
+
+;; ** Hydras
+(defhydra hydra-window ()
+  "Window management"
+  ("h" evil-window-left "left")
+  ("j" evil-window-down "down")
+  ("k" evil-window-up "up")
+  ("l" evil-window-right "right")
+  ("s" evil-window-split "split")
+  ("v" evil-window-vsplit "vsplit")
+  ("d" evil-window-delete "delete")
+  ("f" find-file "file")
+  ("b" ivy-switch-buffer "buffer")
+  ("m" kill-this-buffer "murder")
+  ("q" nil "stop"))
