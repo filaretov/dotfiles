@@ -392,11 +392,6 @@
 (add-hook 'python-mode-hook (lambda ()
 			      (add-to-list (make-local-variable 'company-backends)
 					   'company-jedi)))
-;; ** ido, you do
-;; (setq ido-enable-flex-matching t
-;;       ido-everywhere t
-;;       ido-use-filename-at-point 'guess)
-;; (ido-mode 1)
 
 ;; ** Rainbow mode
 (use-package rainbow-mode)
@@ -410,6 +405,7 @@
 (use-package counsel
   :config
   (counsel-mode 1))
+
 ;; * Magit
 (use-package magit)
 
@@ -426,27 +422,68 @@
   :prefix "SPC f"
   :states 'normal)
 
+(general-create-definer def-dispatch-key
+  :prefix "SPC d"
+  :states 'normal)
+
 (general-create-definer def-mode-key
   :prefix "SPC m"
+  :states 'normal)
+
+(general-create-definer def-g-key
+  :prefix "g"
   :states 'normal)
 
 (def-file-key
   "f" 'find-file
   "s" 'save-buffer
   "o" 'ivy-switch-buffer
+  "i" 'hgf/switch-to-previous-buffer
   "e" 'hgf/edit-or-load-user-init-file)
 
+(def-dispatch-key
+  "d" 'magit
+  "t" 'hgf/ansi-term-fish
+  "T" 'hgf/term-fish)
+
+(def-leader-key
+  "w" 'hydra-window/body)
+
 (general-def 'normal
-  "SPC w" 'hydra-window/body)
+  "/"   'swiper
+  "C-u" 'evil-scroll-up) ;; sorry universal-argument
+
+(general-def 'normal org-mode-map
+  ">" 'org-do-demote
+  "<" 'org-do-promote)
+
+(def-g-key
+  "e" 'eval-last-sexp)
+
+(def-g-key
+  :keymaps 'org-mode-map
+  "t" 'org-todo)
+
+;; ** Python
+(def-mode-key
+  :keymaps 'python-mode-map
+  "f" 'blacken-buffer)
 
 ;; ** Helpers
 (defun hgf/ansi-term-fish ()
   (interactive)
-  (ansi-term "/bin/fish"))
+  (ansi-term "/usr/bin/fish"))
 
 (defun hgf/term-fish ()
   (interactive)
-  (term "/bin/fish"))
+  (term "/usr/bin/fish"))
+
+;; Credit: https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
+(defun hgf/switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 ;; ** Global
 ;; Going back to evil from evil state
@@ -454,22 +491,12 @@
 ;; Completion
 
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-(global-set-key (kbd "C-c c") 'hgf/term-fish)
-(global-set-key (kbd "C-c C") 'hgf/ansi-term-fish)
 
 ;; ** Evil
 ;; *** Global
 (global-set-key [remap evil-next-line] 'evil-next-visual-line)
 (global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
 ;; I like Emacs' C-x [1-3,0] commands
-(evil-define-key 'normal 'global (kbd "C-w 1") 'delete-other-windows)
-(evil-define-key 'normal 'global (kbd "C-w 2") 'split-window-below)
-(evil-define-key 'normal 'global (kbd "C-w 3") 'split-window-right)
-(evil-define-key 'normal 'global (kbd "C-w 0") 'delete-window)
-(evil-define-key 'normal 'global (kbd "C-w m") 'kill-this-buffer)
-
-;; Comfortable scrolling (sorry universal-argument)
-(evil-define-key 'normal 'global (kbd "C-u") 'evil-scroll-up)
 
 ;; Emacsier
 (evil-define-key 'normal 'global (kbd "C-e") 'end-of-line)
@@ -486,10 +513,8 @@
 
 (evil-define-key 'insert 'global (kbd "C-y") 'evil-paste-after)
 
-;; Why would I need two tabs?
+;; Why would I need two tab keys?
 (evil-define-key 'insert 'global (kbd "<C-i>") 'company-complete)
-
-(evil-define-key 'normal 'global (kbd "C-c g") 'magit-dispatch-popup)
 
 ;; *** Outline
 (evil-define-key 'normal outline-minor-mode-map (kbd "M-j") 'outline-move-subtree-down)
@@ -502,13 +527,6 @@
 ;; *** Eshell
 (evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
 (evil-define-key 'insert eshell-mode-map (kbd "C-p") 'eshell-previous-matching-input-from-input)
-
-;; *** Org
-(evil-define-key 'normal org-mode-map (kbd ">") 'org-do-demote)
-(evil-define-key 'normal org-mode-map (kbd "<") 'org-do-promote)
-(evil-define-key 'normal org-mode-map (kbd "gt") 'org-todo)
-;; *** Python
-(evil-define-key 'normal python-mode-map (kbd "C-c C-=") 'blacken-buffer)
 
 ;; ** Hydras
 (defhydra hydra-window ()
@@ -523,4 +541,5 @@
   ("f" find-file "file")
   ("b" ivy-switch-buffer "buffer")
   ("m" kill-this-buffer "murder")
+  ("1" delete-other-windows "highlander")
   ("q" nil "stop"))
