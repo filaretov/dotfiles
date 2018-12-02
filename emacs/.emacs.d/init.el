@@ -17,15 +17,15 @@
 
 (defun hgf/proxy-on ()
   (interactive)
-    (setq url-proxy-services
+  (setq url-proxy-services
 	'(("http"     . "153.96.56.101:3128")
-          ("https"    . "153.96.56.101:3128")
-          ("ftp"      . "153.96.56.101:3128")
-          ("no_proxy" . "^.*153.96.56.101"))))
+	  ("https"    . "153.96.56.101:3128")
+	  ("ftp"      . "153.96.56.101:3128")
+	  ("no_proxy" . "^.*153.96.56.101"))))
 
 (defun hgf/proxy-off ()
   (interactive)
-    (setq url-proxy-services nil))
+  (setq url-proxy-services nil))
 
 ;; ** Blasphemy
 (when (hgf/windows-os-p)
@@ -79,8 +79,8 @@
 
 ;; ** Fonts
 (if (hgf/windows-os-p)
-      (set-face-attribute 'default nil :family "Inconsolata" :height 120 )
-    (set-face-attribute 'default nil :family "Fira Mono" :height 110))
+    (set-face-attribute 'default nil :family "Inconsolata" :height 120 )
+  (set-face-attribute 'default nil :family "Fira Mono" :height 110))
 
 ;; ** Theme
 (use-package solarized-theme
@@ -141,32 +141,32 @@
       evil-operator-state-tag (propertize " O " 'face '((:background "sandy brown" :foreground "black"))))
 (setq evil-mode-line-format '(before . mode-line-front-space))
 (setq-default mode-line-format
-      (list
-       '#("%e")
-       'mode-line-front-space
-       'mode-line-buffer-identification
-       " "
-       ;; 'mode-line-mule-info
-       ;; 'mode-line-client
-       ;; 'mode-line-modified
-       '#("[%*]")
-       " "
-       "("
-       'mode-name
-       ")"
-       " "
-       '(vc-mode vc-mode)
-       'mode-line-end-spaces))
-		   ;; 'mode-line-remote
-		   ;; 'mode-line-frame-identification
-		   ;; "   "
-		   ;; "   "
-		   ;; 'mode-line-position
-		   ;; '(vc-mode vc-mode)
-		   ;; "  "
-		   ;; 'mode-line-modes
-		   ;; 'mode-line-misc-info
-		   ;; 'mode-line-end-spaces))))
+	      (list
+	       '#("%e")
+	       'mode-line-front-space
+	       'mode-line-buffer-identification
+	       " "
+	       ;; 'mode-line-mule-info
+	       ;; 'mode-line-client
+	       ;; 'mode-line-modified
+	       '#("[%*]")
+	       " "
+	       "("
+	       'mode-name
+	       ")"
+	       " "
+	       '(vc-mode vc-mode)
+	       'mode-line-end-spaces))
+;; 'mode-line-remote
+;; 'mode-line-frame-identification
+;; "   "
+;; "   "
+;; 'mode-line-position
+;; '(vc-mode vc-mode)
+;; "  "
+;; 'mode-line-modes
+;; 'mode-line-misc-info
+;; 'mode-line-end-spaces))))
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
@@ -202,6 +202,11 @@
 ;; ** Filling
 (setq-default fill-column 90)
 
+;; ** Aggressive-indent-mode
+(use-package aggressive-indent
+  :config
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'python-mode))
 ;; * Major mode configuration
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
@@ -222,9 +227,9 @@
 
 (add-hook 'c-mode-hook
 	  (lambda ()
-		(setq indent-tabs-mode t)
-		(setq show-trailing-whitespace t)
-		(c-set-style "linux-tabs-only")))
+	    (setq indent-tabs-mode t)
+	    (setq show-trailing-whitespace t)
+	    (c-set-style "linux-tabs-only")))
 
 ;; ** Org mode
 (use-package htmlize)
@@ -263,8 +268,8 @@
 	TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))))
 
 ;; to have the buffer refresh after compilation
- (add-hook 'TeX-after-compilation-finished-functions
-        #'TeX-revert-document-buffer)
+(add-hook 'TeX-after-compilation-finished-functions
+	  #'TeX-revert-document-buffer)
 
 ;; ** Eshell
 (setq eshell-visual-commands '(top))
@@ -500,7 +505,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;; ** Hydras
 (defhydra hydra-window ()
-  "Window management"
+  "Window management" 
   ("h" evil-window-left "left")
   ("j" evil-window-down "down")
   ("k" evil-window-up "up")
