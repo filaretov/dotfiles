@@ -464,11 +464,6 @@
   :keymaps 'org-mode-map
   "t" 'org-todo)
 
-;; ** Python
-(def-mode-key
-  :keymaps 'python-mode-map
-  "f" 'blacken-buffer)
-
 ;; ** Helpers
 (defun hgf/ansi-term-fish ()
   (interactive)
@@ -486,47 +481,22 @@ Repeated invocations toggle between the two most recently open buffers."
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 ;; ** Global
-;; Going back to evil from evil state
-(global-set-key (kbd "<C-[>") 'evil-normal-state)
-;; Completion
+;; Emacsier
+(general-def '(normal visual insert)
+  "C-e" 'end-of-line
+  "C-a" 'beginning-of-line
+  "C-k" 'kill-line)
+(general-def 'insert
+  "C-y" 'evil-paste-after
+  "<C-i>" 'company-complete)
 
+;; Going back to evil from emacs state
+(general-def "<C-[>" 'evil-normal-state)
+
+;; Swapity swap
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-;; ** Evil
-;; *** Global
 (global-set-key [remap evil-next-line] 'evil-next-visual-line)
 (global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
-;; I like Emacs' C-x [1-3,0] commands
-
-;; Emacsier
-(evil-define-key 'normal 'global (kbd "C-e") 'end-of-line)
-(evil-define-key 'visual 'global (kbd "C-e") 'end-of-line)
-(evil-define-key 'insert 'global (kbd "C-e") 'end-of-line)
-
-(evil-define-key 'normal 'global (kbd "C-a") 'beginning-of-line)
-(evil-define-key 'visual 'global (kbd "C-a") 'beginning-of-line)
-(evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)
-
-(evil-define-key 'normal 'global (kbd "C-k") 'kill-line)
-(evil-define-key 'visual 'global (kbd "C-k") 'kill-line)
-(evil-define-key 'insert 'global (kbd "C-k") 'kill-line)
-
-(evil-define-key 'insert 'global (kbd "C-y") 'evil-paste-after)
-
-;; Why would I need two tab keys?
-(evil-define-key 'insert 'global (kbd "<C-i>") 'company-complete)
-
-;; *** Outline
-(evil-define-key 'normal outline-minor-mode-map (kbd "M-j") 'outline-move-subtree-down)
-(evil-define-key 'normal outline-minor-mode-map (kbd "M-k") 'outline-move-subtree-up)
-(evil-define-key 'normal outline-minor-mode-map (kbd "M-h") 'outline-promote)
-(evil-define-key 'normal outline-minor-mode-map (kbd "M-l") 'outline-demote)
-(evil-define-key 'normal outline-minor-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
-(evil-define-key 'normal outline-minor-mode-map (kbd "<tab>") 'evil-toggle-fold)
-
-;; *** Eshell
-(evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
-(evil-define-key 'insert eshell-mode-map (kbd "C-p") 'eshell-previous-matching-input-from-input)
 
 ;; ** Hydras
 (defhydra hydra-window ()
@@ -543,3 +513,21 @@ Repeated invocations toggle between the two most recently open buffers."
   ("m" kill-this-buffer "murder")
   ("1" delete-other-windows "highlander")
   ("q" nil "stop"))
+;; ** Outline
+(general-def 'normal outline-minor-mode-map
+  "M-j" 'outline-move-subtree-down
+  "M-k" 'outline-move-subtree-up
+  "M-h" 'outline-promote
+  "M-l" 'outline-demote
+  "<backtab>" 'outshine-cycle-buffer
+  "<tab>" 'evil-toggle-fold)
+
+;; ** Python
+(def-mode-key
+  :keymaps 'python-mode-map
+  "f" 'blacken-buffer)
+
+;; ** Eshell
+(evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
+(evil-define-key 'insert eshell-mode-map (kbd "C-p") 'eshell-previous-matching-input-from-input)
+
