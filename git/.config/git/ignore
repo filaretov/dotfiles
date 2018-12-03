@@ -11,3 +11,14 @@ a.out
 *.rar
 *.tar.*
 Session.vim
+
+auto/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc

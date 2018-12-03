@@ -18,6 +18,7 @@ emacs/.emacs.d/configuration.el
 emacs/.emacs.d/tramp
 emacs/.emacs.d/custom.el
 emacs/.emacs.d/session*
+emacs/.emacs.d/recentf
 
 fonts/.local/share/fonts/*/.uuid
 fonts/.local/share/fonts/.uuid
