@@ -433,8 +433,30 @@
   :config
   (counsel-mode 1))
 
-;; * Magit
+;; ** Magit
 (use-package magit)
+
+(setq magit-repository-directories
+      '(("~/.dotfiles/" . 0)
+	("~/.crucible/" . 0)
+	("~/Documents/bsc/" . 0)
+	("~/Documents/journal/" . 0)
+	("~/Development/hkm/" . 0)
+	("~/Development/cookbook/" . 0)
+	("~/Development/powervest/" . 0)))
+
+(setq magit-repolist-columns
+      '(("Name" 12 magit-repolist-column-ident nil)
+	("Branch" 10 magit-repolist-column-branch nil)
+	("Dirty" 6 magit-repolist-column-dirty nil)
+	("B<U" 3 magit-repolist-column-unpulled-from-upstream
+	 ((:right-align t)
+	  (:help-echo "Upstream changes not in branch")))
+	("B>U" 3 magit-repolist-column-unpushed-to-upstream
+	 ((:right-align t)
+	  (:help-echo "Local changes not in upstream")))
+	("Version" 30 magit-repolist-column-version nil)
+	("Path" 99 magit-repolist-column-path nil)))
 
 ;; * Keybindings
 ;; ** General.el
@@ -444,6 +466,10 @@
   :prefix "SPC"
   :states 'normal
   :keymaps 'override)
+
+(general-create-definer def-help-key
+  :prefix "SPC h"
+  :states 'normal)
 
 (general-create-definer def-file-key
   :prefix "SPC f"
@@ -461,6 +487,14 @@
   :prefix "g"
   :states 'normal)
 
+(def-help-key
+  "v" 'counsel-describe-variable
+  "f" 'counsel-describe-function
+  "k" 'describe-key
+  "w" 'where-is
+  "m" 'describe-mode
+  "P" 'describe-package)
+
 (def-file-key
   "f" 'find-file
   "s" 'save-buffer
@@ -470,6 +504,7 @@
 
 (def-dispatch-key
   "d" 'magit
+  "l" 'magit-list-repositories
   "t" 'hgf/ansi-term-fish
   "T" 'hgf/term-fish)
 
@@ -509,6 +544,10 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;; ** Global
 ;; Emacsier
+(general-def 'normal
+  "L" 'evil-end-of-visual-line
+  "H" 'evil-first-non-blank-of-visual-line)
+
 (general-def '(normal visual insert)
   "C-e" 'end-of-line
   "C-a" 'beginning-of-line
@@ -519,7 +558,6 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;; Going back to evil from emacs state
 (general-def "<C-[>" 'evil-normal-state)
-
 ;; Swapity swap
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 (global-set-key [remap evil-next-line] 'evil-next-visual-line)
@@ -535,12 +573,12 @@ Repeated invocations toggle between the two most recently open buffers."
   ("l" evil-window-right "right")
   ("s" evil-window-split "split")
   ("v" evil-window-vsplit "vsplit")
-  ("d" evil-window-delete "delete")
+  ("q" evil-window-delete "delete")
   ("f" find-file "file")
-  ("b" ivy-switch-buffer "buffer")
+  ("o" ivy-switch-buffer "buffer")
   ("m" kill-this-buffer "murder")
   ("1" delete-other-windows "highlander")
-  ("q" nil "stop"))
+  ("." nil "stop"))
 ;; ** Outline
 (general-def 'normal outline-minor-mode-map
   "M-j" 'outline-move-subtree-down
