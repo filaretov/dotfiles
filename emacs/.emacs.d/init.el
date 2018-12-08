@@ -270,7 +270,6 @@
 		 ("\\section{%s}" . "\\section*{%s}")
 		 ("\\subsection{%s}" . "\\subsection*{%s}")
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-(ox-extras-activate '(ignore-headlines))
 ;; ** Tex mode
 (use-package tex
   :defer t
