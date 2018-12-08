@@ -80,7 +80,7 @@
 ;; ** Fonts
 (if (hgf/windows-os-p)
     (set-face-attribute 'default nil :family "Inconsolata" :height 120 )
-  (set-face-attribute 'default nil :family "Fira Mono" :height 110))
+  (set-face-attribute 'default nil :family "IBM Plex Mono" :height 110))
 
 ;; ** Theme
 (use-package solarized-theme
@@ -232,6 +232,8 @@
 	    (c-set-style "linux-tabs-only")))
 
 ;; ** Org mode
+;; *** Init
+(use-package org)
 (use-package htmlize)
 
 (setq org-adapt-indentation t
@@ -239,7 +241,7 @@
 (setq org-src-fontify-natively t
       org-src-tab-acts-natively t)
 
-;; *** Publishing
+;; *** Blog
 (setq org-publish-project-alist
       '(("org-notes"
 	 :base-directory "~/Documents/blog/org/"
@@ -259,6 +261,16 @@
 	 )
 	(" org" :components ("org-notes" "org-static"))))
 
+;; *** Latex
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+	       '("book"
+		 "\\documentclass{book}"
+		 ("\\chapter{%s}" . "\\chapter*{%s}")
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}")
+		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+(ox-extras-activate '(ignore-headlines))
 ;; ** Tex mode
 (use-package tex
   :defer t
