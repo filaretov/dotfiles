@@ -116,7 +116,7 @@
 (use-package smooth-scrolling
   :config
   (smooth-scrolling-mode 1)
-  (setq smooth-scroll-margin 10))
+  (setq smooth-scroll-margin 2))
 
 ;; ** Help me remember things
 (use-package which-key
@@ -270,6 +270,10 @@
 		 ("\\section{%s}" . "\\section*{%s}")
 		 ("\\subsection{%s}" . "\\subsection*{%s}")
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+;; (add-to-list 'load-path "/home/hgf/.emacs.d/pkgs/")
+;; (require 'ox-extra)
+;; (ox-extras-activate '(ignore-headlines))
+
 ;; ** Tex mode
 (use-package tex
   :defer t
