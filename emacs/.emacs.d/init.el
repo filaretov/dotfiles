@@ -80,8 +80,13 @@
 
 ;; ** Fonts
 (if (hgf/windows-os-p)
-    (set-face-attribute 'default nil :family "Inconsolata" :height 120 )
-  (set-face-attribute 'default nil :family "IBM Plex Mono" :height 110))
+    (set-face-attribute 'default nil
+			:family "Inconsolata"
+			:height 120 )
+  (set-face-attribute 'default nil
+		      :family "Source Code Pro"
+		      :height 100
+		      :weight 'semi-bold))
 
 ;; ** Theme
 (use-package solarized-theme
