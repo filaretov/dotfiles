@@ -35,7 +35,8 @@
 (require 'package)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
-	("melpa" . "https://melpa.org/packages/")))
+	("melpa" . "https://melpa.org/packages/")
+	("org" . "https://orgmode.org/elpa/")))
 (hgf/package-init)
 (setq use-package-always-ensure t)
 
@@ -236,6 +237,8 @@
 (use-package org)
 (use-package htmlize)
 
+(add-hook 'org-mode-hook 'auto-fill-mode)
+
 (setq org-adapt-indentation t
       org-hide-leading-stars t)
 (setq org-src-fontify-natively t
@@ -270,11 +273,10 @@
 		 ("\\section{%s}" . "\\section*{%s}")
 		 ("\\subsection{%s}" . "\\subsection*{%s}")
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-;; (add-to-list 'load-path "/home/hgf/.emacs.d/pkgs/")
-;; (require 'ox-extra)
-;; (ox-extras-activate '(ignore-headlines))
+(require 'ox-extra)
+(ox-extras-activate '(ignore-headlines))
 
-;; ** Tex mode
+;; ** LaTex mode
 (use-package tex
   :defer t
   :ensure auctex
@@ -295,7 +297,7 @@
 	      (setq ispell-parser 'tex)
 	      (auto-fill-mode 1))))
 
-(add-hook 'latex-mode-hook (lambda () (TeX-source-correlate-mode 1)))
+(add-hook 'latex-mode-hook #'TeX-source-correlate-mode 1)
 
 ;; to use pdfview with auctex
 (unless (hgf/windows-os-p)
@@ -305,6 +307,11 @@
 ;; to have the buffer refresh after compilation
 (add-hook 'TeX-after-compilation-finished-functions
 	  #'TeX-revert-document-buffer)
+
+(setq-default TeX-auto-save t)
+(setq-default TeX-parse-self t)
+(setq-default TeX-PDF-mode t)
+(setq-default TeX-auto-local "~/.emacs.d/auctex-auto")
 
 ;; ** Eshell
 (setq eshell-visual-commands '(top))
