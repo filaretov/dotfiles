@@ -510,6 +510,10 @@
   :prefix "SPC m"
   :states 'normal)
 
+(general-create-definer def-ge-key
+  :prefix "g e"
+  :states 'normal)
+
 (general-create-definer def-g-key
   :prefix "g"
   :states 'normal)
@@ -525,6 +529,7 @@
 (def-file-key
   "f" 'find-file
   "s" 'save-buffer
+  "b" 'ibuffer
   "o" 'ivy-switch-buffer
   "i" 'hgf/switch-to-previous-buffer
   "e" 'hgf/edit-or-load-user-init-file)
@@ -546,8 +551,9 @@
   ">" 'org-do-demote
   "<" 'org-do-promote)
 
-(def-g-key
-  "e" 'eval-last-sexp)
+(def-ge-key
+  "e" 'eval-last-sexp
+  "i" 'eval-defun)
 
 (def-g-key
   :keymaps 'org-mode-map
