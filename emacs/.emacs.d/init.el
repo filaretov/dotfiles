@@ -553,7 +553,8 @@
 (def-g-key
   :keymaps 'org-mode-map
   "g" 'org-ctrl-c-ctrl-c
-  "t" 'org-todo)
+  "t" 'org-todo
+  "x" 'org-open-at-point)
 
 (general-def 'normal org-mode-map
   ">" 'org-do-demote
