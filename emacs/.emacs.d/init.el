@@ -212,7 +212,7 @@
 (use-package aggressive-indent
   :config
   (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'python-mode))
+  (add-to-list 'aggressive-indent-excluded-modes '(python-mode rst-mode)))
 ;; * Major mode configuration
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
@@ -382,6 +382,10 @@
 
 ;; ** Yaml
 (use-package yaml-mode)
+
+;; ** ReStructured Text
+(eval-after-load "rst"
+    '(setq rst-mode-map (make-sparse-keymap)))
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
@@ -400,6 +404,7 @@
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  (setq evil-want-abbrev-expand-on-insert-exit nil)
   :config
   (evil-mode 1)
   (setq evil-emacs-state-cursor '(bar)))
