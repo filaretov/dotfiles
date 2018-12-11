@@ -487,8 +487,10 @@
 
 ;; * Keybindings
 ;; ** General.el
+;; *** Init
 (use-package general)
 
+;; *** Helpers
 (general-create-definer def-leader-key
   :prefix "SPC"
   :states 'normal
@@ -518,6 +520,7 @@
   :prefix "g"
   :states 'normal)
 
+;; *** Defs
 (def-help-key
   "v" 'counsel-describe-variable
   "f" 'counsel-describe-function
@@ -543,21 +546,18 @@
 (def-leader-key
   "w" 'hydra-window/body)
 
-(general-def 'normal
-  "/"   'swiper
-  "C-u" 'evil-scroll-up) ;; sorry universal-argument
-
-(general-def 'normal org-mode-map
-  ">" 'org-do-demote
-  "<" 'org-do-promote)
-
 (def-ge-key
   "e" 'eval-last-sexp
   "i" 'eval-defun)
 
 (def-g-key
   :keymaps 'org-mode-map
+  "g" 'org-ctrl-c-ctrl-c
   "t" 'org-todo)
+
+(general-def 'normal org-mode-map
+  ">" 'org-do-demote
+  "<" 'org-do-promote)
 
 ;; ** Helpers
 (defun hgf/ansi-term-fish ()
@@ -579,7 +579,11 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; Emacsier
 (general-def 'normal
   "L" 'evil-end-of-visual-line
-  "H" 'evil-first-non-blank-of-visual-line)
+  "H" 'evil-first-non-blank-of-visual-line
+  "/"   'swiper
+  "C-u" 'evil-scroll-up ;; sorry universal-argument
+  "<backspace>" 'evil-goto-first-line
+  "<return>" 'evil-goto-line)
 
 (general-def '(normal visual insert)
   "C-e" 'end-of-line
