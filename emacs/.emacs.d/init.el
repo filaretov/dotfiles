@@ -249,6 +249,11 @@
 (setq org-src-fontify-natively t
       org-src-tab-acts-natively t)
 
+(use-package ox-extra
+  :ensure org-plus-contrib
+  :config
+  (ox-extras-activate '(ignore-headlines)))
+
 ;; *** Blog
 (setq org-publish-project-alist
       '(("org-notes"
@@ -278,8 +283,6 @@
 		 ("\\section{%s}" . "\\section*{%s}")
 		 ("\\subsection{%s}" . "\\subsection*{%s}")
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-(require 'ox-extra)
-(ox-extras-activate '(ignore-headlines))
 
 ;; ** LaTex mode
 (use-package tex
