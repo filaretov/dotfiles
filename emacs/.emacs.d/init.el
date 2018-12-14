@@ -119,10 +119,10 @@
 (blink-cursor-mode 0)
 
 ;; ** Scrolling
-(use-package smooth-scrolling
-  :config
-  (smooth-scrolling-mode 1)
-  (setq smooth-scroll-margin 2))
+;; (use-package smooth-scrolling
+;;   :config
+;;   (smooth-scrolling-mode 1)
+;;   (setq smooth-scroll-margin 2))
 
 ;; ** Help me remember things
 (use-package which-key
@@ -324,6 +324,11 @@
 ;; ** Eshell
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
+(add-hook 'eshell-mode-hook (lambda ()
+			      (def-g-key
+				:keymaps 'eshell-mode-map
+				"i" 'hgf/insert-end-of-buffer)))
+
 
 ;; ** Term
 (add-hook 'term-mode-hook (lambda () (toggle-truncate-lines 1)))
@@ -364,8 +369,10 @@
 (use-package elpy
   :config
   (elpy-enable)
-  (setq elpy-shell-use-project-root nil)
-  (delq 'elpy-module-highlight-indentation elpy-modules))
+  (setq elpy-shell-use-project-root nil))
+
+(remove-hook 'elpy-modules 'elpy-module-flymake)
+(remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
 
 (use-package company-jedi)
 (use-package blacken)
@@ -548,6 +555,7 @@
 (def-dispatch-key
   "d" 'magit
   "l" 'magit-list-repositories
+  "e" 'eshell
   "t" 'hgf/ansi-term-fish
   "T" 'hgf/term-fish)
 
@@ -564,11 +572,17 @@
   "t" 'org-todo
   "x" 'org-open-at-point)
 
+
 (general-def 'normal org-mode-map
   ">" 'org-do-demote
   "<" 'org-do-promote)
 
 ;; ** Helpers
+(defun hgf/insert-end-of-buffer ()
+  (interactive)
+  (end-of-buffer)
+  (evil-insert-state))
+
 (defun hgf/ansi-term-fish ()
   (interactive)
   (ansi-term "/usr/bin/fish"))
