@@ -8,6 +8,9 @@
 (defun hgf/windows-os-p ()
   (string= system-type "windows-nt"))
 
+(defun hgf/darwin-os-p ()
+  (eq system-type 'darwin))
+
 (defun hgf/package-init ()
   "Initialize the package manager and install use-package."
   (package-initialize)
@@ -79,14 +82,20 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; ** Fonts
-(if (hgf/windows-os-p)
-    (set-face-attribute 'default nil
-			:family "Inconsolata"
-			:height 120 )
-  (set-face-attribute 'default nil
-		      :family "Source Code Pro"
-		      :height 100
-		      :weight 'semi-bold))
+(cond ((hgf/windows-os-p)
+       (set-face-attribute 'default nil
+			   :family "Inconsolata"
+			   :height 120 ))
+      ((hgf/darwin-os-p)
+       (set-face-attribute 'default nil
+			   :family "Source Code Pro"
+			   :height 120
+			   :weight 'semi-bold))
+      (t
+       (set-face-attribute 'default nil
+			   :family "Source Code Pro"
+			   :height 100
+			   :weight 'semi-bold)))
 
 ;; ** Theme
 (use-package solarized-theme
@@ -340,7 +349,7 @@
 	 ("\\.markdown\\'" . markdown-mode)))
 
 ;; ** PDF
-(unless (hgf/windows-os-p)
+(unless (or (hgf/darwin-os-p) (hgf/windows-os-p))
   (use-package pdf-tools
     :config
     (pdf-tools-install)
