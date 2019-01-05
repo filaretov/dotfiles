@@ -395,18 +395,13 @@
 
 ;; ** ReStructured Text
 (eval-after-load "rst"
-    '(setq rst-mode-map (make-sparse-keymap)))
+  '(setq rst-mode-map (make-sparse-keymap)))
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
-(add-hook 'prog-mode-hook 'outline-minor-mode)
 
-(use-package outshine
-  :config
-  (defvar outline-minor-mode-prefix (kbd "M-#"))
-  (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-  ;; Append, because otherwise some functionality might not be loaded yet
-  (add-hook 'outline-minor-mode-hook (lambda () (outline-hide-sublevels 1)) 'append))
+(use-package outshine)
+(add-hook 'prog-mode-hook 'outshine-mode)
 
 ;; ** Evil
 ;; *** Init
@@ -499,7 +494,6 @@
 	  (:help-echo "Local changes not in upstream")))
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
-
 ;; * Keybindings
 ;; ** General.el
 ;; *** Init
