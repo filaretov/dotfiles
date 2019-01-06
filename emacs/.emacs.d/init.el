@@ -407,6 +407,16 @@
 ;; ** ReStructured Text
 (eval-after-load "rst"
   '(setq rst-mode-map (make-sparse-keymap)))
+;; ** Ledger
+(use-package ledger-mode)
+
+(use-package evil-ledger
+  :ensure t
+  :after ledger-mode
+  :config
+  (setq evil-ledger-sort-key "S")
+  (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+
 ;; * Minor mode configuration
 ;; ** Outline-minor
 ;; *** Init
