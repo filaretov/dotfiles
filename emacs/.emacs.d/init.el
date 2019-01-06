@@ -60,6 +60,7 @@
 
 ;; * Start server
 (server-mode 1)
+
 ;; * UI preferences
 ;; ** Personal info
 (setq user-full-name "Hristo Filaretov"
@@ -171,6 +172,7 @@
 	       ")"
 	       " "
 	       '(vc-mode vc-mode)
+	       'mode-misc-info
 	       'mode-line-end-spaces))
 ;; 'mode-line-remote
 ;; 'mode-line-frame-identification
@@ -411,17 +413,17 @@
 (use-package ledger-mode)
 
 (use-package evil-ledger
-  :ensure t
-  :after ledger-mode
+  :after '(ledger-mode evil-mode)
   :config
-  (setq evil-ledger-sort-key "S")
   (add-hook 'ledger-mode-hook #'evil-ledger-mode))
 
 ;; * Minor mode configuration
-;; ** Outline-minor
+;; ** Outshine
 ;; *** Init
 
-(use-package outshine)
+(use-package outshine
+  :config
+  (setq outshine-startup-folded-p t))
 (add-hook 'prog-mode-hook 'outshine-mode)
 
 ;; ** Evil
