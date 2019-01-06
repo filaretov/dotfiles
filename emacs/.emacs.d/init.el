@@ -336,7 +336,9 @@
 (add-hook 'eshell-mode-hook (lambda ()
 			      (def-g-key
 				:keymaps 'eshell-mode-map
-				"i" 'hgf/insert-end-of-buffer)))
+				"i" 'hgf/insert-end-of-buffer)
+			      (general-def 'eshell-mode-map
+				[remap beginning-of-line] 'eshell-bol)))
 
 
 ;; ** Term
