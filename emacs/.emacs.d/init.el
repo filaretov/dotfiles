@@ -43,6 +43,12 @@
 (hgf/package-init)
 (setq use-package-always-ensure t)
 
+;; ** Package shenanigans
+(use-package quelpa-use-package
+  :config (quelpa-use-package-activate-advice))
+
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
 ;; * Change Customfile
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (when (file-exists-p custom-file)
@@ -60,6 +66,7 @@
 
 ;; * Start server
 (server-mode 1)
+
 ;; * UI preferences
 ;; ** Personal info
 (setq user-full-name "Hristo Filaretov"
@@ -139,7 +146,8 @@
   (which-key-mode))
 
 ;; ** Parens
-(show-paren-mode 1)
+(use-package highlight-sexp
+  :ensure nil)
 
 ;; ** Bells
 (setq ring-bell-function 'ignore)
@@ -171,6 +179,7 @@
 	       ")"
 	       " "
 	       '(vc-mode vc-mode)
+	       'mode-misc-info
 	       'mode-line-end-spaces))
 ;; 'mode-line-remote
 ;; 'mode-line-frame-identification
@@ -223,6 +232,28 @@
   (global-aggressive-indent-mode 1)
   (add-to-list 'aggressive-indent-excluded-modes '(python-mode rst-mode)))
 ;; * Major mode configuration
+;; ** LISPS
+;; *** General
+(defun lisp-modes ()
+  (progn
+    (highlight-sexp-mode 1)))
+
+;; *** Common Lisp
+(use-package slime
+  :mode (("\\.cl\\'" . common-lisp-mode))
+  :config
+  (setq inferior-lisp-program "/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
+
+(add-hook 'common-lisp-mode-hook 'lisp-modes)
+
+;; *** Racket
+(use-package racket-mode)
+(use-package scribble-mode)
+(add-hook 'racket-mode-hook 'lisp-modes)
+
+;; *** Emacs Lisp
+(add-hook 'emacs-lisp-mode-hook 'lisp-modes)
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
   "Line up argument lists by tabs, not spaces"
@@ -241,6 +272,12 @@
 	     c-lineup-arglist-tabs-only))))
 
 (add-hook 'c-mode-hook
+	  (lambda ()
+	    (setq indent-tabs-mode t)
+	    (setq show-trailing-whitespace t)
+	    (c-set-style "linux-tabs-only")))
+
+(add-hook 'c++-mode-hook
 	  (lambda ()
 	    (setq indent-tabs-mode t)
 	    (setq show-trailing-whitespace t)
@@ -361,13 +398,6 @@
 					   (auto-revert-mode 1)
 					   (setq auto-revert-interval 0.1))))
 
-;; ** Common Lisp
-(use-package slime
-  :mode (("\\.cl\\'" . common-lisp-mode))
-  :config
-  (setq inferior-lisp-program "/bin/sbcl")
-  (setq slime-contribs '(slime-fancy)))
-
 ;; ** Fish
 (use-package fish-mode)
 
@@ -390,10 +420,6 @@
 
 (setenv "WORKON_HOME" "~/.miniconda3/envs/")
 
-;; ** Racket
-(use-package racket-mode)
-(use-package scribble-mode)
-
 ;; ** Rust
 (use-package rust-mode)
 (use-package racer)
@@ -407,11 +433,21 @@
 ;; ** ReStructured Text
 (eval-after-load "rst"
   '(setq rst-mode-map (make-sparse-keymap)))
+;; ** Ledger
+(use-package ledger-mode)
+
+(use-package evil-ledger
+  :after '(ledger-mode evil-mode)
+  :config
+  (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+
 ;; * Minor mode configuration
-;; ** Outline-minor
+;; ** Outshine
 ;; *** Init
 
-(use-package outshine)
+(use-package outshine
+  :config
+  (setq outshine-startup-folded-p t))
 (add-hook 'prog-mode-hook 'outshine-mode)
 
 ;; ** Evil
@@ -485,12 +521,12 @@
 (use-package magit)
 
 (setq magit-repository-directories
-      '(("~/.dotfiles/" . 0)
-	("~/.crucible/" . 0)
+      '(("~/.crucible/" . 0)
 	("~/Documents/bsc/" . 0)
 	("~/Documents/journal/" . 0)
 	("~/Development/hkm/" . 0)
 	("~/Development/cookbook/" . 0)
+	("~/Development/dotfiles/" . 0)
 	("~/Development/powervest/" . 0)))
 
 (setq magit-repolist-columns
@@ -580,7 +616,8 @@
 
 (general-def 'normal org-mode-map
   ">" 'org-do-demote
-  "<" 'org-do-promote)
+  "<" 'org-do-promote
+  "<backtab>" 'org-shifttab)
 
 ;; ** Helpers
 (defun hgf/insert-end-of-buffer ()
