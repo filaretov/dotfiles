@@ -362,10 +362,16 @@
 (add-hook 'TeX-after-compilation-finished-functions
 	  #'TeX-revert-document-buffer)
 
+(add-hook 'bibtex-mode-hook (lambda ()
+			      (progn
+				(setq comment-start "%")
+				(outshine-mode 1))))
+
 (setq-default TeX-auto-save t)
 (setq-default TeX-parse-self t)
 (setq-default TeX-PDF-mode t)
 (setq-default TeX-auto-local "~/.emacs.d/auctex-auto")
+(setq bibtex-dialect 'biblatex)
 
 ;; ** Eshell
 (setq eshell-visual-commands '(top))
