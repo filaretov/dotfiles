@@ -38,7 +38,7 @@
   "The current overlay.")
 
 (defcustom hl-sexp-background-color
-  "#073642"
+  "#eee8d5"
   "*The color used for the background of the highlighted sexp."
   :type 'color
   :group 'highlight-sexp)

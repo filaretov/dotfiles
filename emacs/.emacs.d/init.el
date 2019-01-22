@@ -129,7 +129,7 @@
 
 (setq dark-theme 'solarized-dark)
 (setq light-theme 'solarized-light)
-(load-theme dark-theme t)
+(load-theme light-theme t)
 
 ;; ** Cursor
 (blink-cursor-mode 0)
@@ -688,11 +688,7 @@ Repeated invocations toggle between the two most recently open buffers."
   ("1" delete-other-windows "highlander")
   ("." nil "stop"))
 ;; ** Outline
-(general-def 'normal outline-minor-mode-map
-  "M-j" 'outline-move-subtree-down
-  "M-k" 'outline-move-subtree-up
-  "M-h" 'outline-promote
-  "M-l" 'outline-demote
+(general-def 'normal outshine-mode-map
   "<backtab>" 'outshine-cycle-buffer
   "<tab>" 'evil-toggle-fold)
 
