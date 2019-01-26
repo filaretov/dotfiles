@@ -352,7 +352,7 @@
     (auto-fill-mode 1)
     (TeX-source-correlate-mode 1)))
 
-(add-hook 'latex-mode-hook 'hgf--latex-hook)
+(add-hook 'LaTeX-mode-hook 'hgf--latex-hook)
 
 ;; to use pdfview with auctex
 (unless (hgf/windows-os-p)
@@ -461,13 +461,13 @@
 
 ;; * Minor mode configuration
 ;; ** Outshine
-
 (use-package outshine
   :config
   (setq outshine-startup-folded-p t))
 
-(add-hook 'prog-mode-hook 'outshine-mode)
-(add-hook 'bibtex-mode-hook 'outshine-mode)
+(add-hook 'prog-mode-hook #'outshine-mode 1)
+(add-hook 'bibtex-mode-hook #'outshine-mode 1)
+(add-hook 'LaTeX-mode-hook #'outshine-mode 1)
 
 ;; ** Evil
 ;; *** Init
@@ -652,7 +652,6 @@
   "<" 'org-do-promote
   "<backtab>" 'org-shifttab)
 
-;; ** Helpers
 (defun hgf/insert-end-of-buffer ()
   (interactive)
   (end-of-buffer)
@@ -673,7 +672,6 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
-;; ** Global
 (general-def 'normal
   "L" 'evil-end-of-visual-line
   "H" 'evil-first-non-blank-of-visual-line
@@ -714,6 +712,7 @@ Repeated invocations toggle between the two most recently open buffers."
   ("." nil "stop"))
 ;; ** Outline
 (general-def 'normal outshine-mode-map
+  "M-i" 'outshine-imenu
   "<backtab>" 'outshine-cycle-buffer
   "<tab>" 'evil-toggle-fold)
 
