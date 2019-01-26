@@ -650,6 +650,7 @@
 
 
 (general-def 'normal org-mode-map
+  "M-i" 'org-goto
   ">" 'org-do-demote
   "<" 'org-do-promote
   "<backtab>" 'org-shifttab)
