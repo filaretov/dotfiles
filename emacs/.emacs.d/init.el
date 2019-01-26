@@ -149,6 +149,8 @@
 (use-package highlight-sexp
   :ensure nil)
 
+(show-paren-mode 1)
+
 ;; ** Bells
 (setq ring-bell-function 'ignore)
 ;; ** VC symlinks
@@ -246,14 +248,13 @@
   (setq slime-contribs '(slime-fancy)))
 
 (add-hook 'common-lisp-mode-hook 'lisp-modes)
+(add-hook 'racket-mode-hook 'lisp-modes)
+(add-hook 'emacs-lisp-mode-hook 'lisp-modes)
 
 ;; *** Racket
 (use-package racket-mode)
 (use-package scribble-mode)
-(add-hook 'racket-mode-hook 'lisp-modes)
 
-;; *** Emacs Lisp
-(add-hook 'emacs-lisp-mode-hook 'lisp-modes)
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
   "Line up argument lists by tabs, not spaces"
@@ -345,13 +346,13 @@
   (auctex-latexmk-setup)
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
-(add-hook 'latex-mode-hook
-	  (lambda ()
-	    (progn
-	      (setq ispell-parser 'tex)
-	      (auto-fill-mode 1))))
+(defun hgf--latex-hook ()
+  (progn
+    (setq ispell-parser 'tex)
+    (auto-fill-mode 1)
+    (TeX-source-correlate-mode 1)))
 
-(add-hook 'latex-mode-hook #'TeX-source-correlate-mode 1)
+(add-hook 'latex-mode-hook 'hgf--latex-hook)
 
 ;; to use pdfview with auctex
 (unless (hgf/windows-os-p)
@@ -362,10 +363,11 @@
 (add-hook 'TeX-after-compilation-finished-functions
 	  #'TeX-revert-document-buffer)
 
-(add-hook 'bibtex-mode-hook (lambda ()
-			      (progn
-				(setq comment-start "%")
-				(outshine-mode 1))))
+(defun hgf--bibtex-hook ()
+  (progn
+    (setq comment-start "%")))
+
+(add-hook 'bibtex-mode-hook 'hgf--bibtex-hook)
 
 (setq-default TeX-auto-save t)
 (setq-default TeX-parse-self t)
@@ -374,18 +376,21 @@
 (setq bibtex-dialect 'biblatex)
 
 ;; ** Eshell
+(defun hgf--eshell-hook ()
+  (progn
+    (def-g-key
+      :keymaps 'eshell-mode-map
+      "i" 'hgf/insert-end-of-buffer)
+    (general-def 'eshell-mode-map
+      [remap beginning-of-line] 'eshell-bol)))
+
+(add-hook 'eshell-mode-hook 'hgf--eshell-hook)
+
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
-(add-hook 'eshell-mode-hook (lambda ()
-			      (def-g-key
-				:keymaps 'eshell-mode-map
-				"i" 'hgf/insert-end-of-buffer)
-			      (general-def 'eshell-mode-map
-				[remap beginning-of-line] 'eshell-bol)))
-
 
 ;; ** Term
-(add-hook 'term-mode-hook (lambda () (toggle-truncate-lines 1)))
+(add-hook 'term-mode-hook #'toggle-truncate-line 1)
 
 ;; ** Markdown
 (use-package markdown-mode
@@ -400,9 +405,12 @@
     (pdf-tools-install)
     (setq-default pdf-view-display-size 'fit-page)))
 
-(add-hook 'pdf-view-mode-hook (lambda () (progn
-					   (auto-revert-mode 1)
-					   (setq auto-revert-interval 0.1))))
+(defun hgf--pdf-view-hook ()
+  (progn
+    (auto-revert-mode 1)
+    (setq auto-revert-interval 0.1)))
+
+(add-hook 'pdf-view-mode-hook 'hgf--pdf-view-hook)
 
 ;; ** Fish
 (use-package fish-mode)
@@ -430,8 +438,12 @@
 (use-package rust-mode)
 (use-package racer)
 (use-package cargo)
-(add-hook 'rust-mode-hook 'racer-mode)
-(add-hook 'rust-mode-hook 'cargo-minor-mode)
+(defun hgf--rust-hook ()
+  (progn
+    (racer-mode 1)
+    (cargo-minor-mode 1)))
+
+(add-hook 'rust-mode-hook 'hgf--rust-hook)
 
 ;; ** Yaml
 (use-package yaml-mode)
@@ -445,16 +457,17 @@
 (use-package evil-ledger
   :after '(ledger-mode evil-mode)
   :config
-  (add-hook 'ledger-mode-hook #'evil-ledger-mode))
+  (add-hook 'ledger-mode-hook 'evil-ledger-mode))
 
 ;; * Minor mode configuration
 ;; ** Outshine
-;; *** Init
 
 (use-package outshine
   :config
   (setq outshine-startup-folded-p t))
+
 (add-hook 'prog-mode-hook 'outshine-mode)
+(add-hook 'bibtex-mode-hook 'outshine-mode)
 
 ;; ** Evil
 ;; *** Init
@@ -547,6 +560,7 @@
 	  (:help-echo "Local changes not in upstream")))
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
+
 ;; * Keybindings
 ;; ** General.el
 ;; *** Init
@@ -582,6 +596,10 @@
   :prefix "g"
   :states 'normal)
 
+(general-create-definer def-w-key
+  :prefix "SPC w"
+  :states 'normal)
+
 ;; *** Defs
 (def-help-key
   "v" 'counsel-describe-variable
@@ -606,7 +624,17 @@
   "t" 'hgf/ansi-term-fish
   "T" 'hgf/term-fish)
 
-(def-leader-key
+(def-w-key
+  "h" 'evil-window-left
+  "j" 'evil-window-down
+  "k" 'evil-window-up
+  "l" 'evil-window-right
+  "s" 'evil-window-split
+  "v" 'evil-window-vsplit
+  "q" 'evil-window-delete
+  "m" 'kill-this-buffer
+  "1" 'delete-other-windows
+  "0" 'delete-window
   "w" 'hydra-window/body)
 
 (def-ge-key
@@ -615,7 +643,6 @@
 
 (def-g-key
   :keymaps 'org-mode-map
-  "g" 'org-ctrl-c-ctrl-c
   "t" 'org-todo
   "x" 'org-open-at-point)
 
@@ -647,14 +674,12 @@ Repeated invocations toggle between the two most recently open buffers."
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 ;; ** Global
-;; Emacsier
 (general-def 'normal
   "L" 'evil-end-of-visual-line
   "H" 'evil-first-non-blank-of-visual-line
-  "/"   'swiper
+  "?"   'swiper
   "C-u" 'evil-scroll-up ;; sorry universal-argument
-  "<backspace>" 'evil-goto-first-line
-  "<return>" 'evil-goto-line)
+  "<backspace>" 'evil-goto-first-line)
 
 (general-def '(normal visual insert)
   "C-e" 'end-of-line
