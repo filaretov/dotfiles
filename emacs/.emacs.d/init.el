@@ -292,9 +292,11 @@
 (add-hook 'org-mode-hook 'auto-fill-mode)
 
 (setq org-adapt-indentation t
-      org-hide-leading-stars t)
-(setq org-src-fontify-natively t
-      org-src-tab-acts-natively t)
+      org-hide-leading-stars t
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t
+      org-goto-interface 'outline-path-completionp
+      org-outline-path-complete-in-steps nil)
 
 (use-package ox-extra
   :ensure org-plus-contrib
