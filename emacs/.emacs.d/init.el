@@ -1,7 +1,9 @@
-;; You see, yak shaving is what you are doing when you're doing some
-;; stupid, fiddly little task that bears no obvious relationship to what
-;; you're supposed to be working on, but yet a chain of twelve causal
-;; relations links what you're doing to the original meta-task. -- Jeremy H. Brown
+;; You see, yak shaving is what you are doing when you're doing some stupid, fiddly little
+;; task that bears no obvious relationship to what you're supposed to be working on, but
+;; yet a chain of twelve causal relations links what you're doing to the original
+;; meta-task.
+;;
+;; -- Jeremy H. Brown
 
 ;; * Packaging Preparation
 ;; ** Helpers
