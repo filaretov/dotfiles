@@ -69,6 +69,145 @@
 ;; * Start server
 (server-mode 1)
 
+;; * Keybindings setup
+;; ** General.el
+(use-package general)
+
+;; ** Definers
+(general-create-definer def-leader-key
+  :prefix "SPC"
+  :states 'normal
+  :keymaps 'override)
+
+(general-create-definer def-help-key
+  :prefix "SPC h"
+  :states 'normal)
+
+(general-create-definer def-file-key
+  :prefix "SPC f"
+  :states 'normal)
+
+(general-create-definer def-dispatch-key
+  :prefix "SPC d"
+  :states 'normal)
+
+(general-create-definer def-mode-key
+  :prefix "SPC m"
+  :states 'normal)
+
+(general-create-definer def-ge-key
+  :prefix "g e"
+  :states 'normal)
+
+(general-create-definer def-g-key
+  :prefix "g"
+  :states 'normal)
+
+(general-create-definer def-w-key
+  :prefix "SPC w"
+  :states 'normal)
+
+;; ** Helper functions
+(defun hgf/insert-end-of-buffer ()
+  (interactive)
+  (end-of-buffer)
+  (evil-insert-state))
+
+(defun hgf/ansi-term-fish ()
+  (interactive)
+  (ansi-term "/usr/bin/fish"))
+
+(defun hgf/term-fish ()
+  (interactive)
+  (term "/usr/bin/fish"))
+
+;; Credit: https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
+(defun hgf/switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+;; ** Fundamental binds
+(def-help-key
+  "v" 'counsel-describe-variable
+  "f" 'counsel-describe-function
+  "k" 'describe-key
+  "w" 'where-is
+  "m" 'describe-mode
+  "P" 'describe-package)
+
+(def-file-key
+  "f" 'find-file
+  "s" 'save-buffer
+  "b" 'ibuffer
+  "o" 'ivy-switch-buffer
+  "i" 'hgf/switch-to-previous-buffer
+  "e" 'hgf/edit-or-load-user-init-file)
+
+(def-dispatch-key
+  "d" 'magit
+  "l" 'magit-list-repositories
+  "e" 'eshell
+  "t" 'hgf/ansi-term-fish
+  "T" 'hgf/term-fish)
+
+(def-w-key
+  "h" 'evil-window-left
+  "j" 'evil-window-down
+  "k" 'evil-window-up
+  "l" 'evil-window-right
+  "s" 'evil-window-split
+  "v" 'evil-window-vsplit
+  "q" 'evil-window-delete
+  "m" 'kill-this-buffer
+  "1" 'delete-other-windows
+  "0" 'delete-window
+  "w" 'hydra-window/body)
+
+(def-ge-key
+  "e" 'eval-last-sexp
+  "i" 'eval-defun)
+
+(general-def 'normal
+  "L" 'evil-end-of-visual-line
+  "H" 'evil-first-non-blank-of-visual-line
+  "?"   'swiper
+  "C-u" 'evil-scroll-up ;; sorry universal-argument
+  "<backspace>" 'evil-goto-first-line)
+
+(general-def '(normal visual insert)
+  "C-e" 'end-of-line
+  "C-a" 'beginning-of-line
+  "C-k" 'kill-line)
+
+(general-def 'insert
+  "C-y" 'evil-paste-after
+  "<C-i>" 'company-complete)
+
+;; Going back to evil from emacs state
+(general-def "<C-[>" 'evil-normal-state)
+;; Swapity swap
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+(global-set-key [remap evil-next-line] 'evil-next-visual-line)
+(global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
+
+;; ** Hydra
+(use-package hydra)
+(defhydra hydra-window ()
+  "Window management" 
+  ("h" evil-window-left "left")
+  ("j" evil-window-down "down")
+  ("k" evil-window-up "up")
+  ("l" evil-window-right "right")
+  ("s" evil-window-split "split")
+  ("v" evil-window-vsplit "vsplit")
+  ("q" evil-window-delete "delete")
+  ("f" find-file "file")
+  ("o" ivy-switch-buffer "buffer")
+  ("m" kill-this-buffer "murder")
+  ("1" delete-other-windows "highlander")
+  ("." nil "stop"))
 ;; * UI preferences
 ;; ** Personal info
 (setq user-full-name "Hristo Filaretov"
@@ -287,7 +426,6 @@
 	    (c-set-style "linux-tabs-only")))
 
 ;; ** Org mode
-;; *** Init
 (use-package org)
 (use-package htmlize)
 
@@ -305,7 +443,7 @@
   :config
   (ox-extras-activate '(ignore-headlines)))
 
-;; *** Blog
+
 (setq org-publish-project-alist
       '(("org-notes"
 	 :base-directory "~/Documents/blog/org/"
@@ -325,7 +463,7 @@
 	 )
 	(" org" :components ("org-notes" "org-static"))))
 
-;; *** Latex
+
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
 	       '("book"
@@ -334,6 +472,21 @@
 		 ("\\section{%s}" . "\\section*{%s}")
 		 ("\\subsection{%s}" . "\\subsection*{%s}")
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+
+(general-def 'normal org-mode-map
+  "M-i" 'org-goto
+  ">" 'org-do-demote
+  "<" 'org-do-promote
+  "<backtab>" 'org-shifttab)
+
+(def-g-key
+  :keymaps 'org-mode-map
+  "t" 'org-todo
+  "x" 'org-open-at-point)
+
+(def-file-key 'normal org-mode-map
+  "n" 'org-narrow-to-subtree
+  "w" 'widen)
 
 ;; ** LaTex mode
 (use-package tex
@@ -393,6 +546,9 @@
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
 
+(evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
+(evil-define-key 'insert eshell-mode-map (kbd "C-p") 'eshell-previous-matching-input-from-input)
+
 ;; ** Term
 (add-hook 'term-mode-hook #'toggle-truncate-line 1)
 
@@ -438,6 +594,10 @@
 
 (setenv "WORKON_HOME" "~/.miniconda3/envs/")
 
+(def-mode-key
+  :keymaps 'python-mode-map
+  "f" 'blacken-buffer)
+
 ;; ** Rust
 (use-package rust-mode)
 (use-package racer)
@@ -472,6 +632,15 @@
 (add-hook 'prog-mode-hook #'outshine-mode 1)
 (add-hook 'bibtex-mode-hook #'outshine-mode 1)
 (add-hook 'LaTeX-mode-hook #'outshine-mode 1)
+
+(general-def 'normal outshine-mode-map
+  "M-i" 'outshine-imenu
+  "<backtab>" 'outshine-cycle-buffer
+  "<tab>" 'evil-toggle-fold)
+
+(def-file-key 'normal outshine-mode-map
+  "n" 'outshine-narrow-to-subtree
+  "w" 'widen)
 
 ;; ** Evil
 ;; *** Init
@@ -564,169 +733,3 @@
 	  (:help-echo "Local changes not in upstream")))
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
-
-;; * Keybindings
-;; ** General.el
-;; *** Init
-(use-package general)
-
-;; *** Helpers
-(general-create-definer def-leader-key
-  :prefix "SPC"
-  :states 'normal
-  :keymaps 'override)
-
-(general-create-definer def-help-key
-  :prefix "SPC h"
-  :states 'normal)
-
-(general-create-definer def-file-key
-  :prefix "SPC f"
-  :states 'normal)
-
-(general-create-definer def-dispatch-key
-  :prefix "SPC d"
-  :states 'normal)
-
-(general-create-definer def-mode-key
-  :prefix "SPC m"
-  :states 'normal)
-
-(general-create-definer def-ge-key
-  :prefix "g e"
-  :states 'normal)
-
-(general-create-definer def-g-key
-  :prefix "g"
-  :states 'normal)
-
-(general-create-definer def-w-key
-  :prefix "SPC w"
-  :states 'normal)
-
-;; *** Defs
-(def-help-key
-  "v" 'counsel-describe-variable
-  "f" 'counsel-describe-function
-  "k" 'describe-key
-  "w" 'where-is
-  "m" 'describe-mode
-  "P" 'describe-package)
-
-(def-file-key
-  "f" 'find-file
-  "s" 'save-buffer
-  "b" 'ibuffer
-  "o" 'ivy-switch-buffer
-  "i" 'hgf/switch-to-previous-buffer
-  "e" 'hgf/edit-or-load-user-init-file)
-
-(def-dispatch-key
-  "d" 'magit
-  "l" 'magit-list-repositories
-  "e" 'eshell
-  "t" 'hgf/ansi-term-fish
-  "T" 'hgf/term-fish)
-
-(def-w-key
-  "h" 'evil-window-left
-  "j" 'evil-window-down
-  "k" 'evil-window-up
-  "l" 'evil-window-right
-  "s" 'evil-window-split
-  "v" 'evil-window-vsplit
-  "q" 'evil-window-delete
-  "m" 'kill-this-buffer
-  "1" 'delete-other-windows
-  "0" 'delete-window
-  "w" 'hydra-window/body)
-
-(def-ge-key
-  "e" 'eval-last-sexp
-  "i" 'eval-defun)
-
-(def-g-key
-  :keymaps 'org-mode-map
-  "t" 'org-todo
-  "x" 'org-open-at-point)
-
-
-(general-def 'normal org-mode-map
-  "M-i" 'org-goto
-  ">" 'org-do-demote
-  "<" 'org-do-promote
-  "<backtab>" 'org-shifttab)
-
-(defun hgf/insert-end-of-buffer ()
-  (interactive)
-  (end-of-buffer)
-  (evil-insert-state))
-
-(defun hgf/ansi-term-fish ()
-  (interactive)
-  (ansi-term "/usr/bin/fish"))
-
-(defun hgf/term-fish ()
-  (interactive)
-  (term "/usr/bin/fish"))
-
-;; Credit: https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
-(defun hgf/switch-to-previous-buffer ()
-  "Switch to previously open buffer.
-Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-(general-def 'normal
-  "L" 'evil-end-of-visual-line
-  "H" 'evil-first-non-blank-of-visual-line
-  "?"   'swiper
-  "C-u" 'evil-scroll-up ;; sorry universal-argument
-  "<backspace>" 'evil-goto-first-line)
-
-(general-def '(normal visual insert)
-  "C-e" 'end-of-line
-  "C-a" 'beginning-of-line
-  "C-k" 'kill-line)
-(general-def 'insert
-  "C-y" 'evil-paste-after
-  "<C-i>" 'company-complete)
-
-;; Going back to evil from emacs state
-(general-def "<C-[>" 'evil-normal-state)
-;; Swapity swap
-(global-set-key [remap dabbrev-expand] 'hippie-expand)
-(global-set-key [remap evil-next-line] 'evil-next-visual-line)
-(global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
-
-;; ** Hydras
-(use-package hydra)
-(defhydra hydra-window ()
-  "Window management" 
-  ("h" evil-window-left "left")
-  ("j" evil-window-down "down")
-  ("k" evil-window-up "up")
-  ("l" evil-window-right "right")
-  ("s" evil-window-split "split")
-  ("v" evil-window-vsplit "vsplit")
-  ("q" evil-window-delete "delete")
-  ("f" find-file "file")
-  ("o" ivy-switch-buffer "buffer")
-  ("m" kill-this-buffer "murder")
-  ("1" delete-other-windows "highlander")
-  ("." nil "stop"))
-;; ** Outline
-(general-def 'normal outshine-mode-map
-  "M-i" 'outshine-imenu
-  "<backtab>" 'outshine-cycle-buffer
-  "<tab>" 'evil-toggle-fold)
-
-;; ** Python
-(def-mode-key
-  :keymaps 'python-mode-map
-  "f" 'blacken-buffer)
-
-;; ** Eshell
-(evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
-(evil-define-key 'insert eshell-mode-map (kbd "C-p") 'eshell-previous-matching-input-from-input)
-
