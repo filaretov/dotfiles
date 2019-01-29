@@ -276,10 +276,10 @@ Repeated invocations toggle between the two most recently open buffers."
 (blink-cursor-mode 0)
 
 ;; ** Scrolling
-;; (use-package smooth-scrolling
-;;   :config
-;;   (smooth-scrolling-mode 1)
-;;   (setq smooth-scroll-margin 2))
+(use-package smooth-scrolling
+  :config
+  (smooth-scrolling-mode 1)
+  (setq smooth-scroll-margin 3))
 
 ;; ** Help me remember things
 (use-package which-key
@@ -539,15 +539,17 @@ Repeated invocations toggle between the two most recently open buffers."
       :keymaps 'eshell-mode-map
       "i" 'hgf/insert-end-of-buffer)
     (general-def 'eshell-mode-map
-      [remap beginning-of-line] 'eshell-bol)))
+      [remap beginning-of-line] 'eshell-bol)
+    (general-define-key
+     :states 'normal
+     :keymaps 'eshell-mode-map
+     (kbd "C-p") 'eshell-previous-matching-input-from-input
+     (kbd "C-n") 'eshell-next-matching-input-from-input)))
 
 (add-hook 'eshell-mode-hook 'hgf--eshell-hook)
 
 (setq eshell-visual-commands '(top))
 (defalias 'ff #'find-file)
-
-(evil-define-key 'insert eshell-mode-map (kbd "C-n") 'eshell-next-matching-input-from-input)
-(evil-define-key 'insert eshell-mode-map (kbd "C-p") 'eshell-previous-matching-input-from-input)
 
 ;; ** Term
 (add-hook 'term-mode-hook #'toggle-truncate-line 1)
