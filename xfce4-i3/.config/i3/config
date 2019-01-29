@@ -103,6 +103,7 @@ set $ws9 "9:  "
 set $ws0 "10:  "
 
 # Assign programs to ws
+assign [class="Emacs"]       $ws2
 assign [class="Nautilus"]    $ws3
 assign [class="Thunar"]      $ws3
 assign [class="Evince"]      $ws8
