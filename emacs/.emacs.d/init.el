@@ -388,7 +388,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq inferior-lisp-program "/bin/sbcl")
   (setq slime-contribs '(slime-fancy)))
 
-(add-hook 'common-lisp-mode-hook 'lisp-modes)
+(add-hook 'lisp-mode-hook 'lisp-modes)
 (add-hook 'racket-mode-hook 'lisp-modes)
 (add-hook 'emacs-lisp-mode-hook 'lisp-modes)
 
