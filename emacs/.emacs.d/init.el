@@ -463,11 +463,10 @@ Repeated invocations toggle between the two most recently open buffers."
 	 )
 	(" org" :components ("org-notes" "org-static"))))
 
-
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
 	       '("book"
-		 "\\documentclass{book}"
+		 "\\documentclass{book}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
 		 ("\\chapter{%s}" . "\\chapter*{%s}")
 		 ("\\section{%s}" . "\\section*{%s}")
 		 ("\\subsection{%s}" . "\\subsection*{%s}")
