@@ -26,17 +26,7 @@ if exists('*minpac#init')
   call minpac#add('tpope/vim-rsi')
   call minpac#add('tpope/vim-surround')
   call minpac#add('tpope/vim-unimpaired')
-  call minpac#add('filaretov/vim-todo')
-  call minpac#add('filaretov/vim-orgzly')
   call minpac#add('vim-pandoc/vim-pandoc-syntax')
-  call minpac#add('roxma/nvim-yarp')
-  call minpac#add('ncm2/ncm2')
-  call minpac#add('ncm2/ncm2-bufword')
-  call minpac#add('ncm2/ncm2-path')
-  call minpac#add('ncm2/ncm2-jedi')
-  call minpac#add('filipekiss/ncm2-look.vim')
-  call minpac#add('dracula/vim', {'name' : 'vim-dracula'})
-  call minpac#add('https://gitlab.com/Lenovsky/nuake.git')
 endif
 
 " }}}
