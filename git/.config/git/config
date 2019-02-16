@@ -11,6 +11,7 @@
 	cia = commit --amend
 	aa = add --all
 	rc = rebase --continue
+	ls = ls-files
 
 [diff "odf"]
 	binary = true
