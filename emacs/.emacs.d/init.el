@@ -270,7 +270,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (setq dark-theme 'solarized-dark)
 (setq light-theme 'solarized-light)
-(load-theme light-theme t)
+(load-theme dark-theme t)
 
 ;; ** Cursor
 (blink-cursor-mode 0)

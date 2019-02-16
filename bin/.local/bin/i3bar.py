@@ -4,6 +4,8 @@
 import sys
 import json
 import time
+import argparse
+import functools
 from subprocess import check_output
 from time import localtime, strftime
 
@@ -41,17 +43,12 @@ def i3_json(
     instance=None,
     separator=None,
     separator_block_width=None,
-    background=None,
-    border_bottom=None,
-    border_left=None,
-    border_right=None,
-    border_top=None,
 ):
     i3_block = {"name": name, "full_text": text}
     if color is not None:
         i3_block["color"] = color
     if bg is not None:
-        i3_block["background"] = background
+        i3_block["background"] = bg
     if border is not None:
         i3_block["border"] = border
     if min_width is not None:
@@ -66,17 +63,11 @@ def i3_json(
         i3_block["separator"] = separator
     if separator_block_width is not None:
         i3_block["separator_block_width"] = separator_block_width
-    if background is not None:
-        i3_block["background"] = background
-    i3_block["border_bottom"] = bottom if border_bottom is None else border_bottom
-    i3_block["border_top"] = 0 if border_top is None else border_top
-    i3_block["border_left"] = 0 if border_left is None else border_left
-    i3_block["border_right"] = 0 if border_right is None else border_right
     return i3_block
 
 
 def vsc_check():
-    return i3_json("vsc_check", " id", separator=True, border=nord_colors["nord10"])
+    return i3_json("vsc_check", " id", separator=True, bg=nord_colors["nord10"])
 
 
 def _plugged():
@@ -115,20 +106,20 @@ def battery():
         text = "! "
         color = "#f44f4f"
     text = text + " " + str(battery_level)
-    return i3_json("battery_level", text, border=color)
+    return i3_json("battery_level", text, bg=color)
 
 
 def xkb_layout():
     output = check_output(["xkb-switch"]).decode()
     text = output.replace("\n", "").partition("(")[0]
     text = " " + text
-    return i3_json("xkblayout", text, border=nord_colors["nord15"])
+    return i3_json("xkblayout", text, bg=nord_colors["nord15"])
 
 
 def clock():
     date, time = strftime("%Y-%m-%d %H:%M", localtime()).split(" ")
     text = " " + date + "  " + time
-    return i3_json("clock", text, border=nord_colors["nord7"])
+    return i3_json("clock", text, bg=nord_colors["nord7"])
 
 
 def print_line(message):
@@ -137,8 +128,36 @@ def print_line(message):
     sys.stdout.flush()
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--noborders", help="Disable border entries for all items", action="store_true"
+    )
+    parser.add_argument(
+        "--nobackground", help="Disable background entries for all items", action="store_true"
+    )
+    return parser.parse_args()
+
+
+def get_filter(key):
+    def filter(dictionary):
+        return {k:v for (k,v) in dictionary.items() if k != key}
+    return filter
+
+
+def compose(*functions):
+    return functools.reduce(lambda f, g: lambda x: f(g(x)), functions, lambda x: x)
+
+
 if __name__ == "__main__":
     # Skip the first line which contains the version header.
+    args = parse_args()
+    filters = []
+    if args.noborders:
+        filters.append(get_filter("border"))
+    if args.nobackground:
+        filters.append(get_filter("background"))
+    filt = compose(*filters)
     prefix = ","
     print_line('{ "version": 1 }')
 
@@ -149,8 +168,8 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [vsc_check, xkb_layout, battery, clock]
+    modules = [xkb_layout, battery, clock]
     while True:
-        line = [mod() for mod in modules]
+        line = [filt(mod()) for mod in modules]
         print_line(prefix + json.dumps(line))
         time.sleep(0.1)
