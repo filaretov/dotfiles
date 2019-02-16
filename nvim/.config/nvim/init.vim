@@ -7,21 +7,17 @@ command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 if exists('*minpac#init')
   call minpac#init()
-  call minpac#add('justinmk/vim-dirvish')
   call minpac#add('kballard/vim-fish')
   call minpac#add('k-takata/minpac', {'type': 'opt'})
-  call minpac#add('lervag/vimtex')
   call minpac#add('romainl/flattened')
   call minpac#add('rust-lang/rust.vim')
   call minpac#add('sgur/vim-editorconfig')
   call minpac#add('Shougo/neosnippet.vim')
   call minpac#add('tommcdo/vim-exchange')
-  call minpac#add('fneu/breezy')
   call minpac#add('tpope/vim-abolish')
   call minpac#add('tpope/vim-commentary')
   call minpac#add('tpope/vim-eunuch')
   call minpac#add('tpope/vim-fugitive')
-  call minpac#add('tpope/vim-obsession')
   call minpac#add('tpope/vim-repeat')
   call minpac#add('tpope/vim-rsi')
   call minpac#add('tpope/vim-surround')
@@ -36,35 +32,12 @@ endif
 let g:pandoc#syntax#conceal#use = 0
 let s:nvim_config = $HOME.'/.config/nvim'
 
-" Obsession
-
-function! SessionPath()
-  let l:project_dir = substitute(getcwd(), $HOME.'/', "", "")
-  let l:project_name = substitute(l:project_dir, "/", '\\%', "g")
-  let l:obsession_path = s:nvim_config . '/sessions/' . l:project_name . '.vim'
-  return l:obsession_path
-endfunction
-
-function! SessionStart()
-  exec "Obsession " . SessionPath()
-endfunction
-
-function! SessionLoad()
-  exec "silent! source " . SessionPath()
-endfunction
-
-command! SessionStart call SessionStart()
-command! SessionLoad call SessionLoad()
-
 " Neosnippets
 let g:neosnippet#disable_select_mode_mappings = 1
 let g:neosnippet#snippets_directory= s:nvim_config . '/snips/'
 let g:neosnippet#disable_runtime_snippets = {
       \   '_': 1,
       \ }
-
-" Vimtex
-let g:vimtex_fold_enabled = 1
 
 " }}}
 
@@ -193,8 +166,6 @@ vnoremap <leader>p "+p
 nnoremap <leader>P o<c-r>+<ESC>==
 " Snippets
 nnoremap <leader>es :NeoSnippetEdit -split<cr>
-" Quick terminal
-nnoremap <M-q> :Nuake<cr>
 " Don't mess up reg when using x
 nnoremap x "_x
 " Turn off highlighting
@@ -279,21 +250,6 @@ augroup pandoc
   au BufNewFile,BufRead *.markdown,*.mkd,*.md set filetype=pandoc
 augroup END
 
-augroup ncm2
-  au!
-  au BufEnter * call ncm2#enable_for_buffer()
-  au User Ncm2Plugin call ncm2#register_source({
-          \ 'name' : 'vimtex',
-          \ 'priority': 9,
-          \ 'subscope_enable': 1,
-          \ 'complete_length': 1,
-          \ 'scope': ['tex'],
-          \ 'mark': 'tex',
-          \ 'word_pattern': '\w+',
-          \ 'complete_pattern': g:vimtex#re#ncm,
-          \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-          \ })
-augroup END
 " }}}
 
 " Helper functions {{{
