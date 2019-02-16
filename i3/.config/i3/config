@@ -186,9 +186,9 @@ bindsym Mod1+space exec rofi -show drun
 # finds out, if available)
 
 bar {
-	status_command i3status
+	status_command ~/.local/bin/i3bar.py
 	position top
-	mode hide
+	mode dock
 	modifier none
 	font pango: Fira Mono 11
 	separator_symbol " "
