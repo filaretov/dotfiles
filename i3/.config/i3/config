@@ -194,11 +194,11 @@ bar {
 	font pango: Fira Mono Medium 9
 	separator_symbol "   "
 	colors {
-		background #111111
-		statusline #DDDDDD
-		focused_workspace  #DDDDDD #DDDDDD #111111
-		inactive_workspace #111111 #111111 #DDDDDD
-		urgent_workspace   #DDDDDD #DDDDDD #111111
+		background #202020
+		statusline #dedede
+		focused_workspace  #dedede #dedede #202020
+		inactive_workspace #202020 #202020 #dedede
+		urgent_workspace   #dedede #dedede #202020
 	}
 	tray_output primary
 	strip_workspace_numbers yes
