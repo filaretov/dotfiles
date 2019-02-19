@@ -155,8 +155,8 @@ nnoremap L $
 nnoremap <C-s> :w<cr>
 
 " vimrc
-nnoremap <leader>ev :edit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>fe :edit $MYVIMRC<cr>
+nnoremap <leader>fs :source $MYVIMRC<cr>
 
 " OS clipboard
 nnoremap <leader>y "+y

@@ -33,26 +33,12 @@
   :group 'faces
   :group 'matching)
 
-(defvar hl-sexp-overlay
-  nil
+(defvar hl-sexp-overlay nil
   "The current overlay.")
 
-(defcustom hl-sexp-background-color
-  "#eee8d5"
-  "*The color used for the background of the highlighted sexp."
-  :type 'color
-  :group 'highlight-sexp)
-
-(defcustom hl-sexp-foreground-color
-  nil
-  "*The color used for the foreground of the highlighted sexp"
-  :type 'color
-  :group 'highlight-sexp)
-
-(make-face 'hl-sexp-face)
-(defcustom hl-sexp-face
-  nil
-  "*The face used for the highlighted sexp."
+(defcustom hl-sexp-face 'highlight
+  "The face used for the highlighted sexp."
+  :type 'sexp
   :group 'highlight-sexp)
 
 ;;;###autoload
@@ -83,8 +69,6 @@
   (if hl-sexp-overlay
       (delete-overlay hl-sexp-overlay))
   (setq hl-sexp-overlay nil))
-
-
 
 (defun hl-sexp-highlight ()
   (let ((text-property (get-text-property (point) 'face)))
@@ -119,13 +103,9 @@
     (point)))
 
 (defun hl-sexp-create-overlay ()
-  (let ((attribute (face-attr-construct 'hl-sexp-face)))
-    (if hl-sexp-foreground-color
-	(setq attribute (plist-put attribute :foreground hl-sexp-foreground-color)))
-    (if hl-sexp-background-color
-	(setq attribute (plist-put attribute :background hl-sexp-background-color)))
+  (let ((attribute hl-sexp-face))
     (set (make-local-variable 'hl-sexp-overlay) (make-overlay 0 0))
-    (overlay-put hl-sexp-overlay 'face attribute)))
+    (overlay-put hl-sexp-overlay 'face hl-sexp-face)))
 
 (defun hl-sexp-handle-clone-indirect-buffer ()
   "Set hl-sexp-overlay correctly when the buffer is cloned."

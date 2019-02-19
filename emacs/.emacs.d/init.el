@@ -630,6 +630,7 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (setq outshine-startup-folded-p t))
 
+(add-hook 'conf-mode-hook #'outshine-mode 1)
 (add-hook 'prog-mode-hook #'outshine-mode 1)
 (add-hook 'bibtex-mode-hook #'outshine-mode 1)
 (add-hook 'LaTeX-mode-hook #'outshine-mode 1)
