@@ -186,7 +186,7 @@ bindsym Mod1+space exec rofi -show drun
 # finds out, if available)
 
 bar {
-	status_command ~/.local/bin/i3bar.py --noborder --nobackground
+	status_command ~/.local/bin/i3bar.py --nobackground
 	position top
 	mode dock
 	font pango: Fira Mono Medium 9

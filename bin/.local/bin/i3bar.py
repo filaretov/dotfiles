@@ -158,6 +158,7 @@ if __name__ == "__main__":
     if args.nobackground:
         filters.append(get_filter("background"))
     filt = compose(*filters)
+
     prefix = ","
     print_line('{ "version": 1 }')
 
