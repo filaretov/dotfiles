@@ -4,8 +4,11 @@
 import sys
 import json
 import time
-from subprocess import check_output
+import os
+import subprocess
+from glob import glob
 from time import localtime, strftime
+
 
 def i3_json(
     name,
@@ -33,17 +36,37 @@ def i3_json(
     return i3_block
 
 
+def repo_is_dirty(dir):
+    if ".git" in os.listdir(dir):
+        try:
+            rv = subprocess.check_output(
+                ["git", "diff", "@{u}.."], cwd=dir, stderr=subprocess.STDOUT
+            ).decode()
+            rv += subprocess.check_output(
+                ["git", "status", "--porcelain"], cwd=dir, stderr=subprocess.STDOUT
+            ).decode()
+        except subprocess.CalledProcessError:
+            rv = ""
+        return rv
+    else:
+        return False
+
+
 def vsc_check():
-    return i3_json("vsc_check", " id", separator=True)
+    # No unpushed changes if output is empty
+    git_repos = glob("/home/h.filaretov/Development/*/")
+    dirty = any([repo_is_dirty(dir) for dir in git_repos])
+    text = "X" if dirty else "OK"
+    return i3_json("vsc_check", " " + text, separator=True)
 
 
 def _plugged():
-    acpi_output = check_output(["acpi", "-a"]).decode().replace("\n", "")
+    acpi_output = subprocess.check_output(["acpi", "-a"]).decode().replace("\n", "")
     return "on" in acpi_output
 
 
 def _battery_level():
-    raw_acpi_output = check_output(["acpi", "-b"]).decode().replace("\n", "")
+    raw_acpi_output = subprocess.check_output(["acpi", "-b"]).decode().replace("\n", "")
     acpi_output = raw_acpi_output.partition("%")[0]
     battery_level = int(acpi_output.split(" ")[-1])
     return battery_level
@@ -70,7 +93,7 @@ def battery():
 
 
 def xkb_layout():
-    output = check_output(["xkb-switch"]).decode()
+    output = subprocess.check_output(["xkb-switch"]).decode()
     text = output.replace("\n", "").partition("(")[0]
     text = " " + text
     return i3_json("xkblayout", text)
@@ -87,6 +110,7 @@ def print_line(message):
     sys.stdout.write(message + "\n")
     sys.stdout.flush()
 
+
 if __name__ == "__main__":
     # Skip the first line which contains the version header.
     prefix = ","
@@ -99,7 +123,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [xkb_layout, battery, clock]
+    modules = [xkb_layout, vsc_check, battery, clock]
     while True:
         line = [mod() for mod in modules]
         print_line(prefix + json.dumps(line))

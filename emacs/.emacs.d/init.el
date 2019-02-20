@@ -714,14 +714,20 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; ** Magit
 (use-package magit)
 
+(defun hgf/list-subdirs (dir)
+  "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
+  (let ((base dir)
+	(result))
+    (dolist (f (directory-files base) result)
+      (let ((name (concat base "/" f)))
+	(when (and (file-directory-p name) 
+                   (not (equal f ".."))
+                   (not (equal f ".")))
+          (add-to-list 'result `(,name 0)))))
+    result))
+
 (setq magit-repository-directories
-      '(("~/.crucible/" . 0)
-	("~/Documents/bsc/" . 0)
-	("~/Documents/journal/" . 0)
-	("~/Development/hkm/" . 0)
-	("~/Development/cookbook/" . 0)
-	("~/Development/dotfiles/" . 0)
-	("~/Development/powervest/" . 0)))
+      (hgf/list-subdirs "~/Development"))
 
 (setq magit-repolist-columns
       '(("Name" 12 magit-repolist-column-ident nil)
