@@ -55,7 +55,7 @@ def vsc_check():
     git_repos = glob("/home/h.filaretov/Development/*/")
     dirty = any([repo_is_dirty(dir) for dir in git_repos])
     text = "X " if dirty else "OK"
-    return i3_json("vsc_check", " " + text, separator=True)
+    return i3_json("vsc_check", " " + text)
 
 
 def _plugged():
@@ -100,7 +100,12 @@ def xkb_layout():
 def clock():
     date, time = strftime("%Y-%m-%d %H:%M", localtime()).split(" ")
     text = " " + date + "  " + time
-    return i3_json("clock", text)
+    return i3_json("clock", text, separator=False)
+
+
+def sep(n):
+    text = " " * n
+    return i3_json("sep", text, separator=False)
 
 
 def print_line(message):
@@ -121,7 +126,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [xkb_layout, vsc_check, battery, clock]
+    modules = [xkb_layout, vsc_check, battery, clock, lambda: sep(0)]
     while True:
         line = [mod() for mod in modules]
         print_line(prefix + json.dumps(line))
