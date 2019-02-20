@@ -726,8 +726,13 @@ Repeated invocations toggle between the two most recently open buffers."
           (add-to-list 'result `(,name 0)))))
     result))
 
-(setq magit-repository-directories
-      (hgf/list-subdirs "~/Development"))
+
+(defun hgf/repolist-refresh ()
+  (setq magit-repository-directories
+	(hgf/list-subdirs "~/Development")))
+
+(advice-add 'magit-list-repositories :before #'hgf/repolist-refresh)
+
 
 (setq magit-repolist-columns
       '(("Name" 12 magit-repolist-column-ident nil)
