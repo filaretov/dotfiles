@@ -56,7 +56,7 @@ def vsc_check():
     # No unpushed changes if output is empty
     git_repos = glob("/home/h.filaretov/Development/*/")
     dirty = any([repo_is_dirty(dir) for dir in git_repos])
-    text = "X" if dirty else "OK"
+    text = "X " if dirty else "OK"
     return i3_json("vsc_check", " " + text, separator=True)
 
 
