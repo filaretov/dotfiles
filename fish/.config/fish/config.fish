@@ -1,13 +1,7 @@
-set -g theme_color_scheme base16-light
-set -x FZF_DEFAULT_COMMAND 'rg --files'
 set  fish_greeting "Don't panic!"
 
-alias install "sudo dnf install"
 alias search "dnf search"
-alias remove "dnf remove"
-alias trunk "tree -C | less -r"
-alias e "emacsclient -n"
-alias ec "emacsclient -c -n"
+alias remove "sudo dnf remove"
 
 # Find local fish file
 set -l lc_file "$HOME/.config/fish/"(hostname)".fish"
