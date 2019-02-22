@@ -169,12 +169,12 @@ Repeated invocations toggle between the two most recently open buffers."
   "e" 'eval-last-sexp
   "i" 'eval-defun)
 
-(general-def 'normal
+(general-def '(normal visual)
   "L" 'evil-end-of-visual-line
   "H" 'evil-first-non-blank-of-visual-line
   "?"   'swiper
   "C-u" 'evil-scroll-up ;; sorry universal-argument
-  "<backspace>" 'evil-goto-first-line)
+  )
 
 (general-def '(normal visual insert)
   "C-e" 'end-of-line
