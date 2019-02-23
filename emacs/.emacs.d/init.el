@@ -377,9 +377,7 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; * Major mode configuration
 ;; ** LISPS
 ;; *** General
-(defun lisp-modes ()
-  (progn
-    (highlight-sexp-mode 1)))
+(defun lisp-modes ())
 
 ;; *** Common Lisp
 (use-package slime
