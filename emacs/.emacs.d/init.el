@@ -721,16 +721,36 @@ Repeated invocations toggle between the two most recently open buffers."
 	(when (and (file-directory-p name) 
                    (not (equal f ".."))
                    (not (equal f ".")))
-          (add-to-list 'result `(,name 0)))))
+          (add-to-list 'result name))))
     result))
 
+(defun hgf/contains-git-repo-p (dir)
+  "Check if there's  a .git directory in DIR."
+  (let ((dirs (directory-files dir)))
+    (member ".git" dirs)))
+
+(defun hgf/filter-git-repos (dirs)
+  "Remove all directories without a .git subdirectory in DIRS."
+  (let ((result))
+    (dolist (dir dirs result)
+      (when (hgf/contains-git-repo-p dir)
+	(add-to-list 'result dir)))
+    result))
+
+(defun hgf/make-magit-repolist (dirs)
+  "Make a list of the form (dir 0) for the magit-list-repositories function."
+  (let ((result))
+    (dolist (dir dirs result)
+      (add-to-list 'result `(,dir 0)))
+    result))
 
 (defun hgf/repolist-refresh ()
   (setq magit-repository-directories
-	(hgf/list-subdirs "~/Development")))
+	(hgf/make-magit-repolist
+	 (hgf/filter-git-repos
+	  (hgf/list-subdirs "~/Development")))))
 
 (advice-add 'magit-list-repositories :before #'hgf/repolist-refresh)
-
 
 (setq magit-repolist-columns
       '(("Name" 12 magit-repolist-column-ident nil)
