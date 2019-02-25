@@ -1,6 +1,6 @@
 /* -*- mode: css; -*- */
 configuration {
-	modi: "window,drun";
+	modi: "run,window,drun";
 	width: 32;
 	lines: 5;
 	columns: 1;
