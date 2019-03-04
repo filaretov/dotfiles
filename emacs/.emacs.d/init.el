@@ -182,6 +182,7 @@ Repeated invocations toggle between the two most recently open buffers."
   "C-k" 'kill-line)
 
 (general-def 'insert
+  "C-x C-f" 'company-files
   "C-y" 'evil-paste-after
   "<C-i>" 'company-complete)
 
@@ -689,7 +690,6 @@ Repeated invocations toggle between the two most recently open buffers."
   :hook (after-init . global-company-mode))
 ;; *** Add backends
 ;; **** Global
-(add-to-list 'company-backends 'company-files)
 
 ;; **** Python
 (add-hook 'python-mode-hook (lambda ()
