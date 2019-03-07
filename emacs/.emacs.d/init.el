@@ -558,20 +558,6 @@ Repeated invocations toggle between the two most recently open buffers."
 	 ("\\.md\\'" . markdown-mode)
 	 ("\\.markdown\\'" . markdown-mode)))
 
-;; ** PDF
-(unless (or (hgf/darwin-os-p) (hgf/windows-os-p))
-  (use-package pdf-tools
-    :config
-    (pdf-tools-install)
-    (setq-default pdf-view-display-size 'fit-page)))
-
-(defun hgf--pdf-view-hook ()
-  (progn
-    (auto-revert-mode 1)
-    (setq auto-revert-interval 0.1)))
-
-(add-hook 'pdf-view-mode-hook 'hgf--pdf-view-hook)
-
 ;; ** Fish
 (use-package fish-mode)
 
