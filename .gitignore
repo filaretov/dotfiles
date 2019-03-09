@@ -21,6 +21,7 @@ emacs/.emacs.d/session*
 emacs/.emacs.d/recentf
 emacs/.emacs.d/auctex-auto/
 emacs/.emacs.d/quelpa/
+emacs/.emacs.d/transient/
 
 fonts/.local/share/fonts/*/.uuid
 fonts/.local/share/fonts/.uuid
