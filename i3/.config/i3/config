@@ -191,7 +191,7 @@ bar {
 	status_command ~/.local/bin/i3bar.py --nobackground
 	position top
 	mode dock
-	font pango: Fira Mono Medium 9
+	font pango: Font Awesome 10, Source Code Pro 10
 	separator_symbol "   "
 	colors {
 		background #202020
