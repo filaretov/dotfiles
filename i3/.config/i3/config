@@ -205,5 +205,5 @@ bar {
 }
 
 # * Autostart
-exec compton -bcCGfD 4
+exec compton -bfD 4
 exec_always ~/.local/bin/set_xkeyboard
