@@ -5,3 +5,4 @@ end
 
 add-path "$HOME/.cargo/bin"
 add-path "$HOME/.local/bin"
+add-path "$HOME/.local/bin/stowed/"
