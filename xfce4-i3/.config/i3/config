@@ -184,7 +184,7 @@ client.background       #ffffff
 
 bindsym $mod+r mode "resize"
 
-exec_always feh --bg-scale ~/.background
+exec_always feh --bg-scale /usr/share/backgrounds/default.png
 exec_always ~/.local/bin/set_xkeyboard
 # start dmenu (a program launcher)
 bindsym $mod+Shift+o exec xfce4-appfinder --collapsed
