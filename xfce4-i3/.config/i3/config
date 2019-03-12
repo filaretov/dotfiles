@@ -203,7 +203,7 @@ bindsym $mod+y move workspace to output VGA-2
 bar {
     id bar-0
     tray_output primary
-    status_command ~/.local/bin/i3bar.py --nobackground
+    status_command i3bar.py --nobackground
     # status_command i3status
     position top
     font pango: Fira Mono Medium 9

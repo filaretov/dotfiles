@@ -1,3 +1,3 @@
 function add-path
-    set -x PATH $argv $PATH
+    set -gx PATH $argv $PATH
 end
