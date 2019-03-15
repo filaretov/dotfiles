@@ -199,7 +199,7 @@ bar {
 	position top
 	mode dock
 	font pango: Font Awesome 10, Source Code Pro 10
-	separator_symbol "   "
+	separator_symbol " "
 	colors {
 		background #202020
 		statusline #dedede

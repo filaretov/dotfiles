@@ -56,7 +56,7 @@ def vsc_check():
     git_repos = glob(HOME + "/Development/*/")
     dirty = any([repo_is_dirty(dir) for dir in git_repos])
     text = "X " if dirty else "OK"
-    return i3_json("vsc_check", " " + text)
+    return i3_json("vsc_check", f" {text}")
 
 
 def _plugged():
@@ -74,33 +74,34 @@ def _battery_level():
 def battery():
     plugged = _plugged()
     battery_level = _battery_level()
-    text = " "
     if plugged:
-        text = ""
+        symbol = ""
     elif battery_level < 10:
-        text = "! "
+        symbol = "! "
     elif battery_level < 20:
-        text = " "
+        symbol = " "
     elif battery_level < 40:
-        text = " "
+        symbol = " "
     elif battery_level < 60:
-        text = " "
+        symbol = " "
     elif battery_level < 90:
-        text = " "
-    text = text + " " + str(battery_level)
+        symbol = " "
+    else:
+        symbol = " "
+    text = f"{symbol} {battery_level}"
     return i3_json("battery_level", text)
 
 
 def xkb_layout():
     output = subprocess.check_output(["xkb-switch"]).decode()
-    text = output.replace("\n", "").partition("(")[0]
-    text = " " + text
+    lang = output.replace("\n", "").partition("(")[0]
+    text = f" {lang}"
     return i3_json("xkblayout", text)
 
 
 def clock():
     date, time = strftime("%Y-%m-%d %H:%M", localtime()).split(" ")
-    text = " " + date + "  " + time
+    text = f" {date}  {time}"
     return i3_json("clock", text, separator=False)
 
 
@@ -117,7 +118,7 @@ def sep(n):
 
 def print_line(message):
     """ Non-buffered printing to stdout. """
-    sys.stdout.write(message + "\n")
+    sys.stdout.write(f"{message}\n")
     sys.stdout.flush()
 
 
