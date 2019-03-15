@@ -298,7 +298,8 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; ** VC symlinks
 (setq vc-follow-symlinks t)
 
-;; ** Mode-line
+;; ** Modeline
+(column-number-mode 1)
 (setq evil-normal-state-tag   (propertize " N " 'face '((:background "dark khaki" :foreground "black")))
       evil-emacs-state-tag    (propertize " E " 'face '((:background "turquoise" :foreground "black")))
       evil-insert-state-tag   (propertize " I " 'face '((:background "dark sea green" :foreground "black")))
@@ -324,12 +325,12 @@ Repeated invocations toggle between the two most recently open buffers."
 	       " "
 	       '(vc-mode vc-mode)
 	       'mode-misc-info
+	       'mode-line-position
 	       'mode-line-end-spaces))
 ;; 'mode-line-remote
 ;; 'mode-line-frame-identification
 ;; "   "
 ;; "   "
-;; 'mode-line-position
 ;; '(vc-mode vc-mode)
 ;; "  "
 ;; 'mode-line-modes
@@ -705,9 +706,9 @@ Repeated invocations toggle between the two most recently open buffers."
     (dolist (f (directory-files base) result)
       (let ((name (concat base "/" f)))
 	(when (and (file-directory-p name) 
-                   (not (equal f ".."))
-                   (not (equal f ".")))
-          (add-to-list 'result name))))
+		   (not (equal f ".."))
+		   (not (equal f ".")))
+	  (add-to-list 'result name))))
     result))
 
 (defun hgf/contains-git-repo-p (dir)
