@@ -77,16 +77,16 @@ def battery():
     text = " "
     if plugged:
         text = ""
-    elif battery_level < 90:
-        text = " "
-    elif battery_level < 60:
-        text = " "
-    elif battery_level < 40:
-        text = " "
-    elif battery_level < 20:
-        text = " "
     elif battery_level < 10:
         text = "! "
+    elif battery_level < 20:
+        text = " "
+    elif battery_level < 40:
+        text = " "
+    elif battery_level < 60:
+        text = " "
+    elif battery_level < 90:
+        text = " "
     text = text + " " + str(battery_level)
     return i3_json("battery_level", text)
 

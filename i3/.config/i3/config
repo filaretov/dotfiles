@@ -76,6 +76,9 @@ bindsym $mod+Shift+e exit
 bindsym $mod+m move scratchpad
 bindsym $mod+Shift+m scratchpad show
 
+# passwords
+bindsym $mod+p exec ~/.local/bin/stowed/pass_rofi.sh
+
 
 # * Workspaces
 # Workspace Variables
@@ -188,7 +191,7 @@ bindsym Mod1+space exec rofi -show drun
 # finds out, if available)
 
 bar {
-	status_command ~/.local/bin/i3bar.py --nobackground
+	status_command i3bar.py --nobackground
 	position top
 	mode dock
 	font pango: Font Awesome 10, Source Code Pro 10
@@ -206,4 +209,4 @@ bar {
 
 # * Autostart
 exec compton -bfD 4
-exec_always ~/.local/bin/set_xkeyboard
+exec_always ~/.local/bin/stowed/set_xkeyboard
