@@ -79,6 +79,10 @@ bindsym $mod+Shift+m scratchpad show
 # passwords
 bindsym $mod+p exec ~/.local/bin/stowed/pass_rofi.sh
 
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+
 
 # * Workspaces
 # Workspace Variables

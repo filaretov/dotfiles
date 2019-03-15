@@ -104,6 +104,12 @@ def clock():
     return i3_json("clock", text, separator=False)
 
 
+def brightness():
+    value = float(subprocess.check_output(["xbacklight"]).decode())
+    text = f" {value:3.0f}"
+    return i3_json("brightness", text)
+
+
 def sep(n):
     text = " " * n
     return i3_json("sep", text, separator=False)
@@ -127,7 +133,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [xkb_layout, vsc_check, battery, clock, lambda: sep(0)]
+    modules = [xkb_layout, vsc_check, brightness, battery, clock, lambda: sep(0)]
     while True:
         line = [mod() for mod in modules]
         print_line(prefix + json.dumps(line))
