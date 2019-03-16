@@ -325,6 +325,7 @@ Repeated invocations toggle between the two most recently open buffers."
 	       " "
 	       '(vc-mode vc-mode)
 	       'mode-misc-info
+	       " "
 	       'mode-line-position
 	       'mode-line-end-spaces))
 ;; 'mode-line-remote
