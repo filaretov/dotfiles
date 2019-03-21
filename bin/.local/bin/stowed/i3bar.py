@@ -106,7 +106,10 @@ def clock():
 
 
 def brightness():
-    value = float(subprocess.check_output(["xbacklight"]).decode())
+    try:
+        value = float(subprocess.check_output(["xbacklight"]).decode())
+    except subprocess.CalledProcessError:
+        value = -1.0
     text = f" {value:3.0f}"
     return i3_json("brightness", text)
 
