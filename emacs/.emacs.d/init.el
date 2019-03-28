@@ -107,6 +107,10 @@
   :prefix "SPC w"
   :states 'normal)
 
+(general-create-definer def-ctrlw-key
+  :prefix "C-w"
+  :states 'normal)
+
 ;; ** Helper functions
 (defun hgf/insert-end-of-buffer ()
   (interactive)
@@ -168,6 +172,9 @@ Repeated invocations toggle between the two most recently open buffers."
 (def-ge-key
   "e" 'eval-last-sexp
   "i" 'eval-defun)
+
+(def-ctrlw-key
+  "1" 'delete-other-windows)
 
 (general-def '(normal visual)
   "L" 'evil-end-of-visual-line
