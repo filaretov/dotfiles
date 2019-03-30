@@ -186,7 +186,8 @@ Repeated invocations toggle between the two most recently open buffers."
 (general-def '(normal visual insert)
   "C-e" 'end-of-line
   "C-a" 'beginning-of-line
-  "C-k" 'kill-line)
+  "C-k" 'kill-line
+  "C-s" 'save-buffer)
 
 (general-def 'insert
   "C-x C-f" 'company-files
@@ -249,9 +250,9 @@ Repeated invocations toggle between the two most recently open buffers."
 			   :weight 'semi-bold))
       (t
        (set-face-attribute 'default nil
-			   :family "Source Code Pro"
-			   :height 100
-			   :weight 'semi-bold)))
+			   :family "Overpass Mono"
+			   :height 110
+			   :weight 'regular)))
 
 ;; ** Theme
 (use-package solarized-theme
