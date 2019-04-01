@@ -255,17 +255,6 @@ Repeated invocations toggle between the two most recently open buffers."
 			   :weight 'regular)))
 
 ;; ** Theme
-(use-package solarized-theme
-  :config
-  (setq x-underline-at-descent-line t
-	solarized-use-variable-pitch nil
-	solarized-use-less-bold nil
-	solarized-height-plus-1 1.0
-	solarized-height-plus-2 1.0
-	solarized-height-plus-3 1.0
-	solarized-height-plus-4 1.0
-	solarized-high-contrast-mode-line t))
-
 (defun hgf/toggle-theme ()
   "Toggle between solarized variants."
   (interactive)
@@ -277,9 +266,9 @@ Repeated invocations toggle between the two most recently open buffers."
       (disable-theme light-theme)
       (load-theme dark-theme))))
 
-(setq dark-theme 'solarized-dark)
-(setq light-theme 'solarized-light)
-(load-theme dark-theme t)
+(setq dark-theme 'misterioso)
+(setq light-theme 'adwaita)
+(load-theme light-theme t)
 
 ;; ** Cursor
 (blink-cursor-mode 0)
