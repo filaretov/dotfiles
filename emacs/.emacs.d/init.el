@@ -250,8 +250,8 @@ Repeated invocations toggle between the two most recently open buffers."
 			   :weight 'semi-bold))
       (t
        (set-face-attribute 'default nil
-			   :family "Overpass Mono"
-			   :height 110
+			   :family "Source Code Pro"
+			   :height 100
 			   :weight 'regular)))
 
 ;; ** Theme
@@ -266,8 +266,8 @@ Repeated invocations toggle between the two most recently open buffers."
       (disable-theme light-theme)
       (load-theme dark-theme))))
 
-(setq dark-theme 'misterioso)
-(setq light-theme 'adwaita)
+(setq dark-theme 'twilight)
+(setq light-theme 'whiteboard)
 (load-theme light-theme t)
 
 ;; ** Cursor

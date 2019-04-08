@@ -98,7 +98,6 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-color weatherwax
 
 augroup vimrcEx
   au!

@@ -31,15 +31,10 @@
        (white   "#ffffff")
        (gray      "#909090")   ;; text, code
        (gray255   "#eeeeee")   ;; fringe
-       ;; (blue      "#40a0e0")   ;; fringe
        (blue      "#268bd2")
-       ;; (red       "#f06545")   ;; match
        (red       "#dc322f")
-       ;; (orange    "#ff9000")   ;; match
        (orange    "#cb4b16")
-       ;; (green     "#20c020")
        (brown     "#c09040")
-       ;; Solarized accented colors
        (yellow    "#b58900")
        (magenta   "#d33682")
        (violet    "#6c71c4")
@@ -59,7 +54,7 @@
        (red-layer `((t (:foreground ,red :background ,white))))
        (red-bold-layer `((t (:foreground ,red :weight bold :background ,white))))
        (orange-layer `((t (:foreground ,orange :background ,white))))
-      )
+       )
 
 
   ;; Set faces
@@ -78,10 +73,10 @@
    `(font-lock-comment-face       ,comment-layer)
    `(font-lock-doc-face           ,comment-layer)
    `(font-lock-string-face        ,string-layer)
-   `(font-lock-function-name-face ,blue-layer)
-   `(font-lock-constant-face      ,green-layer)
+   `(font-lock-function-name-face ,default-layer)
+   `(font-lock-constant-face      ,default-layer)
    `(font-lock-variable-name-face ,default-layer)
-   `(font-lock-builtin-face       ,blue-layer)
+   `(font-lock-builtin-face       ,red-layer)
    `(font-lock-keyword-face       ,bold-layer)
    `(font-lock-type-face          ,default-layer)
 
@@ -96,7 +91,7 @@
    `(linum        ((t (:background ,gray253))))    ;;line numbers
 
 
-;; ** Org
+   ;; ** Org
    `(org-level-2 ,default-layer)
    `(org-level-3 ,default-layer)
    `(org-level-4 ,default-layer)
@@ -108,17 +103,17 @@
    `(org-todo ,red-bold-layer)
    `(outline-1 ,bold-layer)
 
-;; ** LaTeX
+   ;; ** LaTeX
    `(font-latex-sectioning-1-face ,default-layer)
 
-;; ** Python
+   ;; ** Python
    `(py-number-face ((t (:inherit 'font-lock-constant-face))))
 
    )
 
   ;; Set variables
   (custom-theme-set-variables 'rubric)
-)
+  )
 
 ;;###autoload
 (when load-file-name
