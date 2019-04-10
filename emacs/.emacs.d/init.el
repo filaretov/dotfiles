@@ -266,9 +266,9 @@ Repeated invocations toggle between the two most recently open buffers."
       (disable-theme light-theme)
       (load-theme dark-theme))))
 
-(setq dark-theme 'twilight)
+(setq dark-theme 'zenburn)
 (setq light-theme 'whiteboard)
-(load-theme light-theme t)
+(load-theme dark-theme t)
 
 ;; ** Cursor
 (blink-cursor-mode 0)
@@ -410,6 +410,20 @@ Repeated invocations toggle between the two most recently open buffers."
 	    (arglist-cont-nonempty
 	     c-lineup-gcc-asm-reg
 	     c-lineup-arglist-tabs-only))))
+
+(defun ccc-astyle ()
+  "Format C++ code with astyle."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning)
+              end (region-end))
+      (setq beg (point-min)
+            end (point-max)))
+    (shell-command-on-region
+     beg end
+     "astyle --style=linux -t"
+     nil t)))
 
 (add-hook 'c-mode-hook
 	  (lambda ()

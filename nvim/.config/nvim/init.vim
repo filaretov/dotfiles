@@ -98,6 +98,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
+color flattened_dark
 
 augroup vimrcEx
   au!
