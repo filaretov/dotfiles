@@ -211,13 +211,6 @@ bar {
     separator_symbol "   "
     mode dock
     modifier none
-    colors {
-	background #2E3440
-	statusline #D8DEE9
-	focused_workspace  #2E3440 #ECEFF4 #2E3440
-	inactive_workspace #2E3440 #2E3440 #ECEFF4
-	urgent_workspace   #2E3440 #BF616A #2E3440
-    }
     strip_workspace_numbers yes
 }
 

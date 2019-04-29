@@ -266,8 +266,8 @@ Repeated invocations toggle between the two most recently open buffers."
       (disable-theme light-theme)
       (load-theme dark-theme))))
 
-(setq dark-theme 'zenburn)
-(setq light-theme 'whiteboard)
+(setq dark-theme 'solarized-dark)
+(setq light-theme 'solarized-light)
 (load-theme dark-theme t)
 
 ;; ** Cursor
