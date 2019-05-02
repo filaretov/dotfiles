@@ -255,6 +255,8 @@ Repeated invocations toggle between the two most recently open buffers."
 			   :weight 'regular)))
 
 ;; ** Theme
+(setq solarized-use-variable-pitch nil
+      solarized-emphasize-indicators nil)
 (defun hgf/toggle-theme ()
   "Toggle between solarized variants."
   (interactive)
