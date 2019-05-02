@@ -22,3 +22,7 @@ auto/
 *.run.xml
 *.synctex.gz
 *.toc
+
+GPATH
+GRTAGS
+GTAGS
