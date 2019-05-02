@@ -16,4 +16,5 @@
     "editor.fontFamily": "'Source Code Pro', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
     "vim.enableNeovim": true,
     "vim.substituteGlobalFlag": true,
+    "vim.neovimPath": "/usr/bin/nvim",
 }
