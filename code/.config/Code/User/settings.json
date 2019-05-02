@@ -1,9 +1,19 @@
 {
     "workbench.colorTheme": "Dracula",
+    "window.menuBarVisibility": "toggle",
+    "explorer.confirmDelete": false,
     "editor.minimap.enabled": false,
     "editor.renderWhitespace": "none",
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.cursorBlinking": "smooth",
     "breadcrumbs.enabled": true,
+    "terminal.integrated.shell.linux": "/bin/fish",
     "git.autofetch": true,
     "git.confirmSync": false,
     "editor.fontFamily": "'Source Code Pro', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'"
+    "vim.enableNeovim": true,
+    "vim.substituteGlobalFlag": true,
 }
