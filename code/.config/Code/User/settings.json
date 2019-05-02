@@ -4,5 +4,6 @@
     "editor.renderWhitespace": "none",
     "breadcrumbs.enabled": true,
     "git.autofetch": true,
-    "git.confirmSync": false
+    "git.confirmSync": false,
+    "editor.fontFamily": "'Source Code Pro', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'"
 }
