@@ -13,7 +13,7 @@
     "terminal.integrated.shell.linux": "/bin/fish",
     "git.autofetch": true,
     "git.confirmSync": false,
-    "editor.fontFamily": "'Source Code Pro', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'"
+    "editor.fontFamily": "'Source Code Pro', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
     "vim.enableNeovim": true,
     "vim.substituteGlobalFlag": true,
 }
