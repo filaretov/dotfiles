@@ -2,5 +2,6 @@
     "workbench.colorTheme": "Dracula",
     "editor.minimap.enabled": false,
     "editor.renderWhitespace": "none",
-    "breadcrumbs.enabled": true
+    "breadcrumbs.enabled": true,
+    "git.autofetch": true
 }
