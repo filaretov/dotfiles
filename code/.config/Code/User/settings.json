@@ -1,5 +1,4 @@
 {
-    "workbench.colorTheme": "Dracula",
     "window.menuBarVisibility": "toggle",
     "explorer.confirmDelete": false,
     "editor.minimap.enabled": false,
@@ -17,4 +16,8 @@
     "vim.enableNeovim": true,
     "vim.substituteGlobalFlag": true,
     "vim.neovimPath": "/usr/bin/nvim",
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-k>": false,
+    }
 }
