@@ -270,7 +270,7 @@ Repeated invocations toggle between the two most recently open buffers."
       (disable-theme light-theme)
       (load-theme dark-theme))))
 
-(setq dark-theme 'dracula)
+(setq dark-theme 'nord)
 (setq light-theme 'solarized-light)
 (load-theme dark-theme t)
 
