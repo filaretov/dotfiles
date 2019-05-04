@@ -8,7 +8,10 @@
 	co = checkout
 	cb = checkout -b
 	ci = commit
+	po = push
+	pi = pull
 	cia = commit --amend
+	cm = commit -m
 	aa = add --all
 	rc = rebase --continue
 	ls = ls-files
