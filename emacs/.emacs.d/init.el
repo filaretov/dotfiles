@@ -191,7 +191,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (general-def 'insert
   "C-x C-f" 'company-files
-  "C-y" 'evil-paste-after
+  "C-y" 'evil-paste-before
   "<C-i>" 'company-complete)
 
 ;; Going back to evil from emacs state
@@ -452,7 +452,8 @@ Repeated invocations toggle between the two most recently open buffers."
       org-src-fontify-natively t
       org-src-tab-acts-natively t
       org-goto-interface 'outline-path-completionp
-      org-outline-path-complete-in-steps nil)
+      org-outline-path-complete-in-steps nil
+      org-M-RET-may-split-line nil)
 
 (use-package ox-extra
   :ensure org-plus-contrib
@@ -767,3 +768,9 @@ Repeated invocations toggle between the two most recently open buffers."
 	  (:help-echo "Local changes not in upstream")))
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
+;; * RSS
+(use-package elfeed
+  :config
+  (setq eleed-feeds
+	'("http://nullprogram.com/feed/"
+	  "https://harryrschwartz.com/atom.xml")))

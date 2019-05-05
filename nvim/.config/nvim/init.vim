@@ -9,6 +9,8 @@ if exists('*minpac#init')
   call minpac#init()
   call minpac#add('kballard/vim-fish')
   call minpac#add('k-takata/minpac', {'type': 'opt'})
+  call minpac#add('dracula/vim', {'name': 'dracula.vim'})
+  call minpac#add('sjl/badwolf')
   call minpac#add('romainl/flattened')
   call minpac#add('rust-lang/rust.vim')
   call minpac#add('sgur/vim-editorconfig')
@@ -98,7 +100,10 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-color flattened_dark
+let g:dracula_italic = 0
+let g:dracula_underline = 0
+let g:dracula_undercurl = 0
+color dracula
 
 augroup vimrcEx
   au!
