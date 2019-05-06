@@ -187,11 +187,12 @@ Repeated invocations toggle between the two most recently open buffers."
   "C-e" 'end-of-line
   "C-a" 'beginning-of-line
   "C-k" 'kill-line
-  "C-s" 'save-buffer)
+  "C-s" 'save-buffer
+  "M-;" 'hgf/comment-or-uncomment-region-or-line)
 
 (general-def 'insert
   "C-x C-f" 'company-files
-  "C-y" 'evil-paste-before
+  "C-y" 'yank
   "<C-i>" 'company-complete)
 
 ;; Going back to evil from emacs state
@@ -204,7 +205,7 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; ** Hydra
 (use-package hydra)
 (defhydra hydra-window ()
-  "Window management" 
+  "Window management"
   ("h" evil-window-left "left")
   ("j" evil-window-down "down")
   ("k" evil-window-up "up")
@@ -217,6 +218,8 @@ Repeated invocations toggle between the two most recently open buffers."
   ("m" kill-this-buffer "murder")
   ("1" delete-other-windows "highlander")
   ("." nil "stop"))
+;; * Under the hood
+(setq gc-cons-threshold 20000000)
 ;; * UI preferences
 ;; ** Personal info
 (setq user-full-name "Hristo Filaretov"
@@ -342,9 +345,16 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; ** Curious Characters
 (setq default-input-method "TeX")
 ;; ** Commenting
-(use-package comment-dwim-2
-  :ensure t
-  :bind ("M-;" . comment-dwim-2))
+(defun hgf/comment-or-uncomment-region-or-line ()
+  "Comments or uncomments the region or the current line if
+there's no active region. Credit to Harry R. Schwartz and his
+sensible-defaults package."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning) end (region-end))
+      (setq beg (line-beginning-position) end (line-end-position)))
+    (comment-or-uncomment-region beg end)))
 
 ;; ** Scripts
 (add-hook 'after-save-hook
@@ -364,6 +374,7 @@ Repeated invocations toggle between the two most recently open buffers."
 					 try-complete-lisp-symbol))
 
 ;; ** Being all fancy
+;; Note: very nice when paired with elfeed
 (use-package olivetti)
 
 ;; ** Visual lines
@@ -378,6 +389,10 @@ Repeated invocations toggle between the two most recently open buffers."
   :config
   (global-aggressive-indent-mode 1)
   (add-to-list 'aggressive-indent-excluded-modes '(python-mode rst-mode)))
+;; ** Subword for programming
+(add-hook 'prog-mode-hook 'subword-mode)
+;; ** No double space
+(setq sentence-end-double-space nil)
 ;; * Major mode configuration
 ;; ** LISPS
 ;; *** General
@@ -722,7 +737,7 @@ Repeated invocations toggle between the two most recently open buffers."
 	(result))
     (dolist (f (directory-files base) result)
       (let ((name (concat base "/" f)))
-	(when (and (file-directory-p name) 
+	(when (and (file-directory-p name)
 		   (not (equal f ".."))
 		   (not (equal f ".")))
 	  (add-to-list 'result name))))
@@ -771,6 +786,9 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; * RSS
 (use-package elfeed
   :config
-  (setq eleed-feeds
+  (setq elfeed-feeds
 	'("http://nullprogram.com/feed/"
-	  "https://harryrschwartz.com/atom.xml")))
+	  "https://harryrschwartz.com/atom.xml"
+	  "https://www.jvns.ca/atom.xml"
+	  "https://emptysqua.re/blog/index.xml"
+	  "http://feeds2.feedburner.com/stevelosh")))
