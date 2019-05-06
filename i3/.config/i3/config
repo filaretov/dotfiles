@@ -198,15 +198,8 @@ bar {
 	status_command i3bar.py --nobackground
 	position top
 	mode dock
-	font pango: Font Awesome 10, Overpass Mono 10
+	font pango: Source Code Pro 10
 	separator_symbol " "
-	colors {
-		background #202020
-		statusline #dedede
-		focused_workspace  #dedede #dedede #202020
-		inactive_workspace #202020 #202020 #dedede
-		urgent_workspace   #dedede #dedede #202020
-	}
 	tray_output primary
 	strip_workspace_numbers yes
 }

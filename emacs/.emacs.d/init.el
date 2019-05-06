@@ -188,7 +188,9 @@ Repeated invocations toggle between the two most recently open buffers."
   "C-a" 'beginning-of-line
   "C-k" 'kill-line
   "C-s" 'save-buffer
-  "M-;" 'hgf/comment-or-uncomment-region-or-line)
+  "M-;" 'hgf/comment-or-uncomment-region-or-line
+  "C-]" 'dumb-jump-go
+  "M-/" 'company-complete-common)
 
 (general-def 'insert
   "C-x C-f" 'company-files
@@ -258,10 +260,6 @@ Repeated invocations toggle between the two most recently open buffers."
 			   :weight 'regular)))
 
 ;; ** Theme
-(setq solarized-use-variable-pitch nil
-      solarized-emphasize-indicators nil
-      solarized-high-contrast-mode-line t
-      solarized-scale-org-headlines nil)
 (defun hgf/toggle-theme ()
   "Toggle between solarized variants."
   (interactive)
@@ -273,18 +271,25 @@ Repeated invocations toggle between the two most recently open buffers."
       (disable-theme light-theme)
       (load-theme dark-theme))))
 
-(setq dark-theme 'nord)
-(setq light-theme 'solarized-light)
-(load-theme dark-theme t)
+(use-package solarized-theme
+  :config
+  (setq solarized-use-variable-pitch nil
+	solarized-emphasize-indicators nil
+	solarized-high-contrast-mode-line nil
+	solarized-scale-org-headlines nil
+	solarized-height-plus-1 1.0
+	solarized-height-plus-2 1.0
+	solarized-height-plus-3 1.0
+	solarized-height-plus-4 1.0
+	dark-theme 'solarized-dark
+	light-theme 'solarized-light)
+  (load-theme dark-theme t))
 
 ;; ** Cursor
 (blink-cursor-mode 0)
 
 ;; ** Scrolling
-(use-package smooth-scrolling
-  :config
-  (smooth-scrolling-mode 1)
-  (setq smooth-scroll-margin 3))
+(setq scroll-conservatively 100)
 
 ;; ** Help me remember things
 (use-package which-key
@@ -295,7 +300,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package highlight-sexp
   :ensure nil)
 
-(show-paren-mode 1)
+(show-paren-mode t)
 
 ;; ** Bells
 (setq ring-bell-function 'ignore)
@@ -303,44 +308,22 @@ Repeated invocations toggle between the two most recently open buffers."
 (setq vc-follow-symlinks t)
 
 ;; ** Modeline
-(column-number-mode 1)
-(setq evil-normal-state-tag   (propertize " N " 'face '((:background "dark khaki" :foreground "black")))
-      evil-emacs-state-tag    (propertize " E " 'face '((:background "turquoise" :foreground "black")))
-      evil-insert-state-tag   (propertize " I " 'face '((:background "dark sea green" :foreground "black")))
-      evil-replace-state-tag  (propertize " R " 'face '((:background "dark orange" :foreground "black")))
-      evil-motion-state-tag   (propertize " M " 'face '((:background "khaki" :foreground "black")))
-      evil-visual-state-tag   (propertize " V " 'face '((:background "light salmon" :foreground "black")))
-      evil-operator-state-tag (propertize " O " 'face '((:background "sandy brown" :foreground "black"))))
-(setq evil-mode-line-format '(before . mode-line-front-space))
-(setq-default mode-line-format
-	      (list
-	       '#("%e")
-	       'mode-line-front-space
-	       'mode-line-buffer-identification
-	       " "
-	       ;; 'mode-line-mule-info
-	       ;; 'mode-line-client
-	       ;; 'mode-line-modified
-	       '#("[%*]")
-	       " "
-	       "("
-	       'mode-name
-	       ")"
-	       " "
-	       '(vc-mode vc-mode)
-	       'mode-misc-info
-	       " "
-	       'mode-line-position
-	       'mode-line-end-spaces))
-;; 'mode-line-remote
-;; 'mode-line-frame-identification
-;; "   "
-;; "   "
-;; '(vc-mode vc-mode)
-;; "  "
-;; 'mode-line-modes
-;; 'mode-line-misc-info
-;; 'mode-line-end-spaces))))
+(use-package moody
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (column-number-mode t))
+
+(use-package minions
+  :config
+  (setq minions-mode-line-lighter ""
+	minions-mode-line-delimiters '("" . ""))
+  (minions-mode 1))
+
+;; ** Current line
+(hl-line-mode t)
+
 ;; * Typing Text
 ;; ** Curious Characters
 (setq default-input-method "TeX")
@@ -352,7 +335,7 @@ sensible-defaults package."
   (interactive)
   (let (beg end)
     (if (region-active-p)
-        (setq beg (region-beginning) end (region-end))
+	(setq beg (region-beginning) end (region-end))
       (setq beg (line-beginning-position) end (line-end-position)))
     (comment-or-uncomment-region beg end)))
 
@@ -393,6 +376,12 @@ sensible-defaults package."
 (add-hook 'prog-mode-hook 'subword-mode)
 ;; ** No double space
 (setq sentence-end-double-space nil)
+;; ** Undoing
+(use-package undo-tree)
+;; ** Dumb-jump
+(use-package dumb-jump
+  :config
+  (setq dumb-jump-selector 'ivy))
 ;; * Major mode configuration
 ;; ** LISPS
 ;; *** General
@@ -435,10 +424,10 @@ sensible-defaults package."
   (interactive)
   (let (beg end)
     (if (region-active-p)
-        (setq beg (region-beginning)
-              end (region-end))
+	(setq beg (region-beginning)
+	      end (region-end))
       (setq beg (point-min)
-            end (point-max)))
+	    end (point-max)))
     (shell-command-on-region
      beg end
      "astyle --style=linux -t"
@@ -537,7 +526,7 @@ sensible-defaults package."
 (defun hgf--latex-hook ()
   (progn
     (setq ispell-parser 'tex)
-    (auto-fill-mode 1)
+    (auto-fill-mode t)
     (TeX-source-correlate-mode 1)))
 
 (add-hook 'LaTeX-mode-hook 'hgf--latex-hook)
@@ -598,7 +587,8 @@ sensible-defaults package."
 (use-package python-mode
   :config
   (setq py-shell-name "python3")
-  (setq python-shell-interpreter "python3"))
+  (setq python-shell-interpreter "python3")
+  (add-to-list 'exec-path "~/.local/bin"))
 
 (use-package elpy
   :config
@@ -606,13 +596,23 @@ sensible-defaults package."
   (setq elpy-shell-use-project-root nil))
 
 (remove-hook 'elpy-modules 'elpy-module-flymake)
+(remove-hook 'elpy-modules 'elpy-module-company)
+(remove-hook 'elpy-modules 'elpy-module-django)
 (remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
 
-(use-package company-jedi)
+(defun hgf/python-mode-hook ()
+  (progn
+    (add-to-list 'company-backends 'company-jedi)
+    (jedi:setup)))
+
+(use-package company-jedi
+  :config
+  (add-hook 'python-mode-hook 'hgf/python-mode-hook)
+  (setq jedi:complete-on-dot t))
+
 (use-package blacken)
 
 (setenv "WORKON_HOME" "~/.miniconda3/envs/")
-
 (def-mode-key
   :keymaps 'python-mode-map
   "f" 'blacken-buffer)
@@ -704,16 +704,9 @@ sensible-defaults package."
   (outline-show-all)
   (outline-hide-body))
 ;; ** Company
-;; *** Init
-(use-package company
-  :hook (after-init . global-company-mode))
-;; *** Add backends
-;; **** Global
+(use-package company)
+(add-hook 'after-init-hook 'global-company-mode)
 
-;; **** Python
-(add-hook 'python-mode-hook (lambda ()
-			      (add-to-list (make-local-variable 'company-backends)
-					   'company-jedi)))
 
 ;; ** Rainbow mode
 (use-package rainbow-mode)
@@ -721,12 +714,16 @@ sensible-defaults package."
 (use-package ivy
   :config
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t))
+  (setq ivy-use-virtual-buffers t
+	enable-recursive-minibuffers t
+	ivy-initial-inputs-alist nil
+	count-format "(%d/%d) "))
 
 (use-package counsel
   :config
-  (counsel-mode 1))
+  (counsel-mode 1)
+  (use-package flx)
+  (use-package smex))
 
 ;; ** Magit
 (use-package magit)
@@ -783,6 +780,13 @@ sensible-defaults package."
 	  (:help-echo "Local changes not in upstream")))
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
+;; ** Projectile
+(use-package projectile
+  :config
+  (general-def '(normal visual insert) "C-p" 'projectile-find-file)
+  (setq projectile-completion-system 'ivy
+	projectile-switch-project-action 'projectile-dired
+	projectile-require-project-root nil))
 ;; * RSS
 (use-package elfeed
   :config
@@ -792,3 +796,9 @@ sensible-defaults package."
 	  "https://www.jvns.ca/atom.xml"
 	  "https://emptysqua.re/blog/index.xml"
 	  "http://feeds2.feedburner.com/stevelosh")))
+;; * Snippets
+
+(use-package yasnippet
+  :config
+  (setq yas/indent-line nil))
+(yas-global-mode t)
