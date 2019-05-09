@@ -67,24 +67,11 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (general-create-definer def-cc-key
     :prefix "C-c"
     :states '(normal visual insert)))
-
-(defun hgf/eval-a-paren ()
-  "Eval within current sexp."
-  (interactive)
-  (progn
-    (evil-visual-char)
-    (evil-a-paren)))
-    ;; (eval-region (region-beginning) (region-end))
-    ;; (evil-exit-visual-state)))
   #+end_src
 
 * Giant dump 
   
 #+begin_src emacs-lisp
-
-;; * Keybindings setup
-;; ** General.el
-;; ** Definers
 (general-create-definer def-leader-key
   :prefix "SPC"
   :states 'normal
@@ -167,10 +154,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   "0" 'delete-window
   "w" 'hydra-window/body)
 
-(def-ge-key
-  "e" 'eval-last-sexp
-  "i" 'hgf/eval-a-paren)
-
 (def-ctrlw-key
   "1" 'delete-other-windows)
 
@@ -178,8 +161,10 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   "L" 'evil-end-of-visual-line
   "H" 'evil-first-non-blank-of-visual-line
   "?"   'swiper
-  "C-u" 'evil-scroll-up ;; sorry universal-argument
-  )
+  "C-u" 'evil-scroll-up)
+
+(general-def 'visual
+  "ge" 'eval-region)
 
 (general-def '(normal visual insert)
   "C-e" 'end-of-line
