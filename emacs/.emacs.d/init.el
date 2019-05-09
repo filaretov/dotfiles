@@ -1,15 +1,19 @@
-;; Configure package.el to include MELPA.
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;; * 0. Defun package-init
+(defun hgf/package-init ()
+  "Initialize the package manager and install use-package."
+  (progn
+    (require 'package)
+    (setq package-archives
+	  '(("gnu" . "https://elpa.gnu.org/packages/")
+	    ("melpa" . "https://melpa.org/packages/")
+	    ("org" . "https://orgmode.org/elpa/")))
+    (package-initialize)
+    (unless (package-installed-p 'use-package)
+      (package-refresh-contents)
+      (package-install 'use-package))))
 
-;; Ensure that use-package is installed.
-;;
-;; If use-package isn't already installed, it's extremely likely that this is a
-;; fresh installation! So we'll want to update the package repository and
-;; install use-package before loading the literate configuration.
-(when (not (package-installed-p 'use-package))
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; * 1. Prepare packaging
+(hgf/package-init)
 
+;; * 2. Let it rip
 (org-babel-load-file "~/.emacs.d/configuration.org")
