@@ -54,7 +54,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
       ;; De facto smooth scrolling
       scroll-conservatively 100
       ;; ** Bells
-      ring-bell-function 'ignore)
+      ring-bell-function 'ignore
       ;; ** VC symlinks
       vc-follow-symlinks t
       default-input-method "TeX")
@@ -65,13 +65,16 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (blink-cursor-mode -1)
+(fringe-mode '(0 . 0))
 
 ;; Enabling things
+(global-visual-line-mode 1)
 (show-paren-mode t)
 (hl-line-mode t)
 
 ;; ** Shorter Prompts
 (fset 'yes-or-no-p 'y-or-n-p)
+
    #+end_src
 
 ** Save as script
@@ -270,15 +273,22 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     "M-i" 'org-goto
     ">" 'org-do-demote
     "<" 'org-do-promote
-    "<backtab>" 'org-shifttab))
+    "<backtab>" 'org-shifttab)
+  (require 'ob-lilypond))
 
-(use-package htmlize)
+  (use-package htmlize)
 
 (use-package ox-extra
   :ensure org-plus-contrib
   :config
   (ox-extras-activate '(ignore-headlines)))
  #+end_src
+
+** Lilypond mode
+#+begin_src emacs-lisp
+(use-package lilypond-mode
+  :ensure nil)
+#+end_src
 
 * Minor modes and utilities
 ** Hydra
@@ -318,18 +328,30 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (which-key-mode))
     #+end_src
 
+** Olivetti
+   
+   #+begin_src emacs-lisp
+(use-package olivetti)
+   #+end_src
+   
+** Elfeed
+
+#+begin_src emacs-lisp
+(use-package elfeed
+  :config
+  (setq elfeed-feeds
+	'("http://nullprogram.com/feed/"
+	  "https://harryrschwartz.com/atom.xml"
+	  "https://www.jvns.ca/atom.xml"
+	  "https://emptysqua.re/blog/index.xml"
+	  "http://feeds2.feedburner.com/stevelosh"))
+  (defun hgf/olivetti () (olivetti-mode 1))
+  (advice-add 'elfeed :after #'hgf/olivetti))
+#+end_src
+
 * Dump
 
 #+begin_src emacs-lisp
-
-;; ** Being all fancy
-;; Note: very nice when paired with elfeed
-(use-package olivetti)
-
-;; ** Visual lines
-(global-visual-line-mode 1)
-(fringe-mode '(0 . 0))
-
 ;; ** Filling
 (setq-default fill-column 90)
 
@@ -511,9 +533,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (use-package blacken)
 
 (setenv "WORKON_HOME" "~/.miniconda3/envs/")
-(def-mode-key
-  :keymaps 'python-mode-map
-  "f" 'blacken-buffer)
 
 ;; ** Rust
 (use-package rust-mode)
@@ -555,10 +574,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   "M-i" 'outshine-imenu
   "<backtab>" 'outshine-cycle-buffer
   "<tab>" 'evil-toggle-fold)
-
-(def-file-key 'normal outshine-mode-map
-  "n" 'outshine-narrow-to-subtree
-  "w" 'widen)
 
 ;; ** Evil
 ;; *** Init
@@ -686,14 +701,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 	projectile-switch-project-action 'projectile-dired
 	projectile-require-project-root nil))
 ;; * RSS
-(use-package elfeed
-  :config
-  (setq elfeed-feeds
-	'("http://nullprogram.com/feed/"
-	  "https://harryrschwartz.com/atom.xml"
-	  "https://www.jvns.ca/atom.xml"
-	  "https://emptysqua.re/blog/index.xml"
-	  "http://feeds2.feedburner.com/stevelosh")))
 ;; * Snippets
 
 (use-package yasnippet

@@ -56,7 +56,7 @@ def vsc_check():
     git_repos = glob(HOME + "/Development/*/")
     dirty = any([repo_is_dirty(dir) for dir in git_repos])
     text = "X " if dirty else "OK"
-    return i3_json("vsc_check", f" {text}")
+    return i3_json("vsc_check", f"repos: {text}")
 
 
 def _plugged():
@@ -75,33 +75,23 @@ def battery():
     plugged = _plugged()
     battery_level = _battery_level()
     if plugged:
-        symbol = ""
-    elif battery_level < 10:
-        symbol = "! "
-    elif battery_level < 20:
-        symbol = " "
-    elif battery_level < 40:
-        symbol = " "
-    elif battery_level < 60:
-        symbol = " "
-    elif battery_level < 90:
-        symbol = " "
+        symbol = "chr"
     else:
-        symbol = " "
-    text = f"{symbol} {battery_level}"
+        symbol = "bat"
+    text = f"{symbol}: {battery_level}"
     return i3_json("battery_level", text)
 
 
 def xkb_layout():
     output = subprocess.check_output(["xkb-switch"]).decode()
     lang = output.replace("\n", "").partition("(")[0]
-    text = f" {lang}"
+    text = f"kbd: {lang}"
     return i3_json("xkblayout", text)
 
 
 def clock():
     date, time = strftime("%Y-%m-%d %H:%M", localtime()).split(" ")
-    text = f" {date}  {time}"
+    text = f"{date} {time}"
     return i3_json("clock", text, separator=False)
 
 
@@ -110,7 +100,7 @@ def brightness():
         value = float(subprocess.check_output(["xbacklight"]).decode())
     except subprocess.CalledProcessError:
         value = -1.0
-    text = f" {value:3.0f}"
+    text = f"scrn: {value:3.0f}"
     return i3_json("brightness", text)
 
 

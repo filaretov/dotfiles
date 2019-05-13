@@ -86,16 +86,16 @@ bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # * Workspaces
 # Workspace Variables
-set $ws1 "1:  "
-set $ws2 "2:  "
-set $ws3 "3:  "
+set $ws1 "1: term "
+set $ws2 "2: edit "
+set $ws3 "3: file "
 set $ws4 "4: 4 "
 set $ws5 "5: 5 "
 set $ws6 "6: 6 "
-set $ws7 "7:  "
-set $ws8 "8:  "
-set $ws9 "9:  "
-set $ws0 "10:  "
+set $ws7 "7: mail "
+set $ws8 "8: docs "
+set $ws9 "9: wild "
+set $ws0 "10: web "
 
 
 # Assign programs to ws
@@ -171,16 +171,6 @@ mode "resize" {
 #border pixel 1
 new_window 1pixel
 hide_edge_borders both
-# Colours!
-set_from_resource $black
-#class                  border    backgr.   text      indicator   child_border
-client.focused          #E5E9F0   #E5E9F0   #2E3440   #E5E9F0     #E5E9F0
-client.focused_inactive #2E3440   #2E3440   #E5E9F0   #484e50     #2E3440
-client.unfocused        #2E3440   #2E3440   #E5E9F0   #292d2e     #2E3440
-client.urgent           #2f343a   #2E3440   #E5E9F0   #900000     #900000
-client.placeholder      #2E3440   #2E3440   #E5E9F0   #000000     #0c0c0c
-
-client.background       #ffffff
 
 bindsym $mod+r mode "resize"
 
@@ -199,9 +189,9 @@ bar {
 	position top
 	mode dock
 	font pango: Source Code Pro 10
-	separator_symbol " "
+	separator_symbol " | "
 	tray_output primary
-	strip_workspace_numbers yes
+	strip_workspace_numbers no
 }
 
 # * Autostart
