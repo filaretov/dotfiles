@@ -65,10 +65,12 @@ def _plugged():
 
 
 def _battery_level():
-    raw_acpi_output = subprocess.check_output(["acpi", "-b"]).decode().replace("\n", "")
-    acpi_output = raw_acpi_output.partition("%")[0]
-    battery_level = int(acpi_output.split(" ")[-1])
-    return battery_level
+    # Some laptops have two batteries (t460s, I'm looking at you)
+    batteries = subprocess.check_output(["acpi", "-b"]).decode().split("\n")[:-1]
+    left_output = [x.partition("%")[0] for x in batteries]
+    battery_level = [int(x.split(" ")[-1]) for x in left_output]
+    avg = sum(battery_level)/len(battery_level)
+    return int(avg)
 
 
 def battery():
