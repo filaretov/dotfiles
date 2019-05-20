@@ -100,10 +100,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-let g:dracula_italic = 0
-let g:dracula_underline = 0
-let g:dracula_undercurl = 0
-color dracula
+color flattened_dark
 
 augroup vimrcEx
   au!

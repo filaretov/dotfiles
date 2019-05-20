@@ -18,6 +18,9 @@ set $right l
 bindsym $mod+Return exec gnome-terminal
 # kill focused window
 bindsym $mod+q kill
+# lock
+bindsym $mod+Escape exec i3lock -c 000000
+bindsym $mod+Shift+Escape systemctl suspend
 
 # change focus
 bindsym $mod+$left focus left

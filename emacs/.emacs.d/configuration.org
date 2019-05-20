@@ -111,6 +111,8 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   :config
   (general-create-definer def-cc-key
     :prefix "C-c")
+  (general-create-definer def-cw-key
+    :prefix "C-w")
   (general-def
     "M-;" 'hgf/comment-or-uncomment-region-or-line
     "<C-[>" 'evil-normal-state)
@@ -290,6 +292,41 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   :ensure nil)
 #+end_src
 
+** Python
+
+#+begin_src emacs-lisp
+(use-package python-mode
+  :config
+  (setq py-shell-name "python3")
+  (setq python-shell-interpreter "python3")
+  (add-to-list 'exec-path "~/.local/bin")
+  (general-def 'normal "C-w C-h" nil))
+
+(use-package elpy
+  :config
+  (elpy-enable)
+  (setq elpy-shell-use-project-root nil))
+
+(remove-hook 'elpy-modules 'elpy-module-flymake)
+(remove-hook 'elpy-modules 'elpy-module-company)
+(remove-hook 'elpy-modules 'elpy-module-django)
+(remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
+
+(defun hgf/python-mode-hook ()
+  (progn
+    (add-to-list 'company-backends 'company-jedi)
+    (jedi:setup)))
+
+(use-package company-jedi
+  :config
+  (add-hook 'python-mode-hook 'hgf/python-mode-hook)
+  (setq jedi:complete-on-dot t))
+
+(use-package blacken)
+
+(setenv "WORKON_HOME" "~/.miniconda3/envs/")
+#+end_src
+
 * Minor modes and utilities
 ** Hydra
    I've only found one good use for a hydra thus far, but it's good one.
@@ -315,9 +352,9 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     ("m" kill-this-buffer "murder")
     ("1" delete-other-windows "highlander")
     ("." nil "stop"))
-  (def-cc-key "C-w C-w" 'hydra-window/body))
+  (general-def 'normal "C-w C-w" 'hydra-window/body))
  #+end_src
-
+ 
 ** Evil
    
 ** Utilities
@@ -502,37 +539,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 ;; ** Fish
 (use-package fish-mode)
-
-;; ** Python
-(use-package python-mode
-  :config
-  (setq py-shell-name "python3")
-  (setq python-shell-interpreter "python3")
-  (add-to-list 'exec-path "~/.local/bin"))
-
-(use-package elpy
-  :config
-  (elpy-enable)
-  (setq elpy-shell-use-project-root nil))
-
-(remove-hook 'elpy-modules 'elpy-module-flymake)
-(remove-hook 'elpy-modules 'elpy-module-company)
-(remove-hook 'elpy-modules 'elpy-module-django)
-(remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
-
-(defun hgf/python-mode-hook ()
-  (progn
-    (add-to-list 'company-backends 'company-jedi)
-    (jedi:setup)))
-
-(use-package company-jedi
-  :config
-  (add-hook 'python-mode-hook 'hgf/python-mode-hook)
-  (setq jedi:complete-on-dot t))
-
-(use-package blacken)
-
-(setenv "WORKON_HOME" "~/.miniconda3/envs/")
 
 ;; ** Rust
 (use-package rust-mode)
