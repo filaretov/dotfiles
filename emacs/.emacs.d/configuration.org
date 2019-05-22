@@ -744,7 +744,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 (use-package yasnippet
   :config
-  (setq yas/indent-line nil))
+  (setq yas/indent-line t))
 (yas-global-mode t)
 
 #+end_src

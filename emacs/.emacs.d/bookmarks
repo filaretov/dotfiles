@@ -4,9 +4,9 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
  (filename . "~/.journal/tasks.org")
- (front-context-string . "* TODO Check if ")
- (rear-context-string . "2018-07-15 Sun>\n")
- (position . 59))
+ (front-context-string . "* TODO What\nSCHE")
+ (rear-context-string . "2019-05-22 Wed>\n")
+ (position . 117))
 ("(eintr) defun"
  (front-context-string . "3.1 The ‘defun’ ")
  (rear-context-string . "Writing Defuns\n\n")
