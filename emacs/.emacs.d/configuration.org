@@ -96,6 +96,10 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 ** Meta
  #+begin_src emacs-lisp
+(defun hgf/load-user-init-file ()
+  (interactive)
+  (load-file user-init-file))
+
 (defun hgf/find-or-load-user-init-file ()
   "Find the custom user init file if it's not the current buffer, otherwise load it."
   (interactive)
@@ -129,7 +133,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     "C-y" 'yank)
   (def-cc-key
     "i" 'hgf/switch-to-previous-buffer
-    "e" 'hgf/find-or-load-user-init-file
     "d" 'magit-list-repositories)
   ;; Swapity swap
   (global-set-key [remap dabbrev-expand] 'hippie-expand)
@@ -137,6 +140,11 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (global-set-key [remap evil-previous-line] 'evil-previous-visual-line))
    #+end_src
   
+** Auto reverting
+#+begin_src emacs-lisp
+(global-auto-revert-mode t)
+#+end_src
+
 * GUI
 ** Fonts
 
@@ -243,7 +251,21 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 	org-src-tab-acts-natively t
 	org-goto-interface 'outline-path-completionp
 	org-outline-path-complete-in-steps nil
-	org-M-RET-may-split-line nil)
+	org-M-RET-may-split-line nil
+	org-cycle-separator-lines 0)
+  (setq org-agenda-files
+	'("~/.journal/tasks.org"
+	  "~/.journal/inbox.org"))
+  (setq org-archive-location "~/.journal/archive.org::* From %s")
+  (setq org-todo-keywords
+	'((sequence "TODO(t)" "|" "DONE(d)")))
+  (setq org-capture-templates
+	'(("t" "Todo" entry (file "~/.journal/tasks.org")
+	   "* TODO %?\n")
+	  ("n" "Note" entry (file "~/.journal/notes.org")
+	   "*  %?\n")
+	  ("i" "In" entry (file "~/.journal/inbox.org")
+	   "* TODO %?\nSCHEDULED: %t")))
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (setq org-publish-project-alist
 	'(("org-notes"
@@ -276,6 +298,10 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     ">" 'org-do-demote
     "<" 'org-do-promote
     "<backtab>" 'org-shifttab)
+  (def-cc-key 'normal global-map
+    "c" 'org-capture
+    "a" 'org-agenda
+    "t" (lambda () (interactive) (org-capture nil "t")))
   (require 'ob-lilypond))
 
   (use-package htmlize)
@@ -352,21 +378,29 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     ("m" kill-this-buffer "murder")
     ("1" delete-other-windows "highlander")
     ("." nil "stop"))
-  (general-def 'normal "C-w C-w" 'hydra-window/body))
+  (defhydra hydra-freq-files (:exit t)
+    "Frequent files"
+    ("e" (find-file "~/.emacs.d/configuration.org") "conf")
+    ("i" (find-file "~/.journal/inbox.org") "inbox")
+    ("n" (find-file "~/.journal/notes.org") "notes")
+    ("u" (find-file "~/.journal/uniplan.org") "uniplan")
+    ("w" (find-file "~/.config/i3/config") "i3wm")
+    ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
+  (general-def 'normal
+    "C-w C-w" 'hydra-window/body
+    "C-c f" 'hydra-freq-files/body))
  #+end_src
  
 ** Evil
    
-** Utilities
-*** which-key
-    #+begin_src emacs-lisp
+** Which-key
+   #+begin_src emacs-lisp
 (use-package which-key
   :config
   (which-key-mode))
-    #+end_src
+   #+end_src
 
 ** Olivetti
-   
    #+begin_src emacs-lisp
 (use-package olivetti)
    #+end_src
@@ -613,8 +647,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (when (window-system)
   ;; Separate C-[ and ESC when a window system is available
   (progn
-    (define-key input-decode-map [?\C-\[] (kbd "<C-[>"))
-    (define-key input-decode-map [?\C-i] (kbd "<C-i>"))))
+    (define-key input-decode-map [?\C-\[] (kbd "<C-[>"))))
 
 ;; *** Keybindings
 (defun hgf/outline-show-complete-outline ()

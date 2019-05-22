@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("(eintr) defun"
+(("org-capture-last-stored"
+ (filename . "~/.journal/tasks.org")
+ (front-context-string . "* TODO Check if ")
+ (rear-context-string . "2018-07-15 Sun>\n")
+ (position . 59))
+("(eintr) defun"
  (front-context-string . "3.1 The ‘defun’ ")
  (rear-context-string . "Writing Defuns\n\n")
  (position . 108235)

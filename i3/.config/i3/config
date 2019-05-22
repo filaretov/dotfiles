@@ -200,3 +200,6 @@ bar {
 # * Autostart
 exec compton -bfD 4
 exec_always ~/.local/bin/stowed/set_xkeyboard
+
+# * Floating windows
+for_window [class="(?i)blueman-manager"] floating enable
