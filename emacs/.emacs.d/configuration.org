@@ -1,15 +1,12 @@
+# -*- eval: (prettify-symbols-mode) -*-
 #+TITLE: Emacs Configuration
 #+AUTHOR: Hristo Filaretov
 #+EMAIL: h.filaretov@protonmail.com
 #+OPTIONS: toc:nil num:nil
 
-
 * Preamble
 #+begin_quote
-You see, yak shaving is what you are doing when you're doing some stupid, fiddly little
-task that bears no obvious relationship to what you're supposed to be working on, but
-yet a chain of twelve causal relations links what you're doing to the original
-meta-task.
+You see, yak shaving is what you are doing when you're doing some stupid, fiddly little task that bears no obvious relationship to what you're supposed to be working on, but yet a chain of twelve causal relations links what you're doing to the original meta-task.
 
 -- Jeremy H. Brown
 #+end_quote
@@ -25,7 +22,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
      
 * Introduction
 
-  #+begin_src emacs-lisp
+  #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Hristo Filaretov"
       user-mail-address "h.filaretov@protonmail.com")
   #+end_src
@@ -354,6 +351,20 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 #+end_src
 
 * Minor modes and utilities
+** Prog mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package prog-mode
+  :ensure nil
+  :config
+  (setq-default prettify-symbols-alist
+		'(("#+BEGIN_SRC"     . "λ")
+		  ("#+END_SRC"       . "λ")
+		  ("#+begin_src"     . "λ")
+		  ("#+end_src"       . "λ")))
+  (global-prettify-symbols-mode t))
+#+END_SRC
+
 ** Hydra
    I've only found one good use for a hydra thus far, but it's good one.
 
@@ -384,6 +395,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     ("i" (find-file "~/.journal/inbox.org") "inbox")
     ("n" (find-file "~/.journal/notes.org") "notes")
     ("u" (find-file "~/.journal/uniplan.org") "uniplan")
+    ("t" (find-file "~/.journal/time.ledger") "time")
     ("w" (find-file "~/.config/i3/config") "i3wm")
     ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
   (general-def 'normal
@@ -402,7 +414,9 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 ** Olivetti
    #+begin_src emacs-lisp
-(use-package olivetti)
+(use-package olivetti
+  :config
+  (setq-default olivetti-body-width 95))
    #+end_src
    
 ** Elfeed
