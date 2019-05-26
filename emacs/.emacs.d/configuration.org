@@ -107,34 +107,19 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
  #+end_src
 
 ** General.el bindings
+
+
    #+begin_src emacs-lisp
 (use-package general
   :config
   (general-create-definer def-cc-key
     :prefix "C-c")
-  (general-create-definer def-cw-key
-    :prefix "C-w")
   (general-def
     "M-;" 'hgf/comment-or-uncomment-region-or-line
-    "<C-[>" 'evil-normal-state)
-  (general-def 'normal
-    "L" 'evil-end-of-visual-line
-    "H" 'evil-first-non-blank-of-visual-line
     "C-s" 'swiper
-    "C-u" 'evil-scroll-up)
-  (general-def 'insert
-    "C-e" 'end-of-line
-    "C-a" 'beginning-of-line
-    "C-k" 'kill-line
-    "C-x C-f" 'company-files
-    "C-y" 'yank)
-  (def-cc-key
-    "i" 'hgf/switch-to-previous-buffer
-    "d" 'magit-list-repositories)
+    "C-c d" 'magit-list-repositories)
   ;; Swapity swap
-  (global-set-key [remap dabbrev-expand] 'hippie-expand)
-  (global-set-key [remap evil-next-line] 'evil-next-visual-line)
-  (global-set-key [remap evil-previous-line] 'evil-previous-visual-line))
+  (global-set-key [remap dabbrev-expand] 'hippie-expand))
    #+end_src
   
 ** Auto reverting
@@ -208,14 +193,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
    #+end_src
 
 * Editing helper functions
-  
 #+begin_src emacs-lisp
-(defun hgf/insert-end-of-buffer ()
-  (interactive)
-  (progn
-    (end-of-buffer)
-    (evil-insert-state)))
-
 ;; Credit: https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 (defun hgf/switch-to-previous-buffer ()
   "Switch to previously open buffer.
@@ -236,6 +214,39 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 #+end_src
   
+* Typing text
+
+** Fill column
+#+begin_src emacs-lisp
+(setq-default fill-column 90)
+#+end_src
+
+** Help, C-h isn't help!
+   =<F1>= also calls the help menu and I use it infrequently enough to warrant rebinding =C-h=
+   to =<DEL>=.
+#+begin_src emacs-lisp
+(defun hgf/press-del ()
+  (interactive)
+  (call-interactively (global-key-binding (kbd "<DEL>"))))
+(defun hgf/press-c-del ()
+  (interactive)
+  (call-interactively (global-key-binding (kbd "C-<backspace>"))))
+(general-def
+  "C-h" 'hgf/press-del
+  "C-M-h" 'hgf/press-c-del)
+#+end_src
+
+** Subword mode
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook 'subword-mode)
+#+end_src
+
+** Sentences don't end with double spaces
+#+begin_src emacs-lisp
+(setq sentence-end-double-space nil)
+#+end_src
+
+
 * Major modes
 ** Org mode
  #+begin_src emacs-lisp
@@ -290,15 +301,10 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 		   ("\\section{%s}" . "\\section*{%s}")
 		   ("\\subsection{%s}" . "\\subsection*{%s}")
 		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-  (general-def 'normal org-mode-map
-    "M-i" 'org-goto
-    ">" 'org-do-demote
-    "<" 'org-do-promote
-    "<backtab>" 'org-shifttab)
-  (def-cc-key 'normal global-map
-    "c" 'org-capture
-    "a" 'org-agenda
-    "t" (lambda () (interactive) (org-capture nil "t")))
+  (general-def
+    "C-c c" 'org-capture
+    "C-c a" 'org-agenda
+    "C-c t" (lambda () (interactive) (org-capture nil "t")))
   (require 'ob-lilypond))
 
   (use-package htmlize)
@@ -322,8 +328,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   :config
   (setq py-shell-name "python3")
   (setq python-shell-interpreter "python3")
-  (add-to-list 'exec-path "~/.local/bin")
-  (general-def 'normal "C-w C-h" nil))
+  (add-to-list 'exec-path "~/.local/bin"))
 
 (use-package elpy
   :config
@@ -350,6 +355,39 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (setenv "WORKON_HOME" "~/.miniconda3/envs/")
 #+end_src
 
+** Fish
+#+begin_src emacs-lisp
+(use-package fish-mode)
+#+end_src
+
+** Ledger
+#+begin_src emacs-lisp
+(use-package ledger-mode)
+#+end_src
+
+** Rust
+
+** YAML
+#+begin_src emacs-lisp
+(use-package yaml-mode)
+#+end_src
+
+** Markdown
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . markdown-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode)))
+#+end_src
+
+** LISP
+   Various lisps
+*** Racket
+#+begin_src emacs-lisp
+(use-package racket-mode)
+(use-package scribble-mode)
+#+end_src
+
 * Minor modes and utilities
 ** Prog mode
 
@@ -373,19 +411,12 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   :config
   (defhydra hydra-window ()
     "Window management"
-    ("h" evil-window-left "left")
-    ("j" evil-window-down "down")
-    ("k" evil-window-up "up")
-    ("l" evil-window-right "right")
-    ("H" evil-window-move-far-left "LEFT")
-    ("J" evil-window-down "down")
-    ("K" evil-window-up "up")
-    ("L" evil-window-right "right")
-    ("s" evil-window-split "split")
-    ("v" evil-window-vsplit "vsplit")
-    ("q" evil-window-delete "delete")
+    ("o" other-window "other")
+    ("s" split-window-below "sp-below")
+    ("v" split-window-right "sp-right")
+    ("0" delete-window "delete")
     ("f" find-file "file")
-    ("o" ivy-switch-buffer "buffer")
+    ("b" ivy-switch-buffer "buffer")
     ("m" kill-this-buffer "murder")
     ("1" delete-other-windows "highlander")
     ("." nil "stop"))
@@ -398,13 +429,57 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     ("t" (find-file "~/.journal/time.ledger") "time")
     ("w" (find-file "~/.config/i3/config") "i3wm")
     ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
-  (general-def 'normal
-    "C-w C-w" 'hydra-window/body
+  (general-def
+    "C-c w" 'hydra-window/body
     "C-c f" 'hydra-freq-files/body))
  #+end_src
  
 ** Evil
-   
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-abbrev-expand-on-insert-exit nil)
+  :config
+  (setq evil-emacs-state-cursor '(bar))
+  (general-def 'normal
+    "L" 'evil-end-of-visual-line
+    "H" 'evil-first-non-blank-of-visual-line
+    "C-s" 'swiper
+    "C-u" 'evil-scroll-up)
+  (general-def 'insert
+    "C-e" 'end-of-line
+    "C-a" 'beginning-of-line
+    "C-k" 'kill-line
+    "C-x C-f" 'company-files
+    "C-y" 'yank)
+  (global-set-key [remap evil-next-line] 'evil-next-visual-line)
+  (global-set-key [remap evil-previous-line] 'evil-previous-visual-line))
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
+(defun hgf/insert-end-of-buffer ()
+  (interactive)
+  (progn
+    (end-of-buffer)
+    (evil-insert-state)))
+
+(use-package evil-magit)
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-exchange
+  :config
+  (evil-exchange-cx-install))
+#+END_SRC   
+
 ** Which-key
    #+begin_src emacs-lisp
 (use-package which-key
@@ -434,23 +509,147 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (advice-add 'elfeed :after #'hgf/olivetti))
 #+end_src
 
-* Dump
+** Expand-region
 
-#+begin_src emacs-lisp
-;; ** Filling
-(setq-default fill-column 90)
-
-;; ** Aggressive-indent-mode
-(use-package aggressive-indent
+#+BEGIN_SRC emacs-lisp
+(use-package expand-region
   :config
-  (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes '(python-mode rst-mode)))
-;; ** Subword for programming
-(add-hook 'prog-mode-hook 'subword-mode)
-;; ** No double space
-(setq sentence-end-double-space nil)
-;; ** Undoing
+  (general-def "C-c v" 'er/expand-region))
+#+END_SRC
+
+ 
+** Change-inner
+
+#+BEGIN_SRC emacs-lisp
+(use-package change-inner
+  :config
+  (general-def
+    "C-c i" 'change-inner
+    "C-c o" 'change-outer))
+#+END_SRC
+
+** Yasnippet
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :config
+  (setq yas/indent-line t))
+(yas-global-mode t)
+#+end_src
+
+** Magit
+#+begin_src emacs-lisp
+(use-package magit)
+
+(defun hgf/list-subdirs (dir)
+  "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
+  (let ((base dir)
+	(result))
+    (dolist (f (directory-files base) result)
+      (let ((name (concat base "/" f)))
+	(when (and (file-directory-p name)
+		   (not (equal f ".."))
+		   (not (equal f ".")))
+	  (add-to-list 'result name))))
+    result))
+
+(defun hgf/contains-git-repo-p (dir)
+  "Check if there's  a .git directory in DIR."
+  (let ((dirs (directory-files dir)))
+    (member ".git" dirs)))
+
+(defun hgf/filter-git-repos (dirs)
+  "Remove all directories without a .git subdirectory in DIRS."
+  (let ((result))
+    (dolist (dir dirs result)
+      (when (hgf/contains-git-repo-p dir)
+	(add-to-list 'result dir)))
+    result))
+
+(defun hgf/make-magit-repolist (dirs)
+  "Make a list of the form (dir 0) for the magit-list-repositories function."
+  (let ((result))
+    (dolist (dir dirs result)
+      (add-to-list 'result `(,dir 0)))
+    result))
+
+(defun hgf/repolist-refresh ()
+  (setq magit-repository-directories
+	(hgf/make-magit-repolist
+	 (hgf/filter-git-repos
+	  (hgf/list-subdirs "~/Development")))))
+
+(advice-add 'magit-list-repositories :before #'hgf/repolist-refresh)
+
+(setq magit-repolist-columns
+      '(("Name" 12 magit-repolist-column-ident nil)
+	("Branch" 10 magit-repolist-column-branch nil)
+	("Dirty" 6 magit-repolist-column-dirty nil)
+	("B<U" 3 magit-repolist-column-unpulled-from-upstream
+	 ((:right-align t)
+	  (:help-echo "Upstream changes not in branch")))
+	("B>U" 3 magit-repolist-column-unpushed-to-upstream
+	 ((:right-align t)
+	  (:help-echo "Local changes not in upstream")))
+	("Version" 30 magit-repolist-column-version nil)
+	("Path" 99 magit-repolist-column-path nil)))
+#+end_src
+
+** Company
+#+begin_src emacs-lisp
+(use-package company)
+(add-hook 'after-init-hook 'global-company-mode)
+#+end_src
+
+** Outshine
+#+begin_src emacs-lisp
+(use-package outshine
+  :config
+  (setq outshine-startup-folded-p t))
+
+(add-hook 'conf-mode-hook #'outshine-mode 1)
+(add-hook 'prog-mode-hook #'outshine-mode 1)
+(add-hook 'bibtex-mode-hook #'outshine-mode 1)
+(add-hook 'LaTeX-mode-hook #'outshine-mode 1)
+#+end_src
+
+** Undo tree
+#+begin_src emacs-lisp
 (use-package undo-tree)
+#+end_src
+
+
+** TODO Ivy & Counsel
+   I actually don't know what =flx= does anymore. Shame on me.
+#+begin_src emacs-lisp
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t
+	enable-recursive-minibuffers t
+	ivy-initial-inputs-alist nil
+	count-format "(%d/%d) "))
+
+(use-package counsel
+  :config
+  (counsel-mode 1)
+  (use-package flx)
+  (use-package smex))
+#+end_src
+
+** TODO Projectile
+   I know =Projectile= is useful, but I still don't know how! I should get around to using it.
+#+begin_src emacs-lisp
+(use-package projectile
+  :config
+  (general-def '(normal visual insert) "C-p" 'projectile-find-file)
+  (setq projectile-completion-system 'ivy
+	projectile-switch-project-action 'projectile-dired
+	projectile-require-project-root nil))
+#+end_src
+
+* Dump
+#+begin_src emacs-lisp
+
 ;; ** Dumb-jump
 (use-package dumb-jump
   :config
@@ -472,8 +671,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (add-hook 'emacs-lisp-mode-hook 'lisp-modes)
 
 ;; *** Racket
-(use-package racket-mode)
-(use-package scribble-mode)
 
 ;; ** C mode
 (defun c-lineup-arglist-tabs-only (ignored)
@@ -580,13 +777,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 ;; (add-hook 'term-mode-hook #'toggle-truncate-line 1)
 
 ;; ** Markdown
-(use-package markdown-mode
-  :mode (("README\\.md\\'" . markdown-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode)))
 
-;; ** Fish
-(use-package fish-mode)
 
 ;; ** Rust
 (use-package rust-mode)
@@ -598,168 +789,5 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     (cargo-minor-mode 1)))
 
 (add-hook 'rust-mode-hook 'hgf--rust-hook)
-
-;; ** Yaml
-(use-package yaml-mode)
-
-;; ** ReStructured Text
-(eval-after-load "rst"
-  '(setq rst-mode-map (make-sparse-keymap)))
-;; ** Ledger
-(use-package ledger-mode)
-
-(use-package evil-ledger
-  :after '(ledger-mode evil-mode)
-  :config
-  (add-hook 'ledger-mode-hook 'evil-ledger-mode))
-
-;; * Minor mode configuration
-;; ** Outshine
-(use-package outshine
-  :config
-  (setq outshine-startup-folded-p t))
-
-(add-hook 'conf-mode-hook #'outshine-mode 1)
-(add-hook 'prog-mode-hook #'outshine-mode 1)
-(add-hook 'bibtex-mode-hook #'outshine-mode 1)
-(add-hook 'LaTeX-mode-hook #'outshine-mode 1)
-
-(general-def 'normal outshine-mode-map
-  "M-i" 'outshine-imenu
-  "<backtab>" 'outshine-cycle-buffer
-  "<tab>" 'evil-toggle-fold)
-
-;; ** Evil
-;; *** Init
-(use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-abbrev-expand-on-insert-exit nil)
-  :config
-  (evil-mode 1)
-  (setq evil-emacs-state-cursor '(bar)))
-
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
-
-(use-package evil-magit)
-
-(use-package evil-surround
-  :config
-  (global-evil-surround-mode 1))
-
-(use-package evil-exchange
-  :config
-  (evil-exchange-cx-install))
-
-;; *** Escape from Emacs state
-(global-set-key (kbd "<escape>") 'evil-normal-state)
-(when (window-system)
-  ;; Separate C-[ and ESC when a window system is available
-  (progn
-    (define-key input-decode-map [?\C-\[] (kbd "<C-[>"))))
-
-;; *** Keybindings
-(defun hgf/outline-show-complete-outline ()
-  "Outline: show all, then hide body."
-  (interactive)
-  (outline-show-all)
-  (outline-hide-body))
-;; ** Company
-(use-package company)
-(add-hook 'after-init-hook 'global-company-mode)
-
-
-;; ** Rainbow mode
-(use-package rainbow-mode)
-;; ** Ivy
-(use-package ivy
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t
-	ivy-initial-inputs-alist nil
-	count-format "(%d/%d) "))
-
-(use-package counsel
-  :config
-  (counsel-mode 1)
-  (use-package flx)
-  (use-package smex))
-
-;; ** Magit
-(use-package magit)
-
-(defun hgf/list-subdirs (dir)
-  "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
-  (let ((base dir)
-	(result))
-    (dolist (f (directory-files base) result)
-      (let ((name (concat base "/" f)))
-	(when (and (file-directory-p name)
-		   (not (equal f ".."))
-		   (not (equal f ".")))
-	  (add-to-list 'result name))))
-    result))
-
-(defun hgf/contains-git-repo-p (dir)
-  "Check if there's  a .git directory in DIR."
-  (let ((dirs (directory-files dir)))
-    (member ".git" dirs)))
-
-(defun hgf/filter-git-repos (dirs)
-  "Remove all directories without a .git subdirectory in DIRS."
-  (let ((result))
-    (dolist (dir dirs result)
-      (when (hgf/contains-git-repo-p dir)
-	(add-to-list 'result dir)))
-    result))
-
-(defun hgf/make-magit-repolist (dirs)
-  "Make a list of the form (dir 0) for the magit-list-repositories function."
-  (let ((result))
-    (dolist (dir dirs result)
-      (add-to-list 'result `(,dir 0)))
-    result))
-
-(defun hgf/repolist-refresh ()
-  (setq magit-repository-directories
-	(hgf/make-magit-repolist
-	 (hgf/filter-git-repos
-	  (hgf/list-subdirs "~/Development")))))
-
-(advice-add 'magit-list-repositories :before #'hgf/repolist-refresh)
-
-(setq magit-repolist-columns
-      '(("Name" 12 magit-repolist-column-ident nil)
-	("Branch" 10 magit-repolist-column-branch nil)
-	("Dirty" 6 magit-repolist-column-dirty nil)
-	("B<U" 3 magit-repolist-column-unpulled-from-upstream
-	 ((:right-align t)
-	  (:help-echo "Upstream changes not in branch")))
-	("B>U" 3 magit-repolist-column-unpushed-to-upstream
-	 ((:right-align t)
-	  (:help-echo "Local changes not in upstream")))
-	("Version" 30 magit-repolist-column-version nil)
-	("Path" 99 magit-repolist-column-path nil)))
-;; ** Projectile
-(use-package projectile
-  :config
-  (general-def '(normal visual insert) "C-p" 'projectile-find-file)
-  (setq projectile-completion-system 'ivy
-	projectile-switch-project-action 'projectile-dired
-	projectile-require-project-root nil))
-;; * RSS
-;; * Snippets
-
-(use-package yasnippet
-  :config
-  (setq yas/indent-line t))
-(yas-global-mode t)
-
 #+end_src
 
