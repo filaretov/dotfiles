@@ -50,9 +50,9 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
       auto-save-default nil
       ;; De facto smooth scrolling
       scroll-conservatively 100
-      ;; ** Bells
+      ;; Bells
       ring-bell-function 'ignore
-      ;; ** VC symlinks
+      ;; VC symlinks
       vc-follow-symlinks t
       default-input-method "TeX")
 
@@ -69,7 +69,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (show-paren-mode t)
 (hl-line-mode t)
 
-;; ** Shorter Prompts
+;; Shorter Prompts
 (fset 'yes-or-no-p 'y-or-n-p)
 
    #+end_src
@@ -649,17 +649,10 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 * Dump
 #+begin_src emacs-lisp
-
-;; ** Dumb-jump
 (use-package dumb-jump
   :config
   (setq dumb-jump-selector 'ivy))
-;; * Major mode configuration
-;; ** LISPS
-;; *** General
 (defun lisp-modes ())
-
-;; *** Common Lisp
 (use-package slime
   :mode (("\\.cl\\'" . common-lisp-mode))
   :config
