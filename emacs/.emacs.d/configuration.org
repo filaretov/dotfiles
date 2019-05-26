@@ -380,12 +380,149 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 	 ("\\.markdown\\'" . markdown-mode)))
 #+end_src
 
+** C
+#+begin_src emacs-lisp
+(defun c-lineup-arglist-tabs-only (ignored)
+  "Line up argument lists by tabs, not spaces"
+  (let* ((anchor (c-langelem-pos c-syntactic-element))
+	 (column (c-langelem-2nd-pos c-syntactic-element))
+	 (offset (- (1+ column) anchor))
+	 (steps (floor offset c-basic-offset)))
+    (* (max steps 1)
+       c-basic-offset)))
+
+(c-add-style
+ "linux-tabs-only"
+ '("linux" (c-offsets-alist
+	    (arglist-cont-nonempty
+	     c-lineup-gcc-asm-reg
+	     c-lineup-arglist-tabs-only))))
+
+(defun ccc-astyle ()
+  "Format C++ code with astyle."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+	(setq beg (region-beginning)
+	      end (region-end))
+      (setq beg (point-min)
+	    end (point-max)))
+    (shell-command-on-region
+     beg end
+     "astyle --style=linux -t"
+     nil t)))
+
+(add-hook 'c-mode-hook
+	  (lambda ()
+	    (setq indent-tabs-mode t)
+	    (setq show-trailing-whitespace t)
+	    (c-set-style "linux-tabs-only")))
+
+(add-hook 'c++-mode-hook
+	  (lambda ()
+	    (setq indent-tabs-mode t)
+	    (setq show-trailing-whitespace t)
+	    (c-set-style "linux-tabs-only")))
+
+#+end_src
+
 ** LISP
    Various lisps
+#+begin_src emacs-lisp
+(defun lisp-modes ())
+(add-hook 'lisp-mode-hook 'lisp-modes)
+(add-hook 'racket-mode-hook 'lisp-modes)
+(add-hook 'emacs-lisp-mode-hook 'lisp-modes)
+#+end_src
+
 *** Racket
 #+begin_src emacs-lisp
 (use-package racket-mode)
 (use-package scribble-mode)
+#+end_src
+
+*** Common Lisp
+#+begin_src emacs-lisp
+(use-package slime
+  :mode (("\\.cl\\'" . common-lisp-mode))
+  :config
+  (setq inferior-lisp-program "/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
+#+end_src
+
+** LaTeX
+#+begin_src emacs-lisp
+(use-package tex
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-master nil)
+  (setq TeX-PDF-mode t))
+
+(use-package auctex-latexmk
+  :config
+  (auctex-latexmk-setup)
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+
+(defun hgf--latex-hook ()
+  (progn
+    (setq ispell-parser 'tex)
+    (auto-fill-mode t)
+    (TeX-source-correlate-mode 1)))
+
+(add-hook 'LaTeX-mode-hook 'hgf--latex-hook)
+
+;; to have the buffer refresh after compilation
+(add-hook 'TeX-after-compilation-finished-functions
+	  #'TeX-revert-document-buffer)
+
+(defun hgf--bibtex-hook ()
+  (progn
+    (setq comment-start "%")))
+
+(add-hook 'bibtex-mode-hook 'hgf--bibtex-hook)
+
+(setq-default TeX-auto-save t
+              TeX-parse-self t
+              TeX-PDF-mode t
+              TeX-auto-local "~/.emacs.d/auctex-auto")
+(setq bibtex-dialect 'biblatex)
+#+end_src
+
+** Rust
+#+begin_src emacs-lisp
+(use-package rust-mode)
+(use-package racer)
+(use-package cargo)
+(defun hgf--rust-hook ()
+  (progn
+    (racer-mode 1)
+    (cargo-minor-mode 1)))
+
+(add-hook 'rust-mode-hook 'hgf--rust-hook)
+#+end_src
+
+** Eshell
+#+begin_src emacs-lisp
+(defun hgf--eshell-hook ()
+  (progn
+    (def-g-key
+      :keymaps 'eshell-mode-map
+      "i" 'hgf/insert-end-of-buffer)
+    (general-def 'eshell-mode-map
+      [remap beginning-of-line] 'eshell-bol)
+    (general-define-key
+     :states 'normal
+     :keymaps 'eshell-mode-map
+     (kbd "C-p") 'eshell-previous-matching-input-from-input
+     (kbd "C-n") 'eshell-next-matching-input-from-input)))
+
+(add-hook 'eshell-mode-hook 'hgf--eshell-hook)
+
+(setq eshell-visual-commands '(top))
+(defalias 'ff #'find-file)
 #+end_src
 
 * Minor modes and utilities
@@ -617,6 +754,12 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (use-package undo-tree)
 #+end_src
 
+** Dumb-jump
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :config
+  (setq dumb-jump-selector 'ivy))
+#+end_src
 
 ** TODO Ivy & Counsel
    I actually don't know what =flx= does anymore. Shame on me.
@@ -646,141 +789,3 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 	projectile-switch-project-action 'projectile-dired
 	projectile-require-project-root nil))
 #+end_src
-
-* Dump
-#+begin_src emacs-lisp
-(use-package dumb-jump
-  :config
-  (setq dumb-jump-selector 'ivy))
-(defun lisp-modes ())
-(use-package slime
-  :mode (("\\.cl\\'" . common-lisp-mode))
-  :config
-  (setq inferior-lisp-program "/bin/sbcl")
-  (setq slime-contribs '(slime-fancy)))
-
-(add-hook 'lisp-mode-hook 'lisp-modes)
-(add-hook 'racket-mode-hook 'lisp-modes)
-(add-hook 'emacs-lisp-mode-hook 'lisp-modes)
-
-;; *** Racket
-
-;; ** C mode
-(defun c-lineup-arglist-tabs-only (ignored)
-  "Line up argument lists by tabs, not spaces"
-  (let* ((anchor (c-langelem-pos c-syntactic-element))
-	 (column (c-langelem-2nd-pos c-syntactic-element))
-	 (offset (- (1+ column) anchor))
-	 (steps (floor offset c-basic-offset)))
-    (* (max steps 1)
-       c-basic-offset)))
-
-(c-add-style
- "linux-tabs-only"
- '("linux" (c-offsets-alist
-	    (arglist-cont-nonempty
-	     c-lineup-gcc-asm-reg
-	     c-lineup-arglist-tabs-only))))
-
-(defun ccc-astyle ()
-  "Format C++ code with astyle."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-	(setq beg (region-beginning)
-	      end (region-end))
-      (setq beg (point-min)
-	    end (point-max)))
-    (shell-command-on-region
-     beg end
-     "astyle --style=linux -t"
-     nil t)))
-
-(add-hook 'c-mode-hook
-	  (lambda ()
-	    (setq indent-tabs-mode t)
-	    (setq show-trailing-whitespace t)
-	    (c-set-style "linux-tabs-only")))
-
-(add-hook 'c++-mode-hook
-	  (lambda ()
-	    (setq indent-tabs-mode t)
-	    (setq show-trailing-whitespace t)
-	    (c-set-style "linux-tabs-only")))
-
-;; ** LaTex mode
-(use-package tex
-  :defer t
-  :ensure auctex
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-master nil)
-  (setq TeX-PDF-mode t))
-
-(use-package auctex-latexmk
-  :config
-  (auctex-latexmk-setup)
-  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
-
-(defun hgf--latex-hook ()
-  (progn
-    (setq ispell-parser 'tex)
-    (auto-fill-mode t)
-    (TeX-source-correlate-mode 1)))
-
-(add-hook 'LaTeX-mode-hook 'hgf--latex-hook)
-
-;; to have the buffer refresh after compilation
-(add-hook 'TeX-after-compilation-finished-functions
-	  #'TeX-revert-document-buffer)
-
-(defun hgf--bibtex-hook ()
-  (progn
-    (setq comment-start "%")))
-
-(add-hook 'bibtex-mode-hook 'hgf--bibtex-hook)
-
-(setq-default TeX-auto-save t
-              TeX-parse-self t
-              TeX-PDF-mode t
-              TeX-auto-local "~/.emacs.d/auctex-auto")
-(setq bibtex-dialect 'biblatex)
-
-;; ** Eshell
-(defun hgf--eshell-hook ()
-  (progn
-    (def-g-key
-      :keymaps 'eshell-mode-map
-      "i" 'hgf/insert-end-of-buffer)
-    (general-def 'eshell-mode-map
-      [remap beginning-of-line] 'eshell-bol)
-    (general-define-key
-     :states 'normal
-     :keymaps 'eshell-mode-map
-     (kbd "C-p") 'eshell-previous-matching-input-from-input
-     (kbd "C-n") 'eshell-next-matching-input-from-input)))
-
-(add-hook 'eshell-mode-hook 'hgf--eshell-hook)
-
-(setq eshell-visual-commands '(top))
-(defalias 'ff #'find-file)
-
-;; ** Term
-;; (add-hook 'term-mode-hook #'toggle-truncate-line 1)
-
-;; ** Markdown
-
-
-;; ** Rust
-(use-package rust-mode)
-(use-package racer)
-(use-package cargo)
-(defun hgf--rust-hook ()
-  (progn
-    (racer-mode 1)
-    (cargo-minor-mode 1)))
-
-(add-hook 'rust-mode-hook 'hgf--rust-hook)
-#+end_src
-
