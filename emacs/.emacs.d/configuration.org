@@ -216,6 +216,11 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   
 * Typing text
 
+** Automatic newlines
+#+begin_src emacs-lisp
+(setq next-line-add-newlines t)
+#+end_src
+
 ** Fill column
 #+begin_src emacs-lisp
 (setq-default fill-column 90)
@@ -245,7 +250,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 #+begin_src emacs-lisp
 (setq sentence-end-double-space nil)
 #+end_src
-
 
 * Major modes
 ** Org mode
@@ -789,3 +793,4 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 	projectile-switch-project-action 'projectile-dired
 	projectile-require-project-root nil))
 #+end_src
+

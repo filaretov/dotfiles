@@ -17,3 +17,4 @@
 
 ;; * 2. Let it rip
 (org-babel-load-file "~/.emacs.d/configuration.org")
+(put 'set-goal-column 'disabled nil)
