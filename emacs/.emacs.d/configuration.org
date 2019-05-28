@@ -1,4 +1,4 @@
-# -*- eval: (prettify-symbols-mode) -*-
+# -*-eval: (prettify-symbols-mode) -*-
 #+TITLE: Emacs Configuration
 #+AUTHOR: Hristo Filaretov
 #+EMAIL: h.filaretov@protonmail.com
@@ -67,7 +67,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 ;; Enabling things
 (global-visual-line-mode 1)
 (show-paren-mode t)
-(hl-line-mode t)
+(global-hl-line-mode t)
 
 ;; Shorter Prompts
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -117,7 +117,8 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (general-def
     "M-;" 'hgf/comment-or-uncomment-region-or-line
     "C-s" 'swiper
-    "C-c d" 'magit-list-repositories)
+    "C-c d" 'magit-list-repositories
+    "M-o" 'other-window)
   ;; Swapity swap
   (global-set-key [remap dabbrev-expand] 'hippie-expand))
    #+end_src
@@ -226,21 +227,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (setq-default fill-column 90)
 #+end_src
 
-** Help, C-h isn't help!
-   =<F1>= also calls the help menu and I use it infrequently enough to warrant rebinding =C-h=
-   to =<DEL>=.
-#+begin_src emacs-lisp
-(defun hgf/press-del ()
-  (interactive)
-  (call-interactively (global-key-binding (kbd "<DEL>"))))
-(defun hgf/press-c-del ()
-  (interactive)
-  (call-interactively (global-key-binding (kbd "C-<backspace>"))))
-(general-def
-  "C-h" 'hgf/press-del
-  "C-M-h" 'hgf/press-c-del)
-#+end_src
-
 ** Subword mode
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook 'subword-mode)
@@ -249,6 +235,11 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 ** Sentences don't end with double spaces
 #+begin_src emacs-lisp
 (setq sentence-end-double-space nil)
+#+end_src
+
+** Delete selection
+#+begin_src emacs-lisp
+(delete-selection-mode t)
 #+end_src
 
 * Major modes
@@ -553,9 +544,13 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (defhydra hydra-window ()
     "Window management"
     ("o" other-window "other")
+    ("h" windmove-left "left")
+    ("j" windmove-down "down")
+    ("k" windmove-up "up")
+    ("l" windmove-right "right")
     ("s" split-window-below "sp-below")
     ("v" split-window-right "sp-right")
-    ("0" delete-window "delete")
+    ("d" delete-window "delete")
     ("f" find-file "file")
     ("b" ivy-switch-buffer "buffer")
     ("m" kill-this-buffer "murder")
@@ -763,6 +758,12 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (use-package dumb-jump
   :config
   (setq dumb-jump-selector 'ivy))
+#+end_src
+
+** Flyspell
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+(add-hook 'text-mode-hook #'flyspell-mode)
 #+end_src
 
 ** TODO Ivy & Counsel
