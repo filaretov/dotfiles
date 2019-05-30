@@ -217,11 +217,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   
 * Typing text
 
-** Automatic newlines
-#+begin_src emacs-lisp
-(setq next-line-add-newlines t)
-#+end_src
-
 ** Fill column
 #+begin_src emacs-lisp
 (setq-default fill-column 90)

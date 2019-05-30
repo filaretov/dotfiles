@@ -91,7 +91,7 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #d
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # * Workspaces
-# Workspace Variables
+# ** Workspace Variables
 set $ws1 "1: term "
 set $ws2 "2: edit "
 set $ws3 "3: file "
@@ -103,8 +103,7 @@ set $ws8 "8: docs "
 set $ws9 "9: wild "
 set $ws0 "10: web "
 
-
-# Assign programs to ws
+# ** Assign programs to ws
 assign [class="Firefox"]     $ws0
 assign [class="Nautilus"]    $ws3
 assign [class="Evince"]      $ws8
@@ -112,7 +111,7 @@ assign [class="Telegram"]    $ws6
 assign [class="Thunderbird"] $ws7
 assign [class="okular"]      $ws8
 
-# switch to workspace
+# ** Switch to workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
@@ -124,7 +123,7 @@ bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws0
 
-# move focused container to workspace
+# ** Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2
 bindsym $mod+Shift+3 move container to workspace $ws3
@@ -136,7 +135,7 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws0
 
-# Multi monitor
+# ** Multi monitor
 workspace $ws1 output VGA-1
 workspace $ws2 output VGA-1
 workspace $ws3 output VGA-1
@@ -149,10 +148,10 @@ workspace $ws9 output VGA-2
 workspace $ws0 output VGA-2
 
 
-# resize window (you can also use the mouse for that)
+# ** Resize window mode
+bindsym $mod+r mode "resize"
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
-
         # Pressing left will shrink the window’s width.
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
@@ -161,35 +160,27 @@ mode "resize" {
         bindsym k resize grow height 10 px or 10 ppt
         bindsym l resize shrink height 10 px or 10 ppt
         bindsym semicolon resize grow width 10 px or 10 ppt
-
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
         bindsym Up resize shrink height 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
-
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym kscape mode "default"
 }
 
-# * Colors and such
+# * Window decorations
 #border pixel 1
 new_window 1pixel
 hide_edge_borders both
 
-bindsym $mod+r mode "resize"
-
-exec_always feh --bg-scale ~/.background
-exec_always ~/.local/bin/set_xkeyboard
+# * Rofi
 # start dmenu (a program launcher)
 bindsym $mod+space exec rofi -show drun
 bindsym Mod1+space exec rofi -show drun
 
 # * Bar
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-
 bar {
 	status_command i3bar.py --nobackground
 	position top
@@ -203,6 +194,7 @@ bar {
 # * Autostart
 exec compton -bfD 4
 exec_always ~/.local/bin/stowed/set_xkeyboard
+exec_always feh --bg-scale ~/.background
 
 # * Floating windows
 for_window [class="(?i)blueman-manager"] floating enable
