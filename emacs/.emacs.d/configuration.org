@@ -1,4 +1,4 @@
-# -*-eval: (prettify-symbols-mode) -*-
+# -*- eval: (prettify-symbols-mode) -*-
 #+TITLE: Emacs Configuration
 #+AUTHOR: Hristo Filaretov
 #+EMAIL: h.filaretov@protonmail.com
@@ -37,6 +37,13 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 #+end_src
 
 * Under the hood
+
+** Startup echo area message
+#+begin_src emacs-lisp
+(defun display-startup-echo-area-message ()
+  (message "Don't panic!"))
+#+end_src
+
 ** Default wrangling
 
    #+begin_src emacs-lisp
@@ -219,13 +226,13 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 ** Scrolling
    Scrolling smoothly and without losing where I am in the file.
-
 #+begin_src emacs-lisp
 (setq scroll-margin 10
       scroll-step 1
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
 #+end_src
+
 ** Fill column
 #+begin_src emacs-lisp
 (setq-default fill-column 90)
@@ -575,7 +582,12 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     "C-c f" 'hydra-freq-files/body))
  #+end_src
  
-*** Evil
+** Evil
+   
+#+begin_src emacs-lisp
+(defun hgf/evil-normal-state-if-evil ()
+  (when (bound-and-true-p evil-local-mode) (evil-normal-state)))
+#+end_src
 
  #+BEGIN_SRC emacs-lisp
 (use-package evil
@@ -585,6 +597,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (setq evil-want-abbrev-expand-on-insert-exit nil)
   :config
   (setq evil-emacs-state-cursor '(bar))
+  (general-def "M-`" 'evil-local-mode)
   (general-def 'normal
     "L" 'evil-end-of-visual-line
     "H" 'evil-first-non-blank-of-visual-line
@@ -599,10 +612,9 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (general-def 'visual
     "L" 'end-of-line
     "H" 'beginning-of-line)
-  (advice-add 'keyboard-quit :before #'evil-normal-state)
+  (advice-add 'keyboard-quit :before #'hgf/evil-normal-state-if-evil)
   (global-set-key [remap evil-next-line] 'evil-next-visual-line)
-  (global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
-  (evil-mode t))
+  (global-set-key [remap evil-previous-line] 'evil-previous-visual-line))
 ;; (use-package evil-collection
 ;;   :after evil
 ;;   :ensure t
@@ -656,14 +668,13 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 #+end_src
 
 ** Expand-region
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package expand-region
   :config
   (general-def "C-c v" 'er/expand-region))
-#+END_SRC
+#+end_src
 
- 
-** Yasnippet
+** =yasnippet=
 #+begin_src emacs-lisp
 (use-package yasnippet
   :config
@@ -735,7 +746,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (add-hook 'after-init-hook 'global-company-mode)
 #+end_src
 
-** Outshine
+** =outshine=
 #+begin_src emacs-lisp
 (use-package outshine
   :config
@@ -747,22 +758,48 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (add-hook 'LaTeX-mode-hook #'outshine-mode 1)
 #+end_src
 
-** Undo tree
+** Planning for contingencies =undo-tree=
 #+begin_src emacs-lisp
 (use-package undo-tree)
 #+end_src
 
-** Dumb-jump
+** Go to definition =dumb-jump=
 #+begin_src emacs-lisp
 (use-package dumb-jump
   :config
   (setq dumb-jump-selector 'ivy))
 #+end_src
 
-** Flyspell
+** Flyspell =flyspell=
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'text-mode-hook #'flyspell-mode)
+#+end_src
+
+** Change inner =change-inner=
+#+begin_src emacs-lisp
+(use-package change-inner
+  :config
+  (general-def "C-c i" 'change-inner)
+  (general-def "C-c o" 'change-outer))
+#+end_src
+
+** RYO modal
+#+begin_src emacs-lisp
+(use-package ryo-modal
+  :config
+  (setq ryo-modal-cursor-color "blue")
+  (general-def "M-`" 'ryo-modal-mode)
+  (ryo-modal-keys
+   ("." ryo-modal-repeat)
+   ("l" forward-char)
+   ("h" backward-char)
+   ("j" next-line)
+   ("k" previous-line))
+  (ryo-modal-major-mode-keys
+   'python-mode
+   ("J" python-nav-forward-defun)
+   ("K" python-nav-backward-defun))
 #+end_src
 
 ** TODO Ivy & Counsel
