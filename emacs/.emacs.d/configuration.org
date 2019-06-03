@@ -217,6 +217,15 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   
 * Typing text
 
+** Scrolling
+   Scrolling smoothly and without losing where I am in the file.
+
+#+begin_src emacs-lisp
+(setq scroll-margin 10
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
+#+end_src
 ** Fill column
 #+begin_src emacs-lisp
 (setq-default fill-column 90)
@@ -327,6 +336,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 
 (remove-hook 'elpy-modules 'elpy-module-flymake)
 (remove-hook 'elpy-modules 'elpy-module-company)
+(remove-hook 'elpy-modules 'elpy-module-eldoc)
 (remove-hook 'elpy-modules 'elpy-module-django)
 (remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
 
@@ -565,9 +575,9 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     "C-c f" 'hydra-freq-files/body))
  #+end_src
  
-** Evil
+*** Evil
 
-#+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp
 (use-package evil
   :init
   (setq evil-want-integration t)
@@ -586,13 +596,18 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
     "C-k" 'kill-line
     "C-x C-f" 'company-files
     "C-y" 'yank)
+  (general-def 'visual
+    "L" 'end-of-line
+    "H" 'beginning-of-line)
+  (advice-add 'keyboard-quit :before #'evil-normal-state)
   (global-set-key [remap evil-next-line] 'evil-next-visual-line)
-  (global-set-key [remap evil-previous-line] 'evil-previous-visual-line))
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
+  (global-set-key [remap evil-previous-line] 'evil-previous-visual-line)
+  (evil-mode t))
+;; (use-package evil-collection
+;;   :after evil
+;;   :ensure t
+;;   :config
+;;   (evil-collection-init))
 
 (defun hgf/insert-end-of-buffer ()
   (interactive)
@@ -609,7 +624,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 (use-package evil-exchange
   :config
   (evil-exchange-cx-install))
-#+END_SRC   
+ #+END_SRC   
 
 ** Which-key
    #+begin_src emacs-lisp
@@ -641,7 +656,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 #+end_src
 
 ** Expand-region
-
 #+BEGIN_SRC emacs-lisp
 (use-package expand-region
   :config
@@ -649,16 +663,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 #+END_SRC
 
  
-** Change-inner
-
-#+BEGIN_SRC emacs-lisp
-(use-package change-inner
-  :config
-  (general-def
-    "C-c i" 'change-inner
-    "C-c o" 'change-outer))
-#+END_SRC
-
 ** Yasnippet
 #+begin_src emacs-lisp
 (use-package yasnippet

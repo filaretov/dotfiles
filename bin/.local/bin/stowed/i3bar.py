@@ -34,6 +34,13 @@ def i3_json(
         i3_block["separator_block_width"] = separator_block_width
     return i3_block
 
+def pom_task():
+    try:
+        with open("/tmp/pom_task") as f:
+            task_name = f.read().strip()
+    except:
+        task_name = ""
+    return i3_json("pom", task_name)
 
 def repo_is_dirty(dir):
     if ".git" in os.listdir(dir):
@@ -129,7 +136,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [xkb_layout, vsc_check, brightness, battery, clock, lambda: sep(0)]
+    modules = [pom_task, xkb_layout, vsc_check, brightness, battery, clock, lambda: sep(0)]
     while True:
         line = [mod() for mod in modules]
         print_line(prefix + json.dumps(line))
