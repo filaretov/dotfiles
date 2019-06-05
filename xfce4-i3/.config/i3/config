@@ -151,10 +151,10 @@ workspace $ws9 output VGA-2
 workspace $ws0 output VGA-2
 
 # ** Move workspaces to monitors
-bindsym $mod+Shift+u [class=".*"] move workspace to output VGA-1
-bindsym $mod+u move workspace to output VGA-1
-bindsym $mod+Shift+y [class=".*"] move workspace to output VGA-2
-bindsym $mod+y move workspace to output VGA-2
+bindsym $mod+Shift+y [class=".*"] move workspace to output VGA-1
+bindsym $mod+y move workspace to output VGA-1
+bindsym $mod+Shift+u [class=".*"] move workspace to output VGA-2
+bindsym $mod+u move workspace to output VGA-2
 
 # ** Resize window mode
 bindsym $mod+r mode "resize"
