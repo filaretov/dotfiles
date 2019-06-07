@@ -75,6 +75,9 @@ alias tmns="tmux new -s"
 # show progress of dd, run in a separate terminal
 alias ddprog="sudo kill -USR1 $(pgrep ^dd)"
 
+# cmake convenience
+alias cb="rm -rf build/ && mkdir build && cd build"
+
 function tub_mount(){
 	sshfs filaret@sshgate.tu-berlin.de:/home/users/f/filaret/irb-ubuntu/ ~/Projects/tuberlin
 }
