@@ -743,7 +743,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 ** Company
 #+begin_src emacs-lisp
 (use-package company)
-(add-hook 'after-init-hook 'global-company-mode)
+;; (add-hook 'after-init-hook 'global-company-mode)
 #+end_src
 
 ** =outshine=

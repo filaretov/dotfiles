@@ -140,4 +140,4 @@ if __name__ == "__main__":
     while True:
         line = [mod() for mod in modules]
         print_line(prefix + json.dumps(line))
-        time.sleep(0.1)
+        time.sleep(0.5)
