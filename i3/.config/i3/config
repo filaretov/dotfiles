@@ -182,7 +182,7 @@ bindsym Mod1+space exec rofi -show drun
 
 # * Bar
 bar {
-	status_command i3bar.py --nobackground
+	status_command ~/.local/bin/stowed/i3bar.py --nobackground
 	position top
 	mode dock
 	font pango: Source Code Pro 10

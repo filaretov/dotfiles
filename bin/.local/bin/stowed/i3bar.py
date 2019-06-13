@@ -136,7 +136,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [pom_task, xkb_layout, vsc_check, brightness, battery, clock, lambda: sep(0)]
+    modules = [pom_task, xkb_layout, vsc_check, battery, clock, lambda: sep(0)]
     while True:
         line = [mod() for mod in modules]
         print_line(prefix + json.dumps(line))
