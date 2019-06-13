@@ -597,6 +597,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
   (setq evil-want-abbrev-expand-on-insert-exit nil)
   :config
   (setq evil-emacs-state-cursor '(bar))
+  (evil-mode 1)
   (general-def "M-~" 'evil-local-mode)
   (general-def 'normal
     "L" 'evil-end-of-visual-line
@@ -774,48 +775,6 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'text-mode-hook #'flyspell-mode)
-#+end_src
-
-** Change inner =change-inner=
-#+begin_src emacs-lisp
-(use-package change-inner
-  :config
-  (general-def "C-c i" 'change-inner)
-  (general-def "C-c o" 'change-outer))
-#+end_src
-
-** RYO modal
-#+begin_src emacs-lisp
-(use-package ryo-modal
-  :config
-  (setq ryo-modal-cursor-color nil)
-  (general-def "M-j" 'ryo-modal-mode)
-  (defun hgf/jump-forward () (interactive) (next-line 15))
-  (defun hgf/jump-back () (interactive) (previous-line 15))
-  (ryo-modal-keys
-   ("." ryo-modal-repeat)
-   ("i" ryo-modal-mode)
-   ("o" end-of-line :then '(newline-and-indent) :exit t)
-   ("l" forward-char)
-   ("t" jump-char-forward)
-   ("T" jump-char-backward)
-   (";" jump-char-repeat-forward)
-   ("," jump-char-repeat-backward)
-   (":" counsel-M-x)
-   ("h" backward-char)
-   ("j" next-line)
-   ("k" previous-line)
-   ("b" backward-word)
-   ("f" forward-word)
-   ("L" end-of-line)
-   ("H" back-to-indentation)
-   ("v" er/expand-region)
-   ("J" hgf/jump-forward)
-   ("K" hgf/jump-back))
-  (ryo-modal-major-mode-keys
-   'python-mode
-   ("J" python-nav-forward-defun)
-   ("K" python-nav-backward-defun)))
 #+end_src
 
 ** TODO Ivy & Counsel
