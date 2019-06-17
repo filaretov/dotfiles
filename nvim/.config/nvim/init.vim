@@ -7,14 +7,15 @@ command! PackClean  packadd minpac | source $MYVIMRC | call minpac#clean()
 
 if exists('*minpac#init')
   call minpac#init()
+  call minpac#add('dracula/vim', {'name': 'dracula.vim'})
+  call minpac#add('elixir-editors/vim-elixir')
   call minpac#add('kballard/vim-fish')
   call minpac#add('k-takata/minpac', {'type': 'opt'})
-  call minpac#add('dracula/vim', {'name': 'dracula.vim'})
-  call minpac#add('sjl/badwolf')
   call minpac#add('romainl/flattened')
   call minpac#add('rust-lang/rust.vim')
   call minpac#add('sgur/vim-editorconfig')
   call minpac#add('Shougo/neosnippet.vim')
+  call minpac#add('sjl/badwolf')
   call minpac#add('tommcdo/vim-exchange')
   call minpac#add('tpope/vim-abolish')
   call minpac#add('tpope/vim-commentary')
@@ -94,7 +95,6 @@ let &grepprg=g:grepprg_string
 command! -nargs=+ Grep execute 'silent grep! -r <args>' | copen 10
 
 " }}}
-
 
 let g:tex_flavor='latex'
 
@@ -181,8 +181,6 @@ nnoremap <space>m :!make<cr>
 nnoremap <space>c :!make clean<cr>
 " Indentation
 nnoremap <leader>= mz=ip`z
-" Folding
-nnoremap <tab> za
 
 " Visual {{{
 " Repeat last command on all selected lines
