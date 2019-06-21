@@ -19,7 +19,7 @@ snippet hin
 snippet main
     int main(int argc, char** argv)
     {
-        ${0};
+        ${0}
     }
 
 snippet f
@@ -50,9 +50,6 @@ snippet cm
 options indent
         /* ${0} */
 
-snippet hio
-        #include <stdio.h>${0}
-
 snippet test
         #include <stdio.h>
         #include <stdlib.h>
@@ -63,3 +60,9 @@ snippet test
         {
                 ${0};
         }
+
+snippet io
+        #include <stdio.h>
+
+snippet libc
+        #include <stdlib.h>

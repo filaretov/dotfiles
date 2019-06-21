@@ -182,12 +182,17 @@ nnoremap <space>c :!make clean<cr>
 " Indentation
 nnoremap <leader>= mz=ip`z
 
+" Commenting
+nnoremap <M-;> :<C-u>Commentary<cr>
+
 " Visual {{{
 " Repeat last command on all selected lines
 vnoremap . :norm.<CR>
 " Don't replace "" when pasting in visual
 vnoremap p "_c<Esc>p
 vmap <leader>e <Plug>(neosnippet_expand_target)
+
+vnoremap <M-;> :Commentary<cr>
 
 " }}}
 
