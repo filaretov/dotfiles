@@ -142,7 +142,7 @@ let mapleader = "\<Space>"
 let maplocalleader = ","
 
 " Completion options {{{
-set completeopt=menu
+set completeopt=menu,preview,longest
 " }}}
 
 " Navigation

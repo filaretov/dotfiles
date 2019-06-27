@@ -4,6 +4,19 @@ options indent
         ${2:TARGET}
     }
 
+snippet eif
+options indent
+    else if (${1:condition}) {
+        ${2:TARGET}
+    }
+
+snippet e
+alias else el ef
+    else {
+        ${0}
+    }
+
+
 snippet wh
 options indent
     while (${1:condition}) {
@@ -27,7 +40,6 @@ options head
     ${1} ${2}(${4:#:})
     {
         ${0}
-        return 0;
     }
 
 snippet pf
@@ -45,6 +57,15 @@ snippet hg
                 ${0}
 
         #endif /* `toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g'))` */
+
+snippet hh
+        #include "`expand('%:t:r')`.h"
+
+snippet {
+options indent
+        {
+        ${0}
+        }
 
 snippet cm
 options indent
