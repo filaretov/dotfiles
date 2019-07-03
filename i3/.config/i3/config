@@ -192,6 +192,7 @@ bar {
 }
 
 # * Autostart
+exec nm-applet
 exec compton -bfD 4
 exec_always ~/.local/bin/stowed/set_xkeyboard
 exec_always feh --bg-scale ~/.background
