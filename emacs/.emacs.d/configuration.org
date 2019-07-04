@@ -583,7 +583,7 @@ Credit to [[https://harryrschwartz.com/][Harry R. Schwartz]] for the inspiration
  #+end_src
  
 ** Evil
-   
+
 #+begin_src emacs-lisp
 (defun hgf/evil-normal-state-if-evil ()
   (when (bound-and-true-p evil-local-mode) (evil-normal-state)))

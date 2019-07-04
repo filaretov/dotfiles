@@ -27,3 +27,5 @@ emacs/.emacs.d/.python-environments/
 
 fonts/.local/share/fonts/*/.uuid
 fonts/.local/share/fonts/.uuid
+
+fish/.config/fish/functions/z.fish
