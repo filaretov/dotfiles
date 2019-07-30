@@ -53,11 +53,6 @@
   (load-theme 'zenburn)
   (setq zenburn-use-variable-pitch nil))
 
-;;; * Evil
-(use-package evil
-  :config
-  (evil-mode))
-
 ;;; * Custom file
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
