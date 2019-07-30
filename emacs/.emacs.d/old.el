@@ -1,39 +1,4 @@
-;;; * Initialize packaging
-(defun hgf/package-init ()
-  "Initialize the package manager and install use-package."
-  (progn
-    (require 'package)
-    (setq package-archives
-	  '(("gnu" . "https://elpa.gnu.org/packages/")
-	    ("melpa" . "https://melpa.org/packages/")
-	    ("org" . "https://orgmode.org/elpa/")))
-    (package-initialize)
-    (unless (package-installed-p 'use-package)
-      (package-refresh-contents)
-      (package-install 'use-package))))
-
-(hgf/package-init)
-
-(use-package use-package
-  :config
-  (setq use-package-always-ensure t))
-
-;;; * Introduction
-(setq user-full-name "Hristo Filaretov"
-      user-mail-address "h.filaretov@campus.tu-berlin.de")
-
-;;; ** No startup noise
-(defun display-startup-echo-area-message ()
-  (message "Don't panic!"))
-
 (setq gc-cons-threshold 50000000
-      ;; Quiet startup
-      inhibit-startup-message t
-      inhibit-startup-echo-area-message t
-      initial-scratch-message nil
-      ;; Backups and saving
-      make-backup-files nil
-      auto-save-default nil
       ;; De facto smooth scrolling
       scroll-conservatively 100
       ;; Bells
