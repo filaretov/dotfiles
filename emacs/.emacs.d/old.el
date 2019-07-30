@@ -491,6 +491,8 @@
 
 (use-package evil-magit)
 
+(use-package evil-numbers)
+
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))
@@ -623,3 +625,8 @@
   (setq projectile-completion-system 'ivy
 	projectile-switch-project-action 'projectile-dired
 	projectile-require-project-root nil))
+
+(use-package package-utils)
+(use-package change-inner)
+(use-package dumb-jump)
+(use-package zenburn-theme)
