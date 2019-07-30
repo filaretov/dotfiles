@@ -312,9 +312,6 @@
   (setq yas/indent-line t))
 (yas-global-mode t)
 
-(use-package magit)
-
-
 (use-package company)
 ;; (add-hook 'after-init-hook 'global-company-mode)
 
