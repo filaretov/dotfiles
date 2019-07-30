@@ -1,4 +1,4 @@
-function e -d "Edit in Emacs"
-    # if in Emacs, open in buffer (-n)
-    # else, create new frame (-c -n)
+function e -d "Edit file"
+    set -l file $argv[1]
+    echo $file
 end
