@@ -270,5 +270,12 @@ function! SynGroup()
   echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
 endfunction
 
+function! YankUnityTestGroupName()
+  let l:line = search("TEST_GROUP", "bn")
+  let l:line_txt = getline(l:line)
+  let l:test_name = substitute(l:line_txt, "^.*(\\(.*\\))$", "\\1", "")
+  return l:test_name
+endfunction
+
 nnoremap <space>h :<c-u>call SynGroup()<cr>
 " }}}

@@ -71,7 +71,7 @@ snippet cm
 options indent
         /* ${0} */
 
-snippet test
+snippet testfix
         #include <stdio.h>
         #include <stdlib.h>
         #include <stdint.h>
@@ -90,3 +90,10 @@ snippet libc
 
 snippet str
         #include <string.h>
+
+snippet TEST
+alias test
+        TEST(`YankUnityTestGroupName()`, ${1})
+        {
+                ${0}
+        }

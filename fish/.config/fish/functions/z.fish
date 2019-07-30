@@ -1,0 +1,1 @@
+/home/h.filaretov/Utilities/z-fish/z.fish
