@@ -1,144 +1,4 @@
-(setq gc-cons-threshold 50000000
-      ;; De facto smooth scrolling
-      scroll-conservatively 100
-      ;; Bells
-      ring-bell-function 'ignore
-      ;; VC symlinks
-      vc-follow-symlinks t
-      default-input-method "TeX")
-
-
-;; Disabling things
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(blink-cursor-mode -1)
-(fringe-mode '(0 . 0))
-
-;; Enabling things
-(global-visual-line-mode 1)
-(show-paren-mode t)
-(global-hl-line-mode t)
-
-;; Shorter Prompts
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(add-hook 'after-save-hook
-	  'executable-make-buffer-file-executable-if-script-p)
-
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(setq custom-file (concat user-emacs-directory "custom.el")
-      custom-theme-directory (concat user-emacs-directory "themes/"))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-(defun hgf/load-user-init-file ()
-  (interactive)
-  (load-file user-init-file))
-
-(defun hgf/find-or-load-user-init-file ()
-  "Find the custom user init file if it's not the current buffer, otherwise load it."
-  (interactive)
-    (if (string-equal (buffer-file-name) (file-truename user-init-file))
-	(load-file user-init-file)
-      (find-file user-init-file)))
-
-(use-package general
-  :config
-  (general-create-definer def-cc-key
-    :prefix "C-c")
-  (general-def
-    "M-;" 'hgf/comment-or-uncomment-region-or-line
-    "C-s" 'swiper
-    "C-c d" 'magit-list-repositories
-    "M-o" 'other-window)
-  ;; Swapity swap
-  (global-set-key [remap dabbrev-expand] 'hippie-expand))
-
-(global-auto-revert-mode t)
-
-(cond ((eq system-type 'windows-nt)
-       (set-face-attribute 'default nil
-			   :family "Inconsolata"
-			   :height 120 ))
-      ((eq system-type 'darwin)
-       (set-face-attribute 'default nil
-			   :family "Source Code Pro"
-			   :height 120
-			   :weight 'semi-bold))
-      (t ;; for true operating system
-       (set-face-attribute 'default nil
-			   :family "Source Code Pro"
-			   :height 100
-			   :weight 'regular)))
-
-(use-package solarized-theme
-  :config
-  (setq solarized-use-variable-pitch nil
-	solarized-emphasize-indicators nil
-	solarized-high-contrast-mode-line nil
-	solarized-scale-org-headlines nil
-	solarized-height-plus-1 1.0
-	solarized-height-plus-2 1.0
-	solarized-height-plus-3 1.0
-	solarized-height-plus-4 1.0
-	dark-theme 'solarized-dark
-	light-theme 'solarized-light)
-  (load-theme dark-theme t)
-  (defun hgf/toggle-theme ()
-    "Toggle between solarized variants."
-    (interactive)
-    (if (equal (car custom-enabled-themes) dark-theme)
-	(progn
-	  (disable-theme dark-theme)
-	  (load-theme light-theme))
-      (progn
-	(disable-theme light-theme)
-	(load-theme dark-theme)))))
-
-(use-package moody
-  :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
-  (column-number-mode t))
-
-(use-package minions
-  :config
-  (setq minions-mode-line-lighter ""
-	minions-mode-line-delimiters '("" . ""))
-  (minions-mode 1))
-
-;; Credit: https://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
-(defun hgf/switch-to-previous-buffer ()
-  "Switch to previously open buffer.
-  Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-(defun hgf/comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region or the current line if
-  there's no active region. Credit to Harry R. Schwartz and his
-  sensible-defaults package."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-	(setq beg (region-beginning) end (region-end))
-      (setq beg (line-beginning-position) end (line-end-position)))
-    (comment-or-uncomment-region beg end)))
-
-(setq scroll-margin 10
-      scroll-step 1
-      scroll-conservatively 10000
-      scroll-preserve-screen-position 1)
-
-(setq-default fill-column 90)
-
-(add-hook 'prog-mode-hook 'subword-mode)
-
-(setq sentence-end-double-space nil)
-
-(delete-selection-mode t)
 
 (use-package org
   :config
@@ -197,7 +57,7 @@
     "C-c t" (lambda () (interactive) (org-capture nil "t")))
   (require 'ob-lilypond))
 
-  (use-package htmlize)
+(use-package htmlize)
 
 (use-package ox-extra
   :ensure org-plus-contrib
@@ -206,48 +66,6 @@
 
 (use-package lilypond-mode
   :ensure nil)
-
-(use-package python-mode
-  :config
-  (setq py-shell-name "python3")
-  (setq python-shell-interpreter "python3")
-  (add-to-list 'exec-path "~/.local/bin"))
-
-(use-package elpy
-  :config
-  (elpy-enable)
-  (setq elpy-shell-use-project-root nil))
-
-(remove-hook 'elpy-modules 'elpy-module-flymake)
-(remove-hook 'elpy-modules 'elpy-module-company)
-(remove-hook 'elpy-modules 'elpy-module-eldoc)
-(remove-hook 'elpy-modules 'elpy-module-django)
-(remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
-
-(defun hgf/python-mode-hook ()
-  (progn
-    (add-to-list 'company-backends 'company-jedi)
-    (jedi:setup)))
-
-(use-package company-jedi
-  :config
-  (add-hook 'python-mode-hook 'hgf/python-mode-hook)
-  (setq jedi:complete-on-dot t))
-
-(use-package blacken)
-
-(setenv "WORKON_HOME" "~/.miniconda3/envs/")
-
-(use-package fish-mode)
-
-(use-package ledger-mode)
-
-(use-package yaml-mode)
-
-(use-package markdown-mode
-  :mode (("README\\.md\\'" . markdown-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode)))
 
 (defun c-lineup-arglist-tabs-only (ignored)
   "Line up argument lists by tabs, not spaces"
@@ -496,58 +314,6 @@
 
 (use-package magit)
 
-(defun hgf/list-subdirs (dir)
-  "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
-  (let ((base dir)
-	(result))
-    (dolist (f (directory-files base) result)
-      (let ((name (concat base "/" f)))
-	(when (and (file-directory-p name)
-		   (not (equal f ".."))
-		   (not (equal f ".")))
-	  (add-to-list 'result name))))
-    result))
-
-(defun hgf/contains-git-repo-p (dir)
-  "Check if there's  a .git directory in DIR."
-  (let ((dirs (directory-files dir)))
-    (member ".git" dirs)))
-
-(defun hgf/filter-git-repos (dirs)
-  "Remove all directories without a .git subdirectory in DIRS."
-  (let ((result))
-    (dolist (dir dirs result)
-      (when (hgf/contains-git-repo-p dir)
-	(add-to-list 'result dir)))
-    result))
-
-(defun hgf/make-magit-repolist (dirs)
-  "Make a list of the form (dir 0) for the magit-list-repositories function."
-  (let ((result))
-    (dolist (dir dirs result)
-      (add-to-list 'result `(,dir 0)))
-    result))
-
-(defun hgf/repolist-refresh ()
-  (setq magit-repository-directories
-	(hgf/make-magit-repolist
-	 (hgf/filter-git-repos
-	  (hgf/list-subdirs "~/Development")))))
-
-(advice-add 'magit-list-repositories :before #'hgf/repolist-refresh)
-
-(setq magit-repolist-columns
-      '(("Name" 12 magit-repolist-column-ident nil)
-	("Branch" 10 magit-repolist-column-branch nil)
-	("Dirty" 6 magit-repolist-column-dirty nil)
-	("B<U" 3 magit-repolist-column-unpulled-from-upstream
-	 ((:right-align t)
-	  (:help-echo "Upstream changes not in branch")))
-	("B>U" 3 magit-repolist-column-unpushed-to-upstream
-	 ((:right-align t)
-	  (:help-echo "Local changes not in upstream")))
-	("Version" 30 magit-repolist-column-version nil)
-	("Path" 99 magit-repolist-column-path nil)))
 
 (use-package company)
 ;; (add-hook 'after-init-hook 'global-company-mode)
@@ -591,7 +357,7 @@
 	projectile-switch-project-action 'projectile-dired
 	projectile-require-project-root nil))
 
-(use-package package-utils)
+
 (use-package change-inner)
 (use-package dumb-jump)
 (use-package zenburn-theme)
