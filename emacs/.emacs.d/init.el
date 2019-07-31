@@ -1,4 +1,4 @@
-;;; * Initialize packaging
+;; * Initialize packaging
 (require 'package)
 (package-initialize)
 
@@ -33,13 +33,13 @@
   :config
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-;;; * Default wrangling
+;; * Default wrangling
 
-;;; ** Hi, my name is
+;; ** Hi, my name is
 (setq user-full-name "Hristo Filaretov"
       user-mail-address "h.filaretov@campus.tu-berlin.de")
 
-;;; ** Visual clutter
+;; ** Visual clutter
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -56,16 +56,16 @@
 (defun display-startup-echo-area-message ()
   (message ""))
 
-;;; ** Backups
+;; ** Backups
 (setq backup-inhibited t
       auto-save-default nil
       make-backup-files nil)
 
-;;; ** Convenience
+;; ** Convenience
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq vc-follow-symlinks t)
 
-;;; ** Typing text
+;; ** Typing text
 (setq-default fill-column 90)
 (setq default-input-method "TeX"
       sentence-end-double-space nil)
@@ -73,10 +73,11 @@
 	  'executable-make-buffer-file-executable-if-script-p)
 (delete-selection-mode t)
 
-;;; ** Files
+;; ** Files
 (global-auto-revert-mode 1)
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
-;;; ** Visual cues
+;; ** Visual cues
 (show-paren-mode 1)
 (global-hl-line-mode 1)
 
@@ -86,9 +87,9 @@
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
 
-;;; * Editor theme
+;; * Editor theme
 
-;;; ** Font
+;; ** Font
 (cond ((eq system-type 'windows-nt)
        (set-face-attribute 'default nil
 			   :family "Inconsolata"
@@ -104,10 +105,10 @@
 			   :height 100
 			   :weight 'regular)))
 
-;;; ** Custom directory
+;; ** Custom directory
 (setq custom-theme-directory (concat user-emacs-directory "themes/"))
 
-;;; ** Editor theme
+;; ** Editor theme
 (use-package sourcerer-theme
   :config
   (load-theme 'sourcerer t)
@@ -139,7 +140,7 @@
 	minions-mode-line-delimiters '("" . ""))
   (minions-mode 1))
 
-;;; * general.el keybindings
+;; * general.el keybindings
 (use-package general
   :config
   (general-def
@@ -150,16 +151,16 @@
 
 ;; * Helper functions
 
-;;; ** Switch to previous buffer
+;; ** Switch to previous buffer
 (defun hgf/switch-to-previous-buffer ()
   "Switch to previously open buffer.
   Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
-;;; * Major modes
+;; * Major modes
 
-;;; ** Python
+;; ** Python
 (use-package python-mode
   :config
   (setq py-shell-name "python3")
@@ -168,29 +169,29 @@
 
 (use-package blacken)
 
-;;; ** Fish
+;; ** Fish
 (use-package fish-mode)
 
-;;; ** Ledger
+;; ** Ledger
 (use-package ledger-mode)
 
-;;; ** YAML
+;; ** YAML
 (use-package yaml-mode)
 
-;;; ** Markdown
+;; ** Markdown
 (use-package markdown-mode
   :mode (("README\\.md\\'" . markdown-mode)
 	 ("\\.md\\'" . markdown-mode)
 	 ("\\.markdown\\'" . markdown-mode)))
 
-;;; * Minor modes
+;; * Minor modes
 
-;;; ** Git
+;; ** Git
 (use-package magit
   :config
   (general-def "C-c d" 'magit-list-repositories))
 
-;;; *** Repolist
+;; *** Repolist
 (defun hgf/list-subdirs (dir)
   "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
   (let ((base dir)
@@ -244,6 +245,35 @@
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
 
-;;; * Custom file
+;; ** Outshine
+(use-package outshine
+  :config
+  (setq outshine-startup-folded-p t)
+  (add-hook 'conf-mode-hook #'outshine-mode 1)
+  (add-hook 'prog-mode-hook #'outshine-mode 1)
+  (add-hook 'bibtex-mode-hook #'outshine-mode 1)
+  (add-hook 'LaTeX-mode-hook #'outshine-mode 1))
+
+;; ** Which key
+(use-package which-key
+  :config
+  (which-key-mode))
+
+;; ** Ivy
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t
+	enable-recursive-minibuffers t
+	ivy-initial-inputs-alist nil
+	count-format "(%d/%d) "))
+
+(use-package counsel
+  :config
+  (counsel-mode 1)
+  (use-package flx)
+  (use-package smex))
+
+;; * Custom file
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)

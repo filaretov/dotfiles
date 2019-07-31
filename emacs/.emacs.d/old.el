@@ -1,5 +1,3 @@
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-
 (use-package org
   :config
   (setq org-adapt-indentation t
@@ -64,52 +62,8 @@
   :config
   (ox-extras-activate '(ignore-headlines)))
 
-(use-package lilypond-mode
-  :ensure nil)
 
-(defun c-lineup-arglist-tabs-only (ignored)
-  "Line up argument lists by tabs, not spaces"
-  (let* ((anchor (c-langelem-pos c-syntactic-element))
-	 (column (c-langelem-2nd-pos c-syntactic-element))
-	 (offset (- (1+ column) anchor))
-	 (steps (floor offset c-basic-offset)))
-    (* (max steps 1)
-       c-basic-offset)))
 
-(c-add-style
- "linux-tabs-only"
- '("linux" (c-offsets-alist
-	    (arglist-cont-nonempty
-	     c-lineup-gcc-asm-reg
-	     c-lineup-arglist-tabs-only))))
-
-(defun ccc-astyle ()
-  "Format C++ code with astyle."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-	(setq beg (region-beginning)
-	      end (region-end))
-      (setq beg (point-min)
-	    end (point-max)))
-    (shell-command-on-region
-     beg end
-     "astyle --style=linux -t"
-     nil t)))
-
-(add-hook 'c-mode-hook
-	  (lambda ()
-	    (setq indent-tabs-mode t)
-	    (setq show-trailing-whitespace t)
-	    (c-set-style "linux-tabs-only")))
-
-(add-hook 'c++-mode-hook
-	  (lambda ()
-	    (setq indent-tabs-mode t)
-	    (setq show-trailing-whitespace t)
-	    (c-set-style "linux-tabs-only")))
-
-(defun lisp-modes ())
 (add-hook 'lisp-mode-hook 'lisp-modes)
 (add-hook 'racket-mode-hook 'lisp-modes)
 (add-hook 'emacs-lisp-mode-hook 'lisp-modes)
@@ -284,24 +238,11 @@
   :config
   (evil-exchange-cx-install))
 
-(use-package which-key
-  :config
-  (which-key-mode))
+
 
 (use-package olivetti
   :config
   (setq-default olivetti-body-width 95))
-
-(use-package elfeed
-  :config
-  (setq elfeed-feeds
-	'("http://nullprogram.com/feed/"
-	  "https://harryrschwartz.com/atom.xml"
-	  "https://www.jvns.ca/atom.xml"
-	  "https://emptysqua.re/blog/index.xml"
-	  "http://feeds2.feedburner.com/stevelosh"))
-  (defun hgf/olivetti () (olivetti-mode 1))
-  (advice-add 'elfeed :after #'hgf/olivetti))
 
 (use-package expand-region
   :config
@@ -312,49 +253,12 @@
   (setq yas/indent-line t))
 (yas-global-mode t)
 
-(use-package company)
-;; (add-hook 'after-init-hook 'global-company-mode)
-
-(use-package outshine
-  :config
-  (setq outshine-startup-folded-p t))
-
-(add-hook 'conf-mode-hook #'outshine-mode 1)
-(add-hook 'prog-mode-hook #'outshine-mode 1)
-(add-hook 'bibtex-mode-hook #'outshine-mode 1)
-(add-hook 'LaTeX-mode-hook #'outshine-mode 1)
-
 (use-package undo-tree)
 
 (use-package dumb-jump
   :config
   (setq dumb-jump-selector 'ivy))
 
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
-(add-hook 'text-mode-hook #'flyspell-mode)
-
-(use-package ivy
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t
-	ivy-initial-inputs-alist nil
-	count-format "(%d/%d) "))
-
-(use-package counsel
-  :config
-  (counsel-mode 1)
-  (use-package flx)
-  (use-package smex))
-
-(use-package projectile
-  :config
-  (general-def '(normal visual insert) "C-p" 'projectile-find-file)
-  (setq projectile-completion-system 'ivy
-	projectile-switch-project-action 'projectile-dired
-	projectile-require-project-root nil))
-
 
 (use-package change-inner)
 (use-package dumb-jump)
-(use-package zenburn-theme)
