@@ -4,8 +4,19 @@
 
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
-	("melpa" . "https://melpa.org/packages/")
-	("org" . "https://orgmode.org/elpa/")))
+        ("melpa" . "https://melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")))
+
+(when (string-equal "quirm" (getenv "HOSTNAME"))
+  (progn
+    (setq package-archives
+          '(("gnu" . "http://elpa.gnu.org/packages/")
+            ("melpa" . "https://melpa.org/packages/")
+            ("org" . "https://orgmode.org/elpa/")))
+    (setq url-proxy-services '(("http" . "153.96.56.101:3128")
+                               ("https" . "153.96.56.101:3128")
+                               ("no_proxy" . "^\\(localhost\\|127.*\\)")))))
+
 
 (unless (package-installed-p 'use-package)
   (progn
@@ -40,9 +51,7 @@
       inhibit-startup-echo-area-message t
       initial-scratch-message ";; Don't panic\n\n"
       ring-bell-function 'ignore
-      mode-line-default-help-echo nil
-      left-margin-width nil
-      right-margin-width nil)
+      mode-line-default-help-echo nil)
 
 (defun display-startup-echo-area-message ()
   (message ""))
@@ -106,7 +115,7 @@
     "Toggle between solarized variants."
     (interactive)
     (let ((dark-theme 'sourcerer)
-	  (light-theme 'tango))
+	  (light-theme 'adwaita))
       (if (equal (car custom-enabled-themes) dark-theme)
 	  (progn
 	    (disable-theme dark-theme)
