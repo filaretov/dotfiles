@@ -7,15 +7,16 @@
         ("melpa" . "https://melpa.org/packages/")
         ("org" . "https://orgmode.org/elpa/")))
 
-(when (string-equal "quirm" (getenv "HOSTNAME"))
+(cond
+ ((string-equal "quirm" (getenv "HOSTNAME"))
   (progn
     (setq package-archives
-          '(("gnu" . "http://elpa.gnu.org/packages/")
-            ("melpa" . "https://melpa.org/packages/")
-            ("org" . "https://orgmode.org/elpa/")))
+	  '(("gnu" . "http://elpa.gnu.org/packages/")
+	    ("melpa" . "https://melpa.org/packages/")
+	    ("org" . "https://orgmode.org/elpa/")))
     (setq url-proxy-services '(("http" . "153.96.56.101:3128")
-                               ("https" . "153.96.56.101:3128")
-                               ("no_proxy" . "^\\(localhost\\|127.*\\)")))))
+			       ("https" . "153.96.56.101:3128")
+			       ("no_proxy" . "^\\(localhost\\|127.*\\)"))))))
 
 
 (unless (package-installed-p 'use-package)
