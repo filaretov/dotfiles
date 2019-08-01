@@ -88,7 +88,9 @@
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
 
-;; * Editor theme
+;; * Visual Appearance
+;; ** Cursor
+(setq-default cursor-type 'bar)
 
 ;; ** Font
 (cond ((eq system-type 'windows-nt)
@@ -109,15 +111,14 @@
 ;; ** Custom directory
 (setq custom-theme-directory (concat user-emacs-directory "themes/"))
 
-;; ** Editor theme
-(use-package sourcerer-theme
+;; ** Theme
+(use-package gruvbox-theme
   :config
-  (load-theme 'sourcerer t)
   (defun hgf/toggle-theme ()
     "Toggle between solarized variants."
     (interactive)
-    (let ((dark-theme 'sourcerer)
-	  (light-theme 'adwaita))
+    (let ((dark-theme 'gruvbox-dark-hard)
+	  (light-theme 'gruvbox-light-hard))
       (if (equal (car custom-enabled-themes) dark-theme)
 	  (progn
 	    (disable-theme dark-theme)
@@ -125,7 +126,8 @@
 	(progn
 	  (disable-theme light-theme)
 	  (load-theme dark-theme t)))))
-  (general-def "C-c z" 'hgf/toggle-theme))
+  (general-def "C-c z" 'hgf/toggle-theme)
+  (hgf/toggle-theme))
 
 ;; ** Modeline
 (use-package moody
@@ -160,6 +162,49 @@
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 ;; * Major modes
+;; ** Org
+(use-package org
+  :config
+  (setq org-adapt-indentation t
+	org-hide-leading-stars t
+	org-src-fontify-natively t
+	org-src-preserve-indentation t
+	org-src-tab-acts-natively t
+	org-goto-interface 'outline-path-completionp
+	org-outline-path-complete-in-steps nil
+	org-M-RET-may-split-line nil
+	org-cycle-separator-lines 0)
+  (setq org-agenda-files
+	'("~/.journal/tasks.org"
+	  "~/.journal/inbox.org"))
+  (setq org-archive-location "~/.journal/archive.org::* From %s")
+  (setq org-todo-keywords
+	'((sequence "TODO(t)" "|" "DONE(d)")))
+  (setq org-capture-templates
+	'(("t" "Todo" entry (file "~/.journal/tasks.org")
+	   "* TODO %?\n")
+	  ("n" "Note" entry (file "~/.journal/notes.org")
+	   "*  %?\n")
+	  ("i" "In" entry (file "~/.journal/inbox.org")
+	   "* TODO %?\nSCHEDULED: %t")))
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+		 '("book"
+		   "\\documentclass{book}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
+		   ("\\chapter{%s}" . "\\chapter*{%s}")
+		   ("\\section{%s}" . "\\section*{%s}")
+		   ("\\subsection{%s}" . "\\subsection*{%s}")
+		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+  (general-def
+    "C-c c" 'org-capture
+    "C-c a" 'org-agenda
+    "C-c t" (lambda () (interactive) (org-capture nil "t")))
+  (use-package htmlize)
+  (use-package ox-extra
+    :ensure org-plus-contrib
+    :config
+    (ox-extras-activate '(ignore-headlines))))
 
 ;; ** Python
 (use-package python-mode
@@ -185,9 +230,97 @@
 	 ("\\.md\\'" . markdown-mode)
 	 ("\\.markdown\\'" . markdown-mode)))
 
-;; * Minor modes
+;; ** LISP
+(use-package racket-mode)
+(use-package scribble-mode)
 
-;; ** Git
+(use-package slime
+  :mode (("\\.cl\\'" . common-lisp-mode))
+  :config
+  (setq inferior-lisp-program "/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
+
+;; ** TeX
+(use-package tex
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-master nil)
+  (setq TeX-PDF-mode t))
+
+(use-package auctex-latexmk
+  :config
+  (auctex-latexmk-setup)
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+
+(defun hgf--latex-hook ()
+  (progn
+    (setq ispell-parser 'tex)
+    (auto-fill-mode t)
+    (TeX-source-correlate-mode 1)))
+
+(add-hook 'LaTeX-mode-hook 'hgf--latex-hook)
+
+;; to have the buffer refresh after compilation
+(add-hook 'TeX-after-compilation-finished-functions
+	  #'TeX-revert-document-buffer)
+
+(defun hgf--bibtex-hook ()
+  (progn
+    (setq comment-start "%")))
+
+(add-hook 'bibtex-mode-hook 'hgf--bibtex-hook)
+
+(setq-default TeX-auto-save t
+              TeX-parse-self t
+              TeX-PDF-mode t
+              TeX-auto-local "~/.emacs.d/auctex-auto")
+(setq bibtex-dialect 'biblatex)
+
+;; ** Eshell
+(use-package eshell
+  :config
+  (general-def "<f1>" 'eshell)
+  (add-hook 'eshell-mode-hook (lambda () (setq-local cursor-type 'bar))))
+
+;; * Minor modes
+;; ** Olivetti
+(use-package olivetti
+  :config
+  (setq-default olivetti-body-width 95))
+
+;; ** Hydra
+(use-package hydra
+  :config
+  (defhydra hydra-window ()
+    "Window management"
+    ("o" other-window "other")
+    ("h" windmove-left "left")
+    ("j" windmove-down "down")
+    ("k" windmove-up "up")
+    ("l" windmove-right "right")
+    ("s" split-window-below "sp-below")
+    ("v" split-window-right "sp-right")
+    ("d" delete-window "delete")
+    ("f" find-file "file")
+    ("b" ivy-switch-buffer "buffer")
+    ("m" kill-this-buffer "murder")
+    ("1" delete-other-windows "highlander")
+    ("." nil "stop"))
+  (defhydra hydra-freq-files (:exit t)
+    "Frequent files"
+    ("e" (find-file user-init-file) "conf")
+    ("i" (find-file "~/.journal/inbox.org") "inbox")
+    ("n" (find-file "~/.journal/notes.org") "notes")
+    ("u" (find-file "~/.journal/uniplan.org") "uniplan")
+    ("t" (find-file "~/.journal/time.ledger") "time")
+    ("w" (find-file "~/.config/i3/config") "i3wm")
+    ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
+  (general-def
+    "C-c w" 'hydra-window/body
+    "C-c f" 'hydra-freq-files/body))
+;; ** Magit
 (use-package magit
   :config
   (general-def "C-c d" 'magit-list-repositories))
@@ -274,6 +407,35 @@
   (counsel-mode 1)
   (use-package flx)
   (use-package smex))
+
+;; ** God mode
+(use-package god-mode
+  :config
+  (defun hgf/update-cursor ()
+    (setq cursor-type (if (or god-local-mode buffer-read-only)
+			  'box
+			'bar)))
+  (add-hook 'god-mode-enabled-hook 'hgf/update-cursor)
+  (add-hook 'god-mode-disabled-hook 'hgf/update-cursor)
+  (general-def "M-`" 'god-mode-all)
+  (general-def god-local-mode-map
+    "i" 'god-mode-all
+    "." 'repeat))
+
+;; * Utilities
+;; ** =expand-region=
+(use-package expand-region
+  :config
+  (general-def "C-c v" 'er/expand-region))
+
+;; ** Yasnippet
+(use-package yasnippet
+  :config
+  (yas-global-mode t)
+  (setq yas/indent-line t))
+
+;; ** =change-inner=
+(use-package change-inner)
 
 ;; * Custom file
 (setq custom-file "~/.emacs.d/custom.el")
