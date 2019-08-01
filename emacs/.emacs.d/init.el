@@ -283,6 +283,19 @@
   :config
   (general-def "<f1>" 'eshell)
   (add-hook 'eshell-mode-hook (lambda () (setq-local cursor-type 'bar))))
+;; *** pcomplete
+(defconst pcmpl-exercism-commands
+  '("configure" "download" "help" "open" "prepare"
+    "submit" "troubleshoot" "upgrade" "workspace"
+    "version"))
+
+(defun pcomplete/exercism ()
+  "Completion for `exercism'"
+  (pcomplete-here* pcmpl-exercism-commands)
+
+  (if (pcomplete-match "help")
+      (pcomplete-here* pcmpl-exercism-commands)
+    (while (pcomplete-here (pcomplete-entries)))))
 
 ;; * Minor modes
 ;; ** Olivetti
