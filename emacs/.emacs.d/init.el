@@ -35,7 +35,6 @@
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;; * Default wrangling
-
 ;; ** Hi, my name is
 (setq user-full-name "Hristo Filaretov"
       user-mail-address "h.filaretov@campus.tu-berlin.de")
@@ -65,11 +64,12 @@
 ;; ** Convenience
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq vc-follow-symlinks t)
-
 ;; ** Typing text
-(setq-default fill-column 90)
-(setq default-input-method "TeX"
+(setq-default fill-column 90
       sentence-end-double-space nil)
+(setq default-input-method "TeX"
+      mouse-yank-at-point t
+      require-final-newline t)
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
 (delete-selection-mode t)
@@ -81,6 +81,7 @@
 ;; ** Visual cues
 (show-paren-mode 1)
 (global-hl-line-mode 1)
+(setq-default show-trailing-whitespace t)
 
 ;; ** Scrolling
 (setq scroll-margin 2
@@ -147,6 +148,7 @@
 (use-package general
   :config
   (general-def
+    "M-i" 'imenu
     "M-o" 'other-window
     "M-;" 'comment-dwim-2
     "C-c b" 'hgf/switch-to-previous-buffer)
@@ -281,6 +283,9 @@
 ;; ** Eshell
 (use-package eshell
   :config
+  (setq eshell-cmpl-ignore-case t
+	eshell-cmpl-cycle-cutoff-length nil
+	eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|\\.svn\\|\\.git\\)/\\'")
   (general-def "<f1>" 'eshell)
   (add-hook 'eshell-mode-hook (lambda () (setq-local cursor-type 'bar))))
 ;; *** pcomplete
