@@ -151,6 +151,7 @@
     "M-i" 'imenu
     "M-o" 'other-window
     "M-;" 'comment-dwim-2
+    "M-i" 'imenu
     "C-c b" 'hgf/switch-to-previous-buffer)
   (global-set-key [remap dabbrev-expand] 'hippie-expand))
 
@@ -284,10 +285,12 @@
 (use-package eshell
   :config
   (setq eshell-cmpl-ignore-case t
-	eshell-cmpl-cycle-cutoff-length nil
-	eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|\\.svn\\|\\.git\\)/\\'")
+        eshell-cmpl-cycle-cutoff-length nil
+        eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|\\.svn\\|\\.git\\)/\\'"
+        eshell-banner-message "Don't panic!\n")
   (general-def "<f1>" 'eshell)
   (add-hook 'eshell-mode-hook (lambda () (setq-local cursor-type 'bar))))
+
 ;; *** pcomplete
 (defconst pcmpl-exercism-commands
   '("configure" "download" "help" "open" "prepare"
