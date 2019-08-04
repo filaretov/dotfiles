@@ -115,7 +115,7 @@
 ;; ** Theme
 (use-package gruvbox-theme
   :config
-  (defun hgf/toggle-theme ()
+  (defun hgf-toggle-theme ()
     "Toggle between solarized variants."
     (interactive)
     (let ((dark-theme 'gruvbox-dark-hard)
@@ -127,8 +127,8 @@
 	(progn
 	  (disable-theme light-theme)
 	  (load-theme dark-theme t)))))
-  (general-def "C-c z" 'hgf/toggle-theme)
-  (hgf/toggle-theme))
+  (general-def "C-c z" 'hgf-toggle-theme)
+  (hgf-toggle-theme))
 
 ;; ** Modeline
 (use-package moody
@@ -144,21 +144,41 @@
 	minions-mode-line-delimiters '("" . ""))
   (minions-mode 1))
 
-;; * general.el keybindings
+;; * General keybindings
+;; ** Binds
 (use-package general
   :config
   (general-def
+    "M-j" 'hgf-join-line
     "M-i" 'imenu
     "M-o" 'other-window
     "M-;" 'comment-dwim-2
     "M-i" 'imenu
-    "C-c b" 'hgf/switch-to-previous-buffer)
+    "C-c b" 'hgf-switch-to-previous-buffer)
   (global-set-key [remap dabbrev-expand] 'hippie-expand))
+
+;; ** Helpers
+(defun hgf--join-lines-region ()
+  (let ((n (hgf--count-lines-region))
+	(flip-p (eq (region-end) (point))))
+    (progn
+      (when flip-p (exchange-point-and-mark))
+      (dotimes (_ (max 1 (1- n))) (join-line -1)))))
+
+(defun hgf--count-lines-region ()
+  (interactive)
+  (count-lines (region-beginning) (region-end)))
+
+(defun hgf-join-line ()
+  (interactive)
+  (if (region-active-p)
+      (hgf--join-lines-region)
+    (join-line -1)))
 
 ;; * Helper functions
 
 ;; ** Switch to previous buffer
-(defun hgf/switch-to-previous-buffer ()
+(defun hgf-switch-to-previous-buffer ()
   "Switch to previously open buffer.
   Repeated invocations toggle between the two most recently open buffers."
   (interactive)
@@ -244,18 +264,19 @@
   (setq slime-contribs '(slime-fancy)))
 
 ;; ** TeX
-(use-package tex
-  :ensure auctex
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-master nil)
-  (setq TeX-PDF-mode t))
+;; (use-package tex
+;;   :ensure nil
+;;   :config
+;;   (setq TeX-auto-save t)
+;;   (setq TeX-parse-self t)
+;;   (setq TeX-master nil)
+;;   (setq TeX-PDF-mode t))
 
-(use-package auctex-latexmk
-  :config
-  (auctex-latexmk-setup)
-  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+;; (use-package auctex-latexmk
+;;   :ensure nil
+;;   :config
+;;   (auctex-latexmk-setup)
+;;   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
 (defun hgf--latex-hook ()
   (progn
@@ -347,7 +368,7 @@
   (general-def "C-c d" 'magit-list-repositories))
 
 ;; *** Repolist
-(defun hgf/list-subdirs (dir)
+(defun hgf-list-subdirs (dir)
   "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
   (let ((base dir)
 	(result))
@@ -359,33 +380,33 @@
 	  (add-to-list 'result name))))
     result))
 
-(defun hgf/contains-git-repo-p (dir)
+(defun hgf-contains-git-repo-p (dir)
   "Check if there's  a .git directory in DIR."
   (let ((dirs (directory-files dir)))
     (member ".git" dirs)))
 
-(defun hgf/filter-git-repos (dirs)
+(defun hgf-filter-git-repos (dirs)
   "Remove all directories without a .git subdirectory in DIRS."
   (let ((result))
     (dolist (dir dirs result)
-      (when (hgf/contains-git-repo-p dir)
+      (when (hgf-contains-git-repo-p dir)
 	(add-to-list 'result dir)))
     result))
 
-(defun hgf/make-magit-repolist (dirs)
+(defun hgf-make-magit-repolist (dirs)
   "Make a list of the form (dir 0) for the magit-list-repositories function."
   (let ((result))
     (dolist (dir dirs result)
       (add-to-list 'result `(,dir 0)))
     result))
 
-(defun hgf/repolist-refresh ()
+(defun hgf-repolist-refresh ()
   (setq magit-repository-directories
-	(hgf/make-magit-repolist
-	 (hgf/filter-git-repos
-	  (hgf/list-subdirs "~/Development")))))
+	(hgf-make-magit-repolist
+	 (hgf-filter-git-repos
+	  (hgf-list-subdirs "~/Development")))))
 
-(advice-add 'magit-list-repositories :before #'hgf/repolist-refresh)
+(advice-add 'magit-list-repositories :before #'hgf-repolist-refresh)
 
 (setq magit-repolist-columns
       '(("Name" 12 magit-repolist-column-ident nil)
@@ -432,12 +453,12 @@
 ;; ** God mode
 (use-package god-mode
   :config
-  (defun hgf/update-cursor ()
+  (defun hgf-update-cursor ()
     (setq cursor-type (if (or god-local-mode buffer-read-only)
 			  'box
 			'bar)))
-  (add-hook 'god-mode-enabled-hook 'hgf/update-cursor)
-  (add-hook 'god-mode-disabled-hook 'hgf/update-cursor)
+  (add-hook 'god-mode-enabled-hook 'hgf-update-cursor)
+  (add-hook 'god-mode-disabled-hook 'hgf-update-cursor)
   (general-def "M-`" 'god-mode-all)
   (general-def god-local-mode-map
     "i" 'god-mode-all
