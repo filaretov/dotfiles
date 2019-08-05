@@ -149,6 +149,9 @@
 (use-package general
   :config
   (general-def
+    "C-x C-r" 'hgf-rename-this-file
+    "C-x C-k" 'hgf-delete-this-file
+    "C-c k" 'kill-this-buffer
     "M-j" 'hgf-join-line
     "M-i" 'imenu
     "M-o" 'other-window
@@ -157,7 +160,16 @@
     "C-c b" 'hgf-switch-to-previous-buffer)
   (global-set-key [remap dabbrev-expand] 'hippie-expand))
 
-;; ** Helpers
+
+;; * Helper functions
+;; ** Switch to previous buffer
+(defun hgf-switch-to-previous-buffer ()
+  "Switch to previously open buffer.
+  Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+;; ** Join lines
 (defun hgf--join-lines-region ()
   (let ((n (hgf--count-lines-region))
 	(flip-p (eq (region-end) (point))))
@@ -167,7 +179,11 @@
 
 (defun hgf--count-lines-region ()
   (interactive)
-  (count-lines (region-beginning) (region-end)))
+  (let ((numlines (count-lines (region-beginning) (region-end)))
+	(beginning-of-line-p (= (line-beginning-position) (point))))
+    (if beginning-of-line-p
+	(1+ numlines)
+      numlines)))
 
 (defun hgf-join-line ()
   (interactive)
@@ -175,14 +191,42 @@
       (hgf--join-lines-region)
     (join-line -1)))
 
-;; * Helper functions
+;; ** Delete file
+(defun visiting-file-p ()
+  (let ((filename (buffer-file-name)))
+    (and filename (file-exists-p filename))))
 
-;; ** Switch to previous buffer
-(defun hgf-switch-to-previous-buffer ()
-  "Switch to previously open buffer.
-  Repeated invocations toggle between the two most recently open buffers."
+(defun hgf-delete-this-file ()
+  "Removes file connected to current buffer and kills buffer."
   (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
+  (let ((filename (buffer-file-name))
+	(buffer (current-buffer))
+	(name (buffer-name)))
+    (if (not (visiting-file-p))
+	(kill-buffer buffer)
+      (when (yes-or-no-p "Delete this file? ")
+	(delete-file filename)
+	(kill-buffer buffer)
+	(message "File %s successfully removed" filename)))))
+
+;; ** Rename file
+(defun hgf-rename-this-file ()
+  "Renames current buffer and associated file."
+  (interactive)
+  (let ((name (buffer-name))
+	(filename (buffer-file-name)))
+    (if (not (visiting-file-p))
+	(error "Buffer '%s' is not visiting a file!" name)
+      (let ((new-name (read-file-name "New name: " filename)))
+	(if (get-buffer new-name)
+	    (error "A buffer named '%s' already exists!" new-name)
+	  (rename-file filename new-name 1)
+	  (rename-buffer new-name)
+	  (set-visited-file-name new-name)
+	  (set-buffer-modified-p nil)
+	  (message "File '%s' successfully renamed to '%s'"
+		   name (file-name-nondirectory new-name)))))))
+
 
 ;; * Major modes
 ;; ** Org
