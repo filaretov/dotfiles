@@ -227,6 +227,15 @@
 	  (message "File '%s' successfully renamed to '%s'"
 		   name (file-name-nondirectory new-name)))))))
 
+;; ** Close all magit buffers
+(defun hgf-magit-kill-buffers ()
+  "Restore window configuration and kill all Magit buffers."
+  (interactive)
+  (let ((buffers (magit-mode-get-buffers)))
+    (magit-restore-window-configuration)
+    (mapc #'kill-buffer buffers)))
+
+(general-def magit-status-mode-map "q" #'hgf-magit-kill-buffers)
 
 ;; * Major modes
 ;; ** Org
