@@ -235,8 +235,6 @@
     (magit-restore-window-configuration)
     (mapc #'kill-buffer buffers)))
 
-(general-def magit-status-mode-map "q" #'hgf-magit-kill-buffers)
-
 ;; * Major modes
 ;; ** Org
 (use-package org
@@ -418,7 +416,8 @@
 ;; ** Magit
 (use-package magit
   :config
-  (general-def "C-c d" 'magit-list-repositories))
+  (general-def "C-c d" 'magit-list-repositories)
+  (general-def magit-status-mode-map "q" #'hgf-magit-kill-buffers))
 
 ;; *** Repolist
 (defun hgf-list-subdirs (dir)
