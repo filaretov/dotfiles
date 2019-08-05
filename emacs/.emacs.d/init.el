@@ -46,10 +46,12 @@
 (blink-cursor-mode -1)
 (fringe-mode 0)
 
+
+
 (setq inhibit-startup-screen t
       inhibit-startup-message t
       inhibit-startup-echo-area-message t
-      initial-scratch-message ";; Don't panic\n\n"
+      initial-scratch-message ";; Don't panic!\n\n"
       ring-bell-function 'ignore
       mode-line-default-help-echo nil)
 
@@ -410,9 +412,14 @@
     ("t" (find-file "~/.journal/time.ledger") "time")
     ("w" (find-file "~/.config/i3/config") "i3wm")
     ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
+  (defhydra hydra-package (:exit t)
+    "Package management"
+    ("r" (package-refresh-contents) "refresh")
+    ("i" (call-interactively #'package-install) "install"))
   (general-def
     "C-c w" 'hydra-window/body
-    "C-c f" 'hydra-freq-files/body))
+    "C-c f" 'hydra-freq-files/body
+    "C-c p" 'hydra-package/body))
 ;; ** Magit
 (use-package magit
   :config
@@ -530,6 +537,13 @@
 
 ;; ** =change-inner=
 (use-package change-inner)
+
+;; ** =memento-mori=
+(use-package memento-mori
+  :config
+  (setq memento-mori-birth-date "1996-10-03"
+        initial-scratch-message (format ";; You are %.3f years old!\n\n" (memento-mori-age)))
+  (memento-mori-mode 1))
 
 ;; * Custom file
 (setq custom-file "~/.emacs.d/custom.el")
