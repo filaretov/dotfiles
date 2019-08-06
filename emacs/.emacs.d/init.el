@@ -213,6 +213,41 @@
     (magit-restore-window-configuration)
     (mapc #'kill-buffer buffers)))
 
+;; ** Pipe macro
+(defmacro pipe (init &rest lst)
+  "Evaluate transformation pipeline. Either append argument at
+the end or replace all :arg occurences.
+
+Example:
+(pipe (number-sequence 1 10)
+      (-filter 'evenp)
+      (mapcar '1+))
+=> (3 5 7 9 11)
+
+(pipe (number-sequence 1 10)
+    (-filter 'evenp)
+    (mapcar '1+)
+    (-filter (lambda (x) (= 0 (mod x 3))))
+    (mapcar '1+)
+    (-filter (lambda (x) (= 0 (mod x 5)))))
+=> (10)
+
+(pipe 1
+      (1+)
+      (1+)
+      ((lambda (x y) (+ y x)) :arg 100))
+=> 103"
+  (reduce (lambda (acc el)
+	    (if (member :arg el)
+		(mapcar (lambda (x)
+			  (case x
+			    (:arg acc)
+			    (t x)))
+			el)
+	      (append el `(,acc))))
+	  lst
+	  :initial-value init))
+
 ;; * Major modes
 ;; ** Org
 (use-package org
