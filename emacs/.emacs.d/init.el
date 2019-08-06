@@ -1,38 +1,32 @@
-;; * Initialize packaging
-(require 'package)
-(package-initialize)
+;; * Bootstrap
+(load "~/.emacs.d/bootstrap.el")
 
-(setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")))
-
-(cond
- ((string-equal "quirm" (getenv "HOSTNAME"))
-  (progn
-    (setq package-archives
-	  '(("gnu" . "http://elpa.gnu.org/packages/")
-	    ("melpa" . "https://melpa.org/packages/")
-	    ("org" . "https://orgmode.org/elpa/")))
-    (setq url-proxy-services '(("http" . "153.96.56.101:3128")
-			       ("https" . "153.96.56.101:3128")
-			       ("no_proxy" . "^\\(localhost\\|127.*\\)"))))))
-
-
-(unless (package-installed-p 'use-package)
-  (progn
-    (package-refresh-contents)
-    (package-install 'use-package)))
-
+;; * =use-package=
 (use-package use-package
   :config
   (setq use-package-always-ensure t))
 
 (use-package package-utils)
 
+;; * Startup benchmarking
 (use-package benchmark-init
   :config
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+;; * General keybindings
+(use-package general
+  :config
+  (general-def
+    "C-x C-r" 'hgf-rename-this-file
+    "C-x C-k" 'hgf-delete-this-file
+    "C-c k" 'kill-this-buffer
+    "M-j" 'hgf-join-line
+    "M-i" 'imenu
+    "M-o" 'other-window
+    "M-;" 'comment-dwim-2
+    "M-i" 'imenu
+    "C-c b" 'hgf-switch-to-previous-buffer)
+  (global-set-key [remap dabbrev-expand] 'hippie-expand))
 
 ;; * Default wrangling
 ;; ** Hi, my name is
@@ -45,8 +39,6 @@
 (scroll-bar-mode -1)
 (blink-cursor-mode -1)
 (fringe-mode 0)
-
-
 
 (setq inhibit-startup-screen t
       inhibit-startup-message t
@@ -145,22 +137,6 @@
   (setq minions-mode-line-lighter ""
 	minions-mode-line-delimiters '("" . ""))
   (minions-mode 1))
-
-;; * General keybindings
-;; ** Binds
-(use-package general
-  :config
-  (general-def
-    "C-x C-r" 'hgf-rename-this-file
-    "C-x C-k" 'hgf-delete-this-file
-    "C-c k" 'kill-this-buffer
-    "M-j" 'hgf-join-line
-    "M-i" 'imenu
-    "M-o" 'other-window
-    "M-;" 'comment-dwim-2
-    "M-i" 'imenu
-    "C-c b" 'hgf-switch-to-previous-buffer)
-  (global-set-key [remap dabbrev-expand] 'hippie-expand))
 
 
 ;; * Helper functions
@@ -415,11 +391,13 @@
   (defhydra hydra-package (:exit t)
     "Package management"
     ("r" (package-refresh-contents) "refresh")
-    ("i" (call-interactively #'package-install) "install"))
+    ("i" (call-interactively #'package-install) "install")
+    ("u" (package-utils-upgrade-all) "upgrade"))
   (general-def
     "C-c w" 'hydra-window/body
     "C-c f" 'hydra-freq-files/body
     "C-c p" 'hydra-package/body))
+
 ;; ** Magit
 (use-package magit
   :config
@@ -546,5 +524,6 @@
   (memento-mori-mode 1))
 
 ;; * Custom file
+(load (format "~/.emacs.d/machine/%s/post.el" (getenv "HOSTNAME")) 'noerror)
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
