@@ -75,7 +75,6 @@
 ;; ** Visual cues
 (show-paren-mode 1)
 (global-hl-line-mode 1)
-(setq-default show-trailing-whitespace t)
 
 ;; ** Scrolling
 (setq scroll-margin 2
@@ -256,13 +255,12 @@ Example:
 	org-goto-interface 'outline-path-completionp
 	org-outline-path-complete-in-steps nil
 	org-M-RET-may-split-line nil
-	org-cycle-separator-lines 0)
+	org-cycle-separator-lines 0
+	org-latex-with-hyperref nil)
   (setq org-agenda-files
 	'("~/.journal/tasks.org"
 	  "~/.journal/inbox.org"))
   (setq org-archive-location "~/.journal/archive.org::* From %s")
-  (setq org-todo-keywords
-	'((sequence "TODO(t)" "|" "DONE(d)")))
   (setq org-capture-templates
 	'(("t" "Todo" entry (file "~/.journal/tasks.org")
 	   "* TODO %?\n")
@@ -270,6 +268,7 @@ Example:
 	   "*  %?\n")
 	  ("i" "In" entry (file "~/.journal/inbox.org")
 	   "* TODO %?\nSCHEDULED: %t")))
+
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (with-eval-after-load 'ox-latex
     (add-to-list 'org-latex-classes
@@ -278,7 +277,13 @@ Example:
 		   ("\\chapter{%s}" . "\\chapter*{%s}")
 		   ("\\section{%s}" . "\\section*{%s}")
 		   ("\\subsection{%s}" . "\\subsection*{%s}")
-		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+    (add-to-list 'org-latex-classes
+		 '("ieee"
+		   "\\documentclass{IEEEtran}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
+		   ("\\section{%s}" . "")
+		   ("\\subsection{%s}" . "")
+		   ("\\subsubsection{%s}" . ""))))
   (general-def
     "C-c c" 'org-capture
     "C-c a" 'org-agenda
