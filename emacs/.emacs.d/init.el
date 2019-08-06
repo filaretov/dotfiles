@@ -239,11 +239,7 @@ Example:
 => 103"
   (reduce (lambda (acc el)
 	    (if (member :arg el)
-		(mapcar (lambda (x)
-			  (case x
-			    (:arg acc)
-			    (t x)))
-			el)
+		(-replace :arg acc el)
 	      (append el `(,acc))))
 	  lst
 	  :initial-value init))
