@@ -380,6 +380,9 @@ Example:
   (general-def "<f1>" 'eshell)
   (add-hook 'eshell-mode-hook (lambda () (setq-local cursor-type 'bar))))
 
+;; ** C#
+(use-package csharp-mode)
+
 ;; *** pcomplete
 (defconst pcmpl-exercism-commands
   '("configure" "download" "help" "open" "prepare"
