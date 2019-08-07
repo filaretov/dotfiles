@@ -26,7 +26,6 @@
     "M-j" 'hgf-join-line
     "M-i" 'imenu
     "M-o" 'other-window
-    "M-;" 'comment-dwim-2
     "M-i" 'imenu
     "C-c b" 'hgf-switch-to-previous-buffer)
   (global-set-key [remap dabbrev-expand] 'hippie-expand))
@@ -380,9 +379,6 @@ Example:
   (general-def "<f1>" 'eshell)
   (add-hook 'eshell-mode-hook (lambda () (setq-local cursor-type 'bar))))
 
-;; ** C#
-(use-package csharp-mode)
-
 ;; *** pcomplete
 (defconst pcmpl-exercism-commands
   '("configure" "download" "help" "open" "prepare"
@@ -396,6 +392,9 @@ Example:
   (if (pcomplete-match "help")
       (pcomplete-here* pcmpl-exercism-commands)
     (while (pcomplete-here (pcomplete-entries)))))
+
+;; ** C#
+(use-package csharp-mode)
 
 ;; * Minor modes
 ;; ** Olivetti
@@ -562,6 +561,10 @@ Example:
 ;; ** =change-inner=
 (use-package change-inner)
 
+;; ** =comment-dwim-2=
+(use-package comment-dwim-2
+  :config
+  (general-def "M-;" 'comment-dwim-2))
 ;; ** =memento-mori=
 (use-package memento-mori
   :config
