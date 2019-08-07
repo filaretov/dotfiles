@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 set __fish_git_prompt_showdirtystate 'yes'
 set __fish_git_prompt_showupstream 'yes'
 set __fish_git_prompt_color_branch yellow

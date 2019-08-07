@@ -1,4 +1,6 @@
 #!/bin/sh
+# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 
 #remember terminal setup
 stty_config="$(stty -g)"

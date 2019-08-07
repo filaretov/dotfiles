@@ -1,3 +1,5 @@
+;; SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+;; SPDX-License-Identifier: MIT
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
 	("melpa" . "https://melpa.org/packages/")

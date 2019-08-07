@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 set -gx all_proxy  "https://153.96.56.101:3128"
 set -gx http_proxy "http://153.96.56.101:3128"
 set -gx ftp_proxy $all_proxy

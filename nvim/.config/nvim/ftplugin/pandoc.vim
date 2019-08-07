@@ -1,3 +1,5 @@
+" SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+" SPDX-License-Identifier: MIT
 nnoremap <buffer> <leader>f 0f(vi("zy:rightb vsplit <C-R>z<cr>
 
 " Search word in dict.cc

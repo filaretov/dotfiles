@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 function hgf-ls -d "Custom ls replacement. Meant to be bind. See code for details"
     exa -lh
     commandline -f repaint

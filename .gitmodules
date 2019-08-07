@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 [submodule "nvim/.config/nvim/pack/minpac/opt/minpac"]
 	path = nvim/.config/nvim/pack/minpac/opt/minpac
 	url = https://github.com/k-takata/minpac.git

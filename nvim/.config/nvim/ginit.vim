@@ -1,3 +1,5 @@
+" SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+" SPDX-License-Identifier: MIT
 GuiFont Fira Code:h10
 
 nnoremap <expr> <silent> <C-z> (&buftype == 'terminal') ? ":bw!<cr>" : ":terminal<cr>"

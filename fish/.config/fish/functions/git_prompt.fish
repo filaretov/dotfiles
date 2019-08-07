@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 function git_prompt -d "Echoes git prompt"
     set -l git_repo (git rev-parse --is-inside-work-tree ^/dev/null)
     if test "$git_repo" = "true"

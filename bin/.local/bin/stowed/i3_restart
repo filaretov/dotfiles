@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 
 i3_path="$HOME/.config/i3"
 i3_config="$i3_path/config"

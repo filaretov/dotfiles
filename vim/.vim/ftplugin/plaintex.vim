@@ -1,3 +1,5 @@
+" SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+" SPDX-License-Identifier: MIT
 "iabbrev ,m \makeSpell<cr>{}<cr>{}<cr>{}<cr>{}<cr>{}<cr>{}<cr>{}<cr>{}
 
 iabbrev mm \makeSpell<cr>{}<Left>
