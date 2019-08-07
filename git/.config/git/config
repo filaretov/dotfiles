@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 [user]
 	name = Hristo Filaretov
-	email = h.filaretov@protonmail.com
+	email = h.filaretov@campus.tu-berlin.de
 
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
@@ -42,6 +42,7 @@
 
 [commit]
 	verbose = true
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
