@@ -1,7 +1,7 @@
 ;; SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 ;; SPDX-License-Identifier: MIT
 
-
+;;-*-coding: utf-8;-*-
 (define-abbrev-table 'Buffer-menu-mode-abbrev-table '())
 
 (define-abbrev-table 'Custom-mode-abbrev-table '())
@@ -15,6 +15,8 @@
 (define-abbrev-table 'TeX-output-mode-abbrev-table '())
 
 (define-abbrev-table 'TeX-special-mode-abbrev-table '())
+
+(define-abbrev-table 'apropos-mode-abbrev-table '())
 
 (define-abbrev-table 'awk-mode-abbrev-table
   '(
@@ -61,6 +63,12 @@
 (define-abbrev-table 'conf-windows-mode-abbrev-table '())
 
 (define-abbrev-table 'conf-xdefaults-mode-abbrev-table '())
+
+(define-abbrev-table 'css-mode-abbrev-table '())
+
+(define-abbrev-table 'diary-fancy-display-mode-abbrev-table '())
+
+(define-abbrev-table 'diary-mode-abbrev-table '())
 
 (define-abbrev-table 'diff-mode-abbrev-table '())
 
@@ -120,14 +128,14 @@
 
 (define-abbrev-table 'git-commit-elisp-text-mode-abbrev-table '())
 
-(define-abbrev-table 'global-abbrev-table '(
+(define-abbrev-table 'global-abbrev-table
+  '(
     ("p" "=pom=" nil 5)
     ("spdx" "
-SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
-PDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-License-Identifier: MIT
 " nil 1)
-    ))
-
+   ))
 
 (define-abbrev-table 'gnus-group-mode-abbrev-table '())
 
@@ -245,11 +253,11 @@ PDX-License-Identifier: MIT
 
 (define-abbrev-table 'py-python-shell-mode-abbrev-table '())
 
+(define-abbrev-table 'py-shell-mode-abbrev-table '())
+
 (define-abbrev-table 'python-mode-abbrev-table '())
 
-(define-abbrev-table 'python-mode-skeleton-abbrev-table
-  '(
-   ))
+(define-abbrev-table 'python-mode-skeleton-abbrev-table '())
 
 (define-abbrev-table 'racer-help-mode-abbrev-table '())
 
@@ -268,6 +276,8 @@ PDX-License-Identifier: MIT
 (define-abbrev-table 'rust-mode-abbrev-table '())
 
 (define-abbrev-table 'scribble-mode-abbrev-table '())
+
+(define-abbrev-table 'scss-mode-abbrev-table '())
 
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
@@ -288,6 +298,8 @@ PDX-License-Identifier: MIT
 (define-abbrev-table 'speedbar-mode-abbrev-table '())
 
 (define-abbrev-table 'tabulated-list-mode-abbrev-table '())
+
+(define-abbrev-table 'term-mode-abbrev-table '())
 
 (define-abbrev-table 'text-mode-abbrev-table '())
 

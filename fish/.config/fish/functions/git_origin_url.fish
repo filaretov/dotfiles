@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 # SPDX-License-Identifier: MIT
 function git_origin_url --description 'Echo current git repo name'
     set -l git_url (git config --get remote.origin.url)

@@ -1,5 +1,5 @@
 #!/bin/bash
-# SPDX-FileCopyrightText: Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
+# SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 # SPDX-License-Identifier: MIT
 setxkbmap -option
 setxkbmap -layout us,bg -variant ,phonetic -option caps:ctrl_modifier,grp:toggle,compose:prsc
