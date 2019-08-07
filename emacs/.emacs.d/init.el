@@ -1,6 +1,6 @@
+;; * Licensing
 ;; SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 ;; SPDX-License-Identifier: MIT
-
 ;; * Bootstrap
 (load "~/.emacs.d/bootstrap.el")
 
@@ -365,18 +365,18 @@ Example:
 (add-hook 'bibtex-mode-hook 'hgf--bibtex-hook)
 
 (setq-default TeX-auto-save t
-              TeX-parse-self t
-              TeX-PDF-mode t
-              TeX-auto-local "~/.emacs.d/auctex-auto")
+	      TeX-parse-self t
+	      TeX-PDF-mode t
+	      TeX-auto-local "~/.emacs.d/auctex-auto")
 (setq bibtex-dialect 'biblatex)
 
 ;; ** Eshell
 (use-package eshell
   :config
   (setq eshell-cmpl-ignore-case t
-        eshell-cmpl-cycle-cutoff-length nil
-        eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|\\.svn\\|\\.git\\)/\\'"
-        eshell-banner-message "Don't panic!\n")
+	eshell-cmpl-cycle-cutoff-length nil
+	eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|\\.svn\\|\\.git\\)/\\'"
+	eshell-banner-message "Don't panic!\n")
   (general-def "<f1>" 'eshell)
   (add-hook 'eshell-mode-hook (lambda () (setq-local cursor-type 'bar))))
 
@@ -435,10 +435,14 @@ Example:
     ("r" (package-refresh-contents) "refresh")
     ("i" (call-interactively #'package-install) "install")
     ("u" (package-utils-upgrade-all) "upgrade"))
+  (defhydra hydra-project (:exit t)
+    "Package management"
+    ("c" (call-interactively #'compile) "compile"))
   (general-def
     "C-c w" 'hydra-window/body
     "C-c f" 'hydra-freq-files/body
-    "C-c p" 'hydra-package/body))
+    "C-c i" 'hydra-package/body
+    "C-c p" 'hydra-project/body))
 
 ;; ** Magit
 (use-package magit
@@ -562,7 +566,7 @@ Example:
 (use-package memento-mori
   :config
   (setq memento-mori-birth-date "1996-10-03"
-        initial-scratch-message (format ";; You are %.3f years old!\n\n" (memento-mori-age)))
+	initial-scratch-message (format ";; You are %.3f years old!\n\n" (memento-mori-age)))
   (memento-mori-mode 1))
 
 ;; * Custom file
