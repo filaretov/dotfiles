@@ -62,17 +62,15 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+Shift+w layout stacking 
-bindsym $mod+w       layout tabbed   
+bindsym $mod+Shift+w layout stacking
+bindsym $mod+w       layout tabbed
 bindsym $mod+s       layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-# bindsym $mod+Shift+r exec ~/.local/bin/i3_restart
 bindsym $mod+Shift+r exec "i3-msg restart"
-# exit i3 (logs you out of your X session)
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+Shift+e exit
 
@@ -88,11 +86,11 @@ bindsym $mod+p exec ~/.local/bin/stowed/pass_rofi.sh
 bindsym $mod+Shift+p exec scrot
 
 # Sreen brightness and audio volume controls
-bindsym XF86MonBrightnessUp   exec xbacklight -inc  10                                        
-bindsym XF86MonBrightnessDown exec xbacklight -dec  10                                        
+bindsym XF86MonBrightnessUp   exec xbacklight -inc  10
+bindsym XF86MonBrightnessDown exec xbacklight -dec  10
 bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl set-sink-volume 0 +5%    # increase sound volume
 bindsym XF86AudioLowerVolume  exec --no-startup-id pactl set-sink-volume 0 -5%    # decrease sound volume
-bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute   0 toggle # mute     sound 
+bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute   0 toggle # mute     sound
 
 # * Launcher mode
 set $mode_launcher Launch: [b]rowser [e]macs [t]erm [s]t [f]iles [c]hat
@@ -180,23 +178,23 @@ bindsym $mod+u move workspace to output VGA-2
 # ** Resize window mode
 bindsym $mod+r mode "resize"
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym $left resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-        # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym kscape mode "default"
+	# These bindings trigger as soon as you enter the resize mode
+	# Pressing left will shrink the window’s width.
+	# Pressing right will grow the window’s width.
+	# Pressing up will shrink the window’s height.
+	# Pressing down will grow the window’s height.
+	bindsym $left resize shrink width 10 px or 10 ppt
+	bindsym k resize grow height 10 px or 10 ppt
+	bindsym l resize shrink height 10 px or 10 ppt
+	bindsym semicolon resize grow width 10 px or 10 ppt
+	# same bindings, but for the arrow keys
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
+	# back to normal: Enter or Escape
+	bindsym Return mode "default"
+	bindsym kscape mode "default"
 }
 
 # * Window decorations
