@@ -214,8 +214,8 @@
     (magit-restore-window-configuration)
     (mapc #'kill-buffer buffers)))
 
-;; ** Pipe macro
-(defmacro pipe (init &rest lst)
+;; ** Threading macro
+(defmacro ~> (init &rest lst)
   "Evaluate transformation pipeline. Either append argument at
 the end or replace all :arg occurences.
 
@@ -285,6 +285,12 @@ Example:
 		   "\\documentclass{IEEEtran}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
 		   ("\\section{%s}" . "")
 		   ("\\subsection{%s}" . "")
+		   ("\\subsubsection{%s}" . "")))
+    (add-to-list 'org-latex-classes
+		 '("blank"
+		   ""
+		   ("\\section{%s}" . "")
+		   ("\\subsection{%s}" . "")
 		   ("\\subsubsection{%s}" . ""))))
   (general-def
     "C-c c" 'org-capture
@@ -320,10 +326,18 @@ Example:
 	 ("\\.md\\'" . markdown-mode)
 	 ("\\.markdown\\'" . markdown-mode)))
 
-;; ** LISP
+;; ** Lisp
+;; *** All lisps
+(use-package smartparens)
+(use-package rainbow-delimiters)
+
+;; *** Racket
 (use-package racket-mode)
 (use-package scribble-mode)
+(use-package quack)
+(use-package geiser)
 
+;; *** Common Lisp
 (use-package slime
   :mode (("\\.cl\\'" . common-lisp-mode))
   :config
@@ -433,7 +447,8 @@ Example:
     "Package management"
     ("r" (package-refresh-contents) "refresh")
     ("i" (call-interactively #'package-install) "install")
-    ("u" (package-utils-upgrade-all) "upgrade"))
+    ("u" (package-utils-upgrade-all) "upgrade")
+    ("d" (call-interactively #'package-delete) "delete"))
   (defhydra hydra-project (:exit t)
     "Package management"
     ("c" (call-interactively #'compile) "compile"))
