@@ -1,3 +1,4 @@
+# * License
 # SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 # SPDX-License-Identifier: MIT
 # * Basics
@@ -25,27 +26,27 @@ bindsym $mod+Escape exec i3lock -c 000000
 bindsym $mod+Shift+Escape systemctl suspend
 
 # change focus
-bindsym $mod+$left focus left
-bindsym $mod+$down focus down
-bindsym $mod+$up focus up
+bindsym $mod+$left  focus left
+bindsym $mod+$down  focus down
+bindsym $mod+$up    focus up
 bindsym $mod+$right focus right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+$left move left
-bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$left  move left
+bindsym $mod+Shift+$down  move down
+bindsym $mod+Shift+$up    move up
 bindsym $mod+Shift+$right move right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
 bindsym $mod+Shift+Right move right
 
 # toggle the bar
@@ -61,9 +62,9 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+Shift+w layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+s layout toggle split
+bindsym $mod+Shift+w layout stacking 
+bindsym $mod+w       layout tabbed   
+bindsym $mod+s       layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -75,23 +76,23 @@ bindsym $mod+Shift+r exec "i3-msg restart"
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+Shift+e exit
 
+# Start the most important program of all
 bindsym $mod+e exec emacs
 
 # scratchpad
-bindsym $mod+m move scratchpad
+bindsym $mod+m       move scratchpad
 bindsym $mod+Shift+m scratchpad show
 
 # passwords
 bindsym $mod+p exec ~/.local/bin/stowed/pass_rofi.sh
 bindsym $mod+Shift+p exec scrot
 
-# Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 10
-bindsym XF86MonBrightnessDown exec xbacklight -dec 10
-# Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+# Sreen brightness and audio volume controls
+bindsym XF86MonBrightnessUp   exec xbacklight -inc  10                                        
+bindsym XF86MonBrightnessDown exec xbacklight -dec  10                                        
+bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl set-sink-volume 0 +5%    # increase sound volume
+bindsym XF86AudioLowerVolume  exec --no-startup-id pactl set-sink-volume 0 -5%    # decrease sound volume
+bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute   0 toggle # mute     sound 
 
 # * Launcher mode
 set $mode_launcher Launch: [b]rowser [e]macs [t]erm [s]t [f]iles [c]hat
@@ -118,21 +119,21 @@ set $ws3 "3: file "
 set $ws4 "4: 4 "
 set $ws5 "5: 5 "
 set $ws6 "6: 6 "
-set $ws7 "7: mail "
+set $ws7 "7: plot "
 set $ws8 "8: docs "
 set $ws9 "9: wild "
 set $ws0 "10: web "
 
 # ** Assign programs to ws
-assign [class="Emacs"]       $ws2
-assign [class="Evince"]      $ws8
-assign [class="Firefox"]     $ws0
-assign [class="Nautilus"]    $ws3
-assign [class="okular"]      $ws8
-assign [class="Telegram"]    $ws6
-assign [class="Thunar"]      $ws3
-assign [class="Thunderbird"] $ws7
-assign [class="okular"]      $ws8
+assign [class="Emacs"]          $ws2
+assign [class="Evince"]         $ws8
+assign [class="Firefox"]        $ws0
+assign [class="Nautilus"]       $ws3
+assign [class="okular"]         $ws8
+assign [class="Telegram"]       $ws6
+assign [class="Thunar"]         $ws3
+assign [class="(?i)matplotlib"] $ws7
+assign [class="okular"]         $ws8
 
 # ** Switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -214,7 +215,7 @@ bar {
 	position top
 	mode dock
 	font pango: Source Code Pro 10
-	separator_symbol " | "
+	separator_symbol "   "
 	tray_output primary
 	strip_workspace_numbers no
 }
