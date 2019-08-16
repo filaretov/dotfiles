@@ -6,3 +6,5 @@ begin
     source $conda_file
   end
 end
+
+eval (dircolors ~/.dir_colors/dircolors | head -n 1 | sed 's/^LS_COLORS=/set -x LS_COLORS /;s/;$//')

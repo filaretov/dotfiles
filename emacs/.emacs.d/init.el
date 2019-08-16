@@ -603,7 +603,10 @@ Example:
 (defun hgf-tabulate-region ()
   "Use `column` to tabulate region."
   (interactive)
-  (shell-command-on-region (region-beginning) (region-end) "column -t -o' '" :replace t))
+  (shell-command-on-region
+   (region-beginning)
+   (region-end)
+   "column -t -o' '" :replace t))
 
 (use-package selected
   :commands selected-minor-mode
@@ -616,6 +619,7 @@ Example:
     "!" 'hgf-shell-command-on-region-replace
     "t" 'hgf-tabulate-region
     "s" 'replace-string
+    "a" 'sort-lines
     "x" 'exchange-point-and-mark
     "p" 'previous-line
     "n" 'next-line
