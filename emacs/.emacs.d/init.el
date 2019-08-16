@@ -328,11 +328,11 @@ Example:
 
 ;; ** Lisp
 ;; *** All lisps
-(use-package smartparens)
 (use-package rainbow-delimiters)
 
 ;; *** Racket
-(use-package racket-mode)
+(use-package racket-mode
+  :mode (("\\.rkt\\'" . racket-mode)))
 (use-package scribble-mode)
 (use-package quack)
 (use-package geiser)
@@ -586,6 +586,41 @@ Example:
   (setq memento-mori-birth-date "1996-10-03"
 	initial-scratch-message (format ";; You are %.3f years old!\n\n" (memento-mori-age)))
   (memento-mori-mode 1))
+
+;; ** =smartparens=
+(use-package smartparens
+  :config
+  (general-def
+    "C-c ei" 'sp-change-inner))
+
+;; ** =selected=
+(defun hgf-shell-command-on-region-replace ()
+  "Just like its namesake, but always replace."
+  (interactive)
+  (let ((current-prefix-arg '(0)))
+    (call-interactively #'shell-command-on-region)))
+
+(defun hgf-tabulate-region ()
+  "Use `column` to tabulate region."
+  (interactive)
+  (shell-command-on-region (region-beginning) (region-end) "column -t -o' '" :replace t))
+
+(use-package selected
+  :commands selected-minor-mode
+  :config
+  (general-def selected-keymap
+    "u" 'upcase-region
+    "d" 'downcase-region
+    "w" 'count-words-region
+    "i" 'string-insert-rectangle
+    "!" 'hgf-shell-command-on-region-replace
+    "t" 'hgf-tabulate-region
+    "s" 'replace-string
+    "x" 'exchange-point-and-mark
+    "p" 'previous-line
+    "n" 'next-line
+    "v" 'rectangle-mark-mode
+    "<backspace>" 'kill-region))
 
 ;; * Custom file
 (load (format "~/.emacs.d/machine/%s/post.el" (getenv "HOSTNAME")) 'noerror)

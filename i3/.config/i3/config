@@ -74,7 +74,7 @@ bindsym $mod+Shift+r exec "i3-msg restart"
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 bindsym $mod+Shift+e exit
 
-# Start the most important program of all
+# start the operating system
 bindsym $mod+e exec emacs
 
 # scratchpad
@@ -83,6 +83,8 @@ bindsym $mod+Shift+m scratchpad show
 
 # passwords
 bindsym $mod+p exec ~/.local/bin/stowed/pass_rofi.sh
+
+# screenshot
 bindsym $mod+Shift+p exec scrot
 
 # Sreen brightness and audio volume controls
