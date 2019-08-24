@@ -108,10 +108,30 @@
 (setq custom-theme-directory (concat user-emacs-directory "themes/"))
 
 ;; ** Theme
+;; *** Custom group WIP
+(defgroup hgf-custom nil
+  "A group for all my variables."
+  :link '(info-link "(hgf)Custom"))
+
+(defcustom hgf-theme-color 'dark
+  "Specifies light or dark color scheme."
+  :group 'hgf-custom
+  :type 'symbol
+  :options '('light 'dark))
+
+(defun disable-all-themes ()
+  "Disable all custom enabled themes."
+  (interactive)
+  (dolist (theme custom-enabled-themes)
+    (disable-theme theme)))
+
+(customize-save-variable hgf-theme-color 'dark)
+
+;; *** Gruvbox
 (use-package gruvbox-theme
   :config
   (defun hgf-toggle-theme ()
-    "Toggle between solarized variants."
+    "Toggle between dark and light variants."
     (interactive)
     (let ((dark-theme 'gruvbox-dark-hard)
 	  (light-theme 'gruvbox-light-hard))
