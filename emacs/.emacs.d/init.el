@@ -126,19 +126,12 @@
   (hgf-toggle-theme))
 
 ;; ** Modeline
-(use-package moody
-  :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
-  (column-number-mode t))
-
 (use-package minions
   :config
   (setq minions-mode-line-lighter ""
 	minions-mode-line-delimiters '("" . ""))
-  (minions-mode 1))
-
+  (minions-mode 1)
+  (column-number-mode 1))
 
 ;; * Helper functions
 ;; ** Switch to previous buffer
