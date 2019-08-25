@@ -35,6 +35,18 @@
 (setq user-full-name "Hristo Filaretov"
       user-mail-address "h.filaretov@campus.tu-berlin.de")
 
+;; ** Custom group
+(defgroup hgf nil
+  "Global custom group."
+  :link '(info-link "(hgf)Custom"))
+
+;; ** Custom directory
+(setq custom-theme-directory (concat user-emacs-directory "themes/"))
+
+;; ** Custom file
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+
 ;; ** Visual clutter
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -61,7 +73,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq vc-follow-symlinks t)
 ;; ** Typing text
-(setq-default fill-column 90
+(setq-default fill-column 100
       sentence-end-double-space nil)
 (setq default-input-method "TeX"
       mouse-yank-at-point t
@@ -104,46 +116,54 @@
 			   :height 100
 			   :weight 'regular)))
 
-;; ** Custom directory
-(setq custom-theme-directory (concat user-emacs-directory "themes/"))
 
 ;; ** Theme
-;; *** Custom group WIP
-(defgroup hgf-custom nil
-  "A group for all my variables."
-  :link '(info-link "(hgf)Custom"))
+;; *** Helpers
+(defun hgf--load-theme ()
+  "Load theme according to `hgf-theme` variable."
+  (interactive)
+  (progn
+    (hgf--disable-all-themes)
+    (load-theme hgf-theme t)))
 
-(defcustom hgf-theme-color 'dark
-  "Specifies light or dark color scheme."
-  :group 'hgf-custom
-  :type 'symbol
-  :options '('light 'dark))
-
-(defun disable-all-themes ()
+(defun hgf--disable-all-themes ()
   "Disable all custom enabled themes."
   (interactive)
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
 
-(customize-save-variable hgf-theme-color 'dark)
+(defun hgf-toggle-theme ()
+  "Toggle customvar between light and dark themes."
+  (interactive)
+  (if (equal hgf-theme hgf-theme-dark)
+      (customize-save-variable 'hgf-theme hgf-theme-light)
+    (customize-save-variable 'hgf-theme hgf-theme-dark))
+  (hgf--load-theme))
+
+;; *** Custom group
+(defgroup hgf-theme nil
+  "A group for all my theme variables."
+  :link '(info-link "(hgf)Custom theme")
+  :group 'hgf)
+
+(defcustom hgf-theme nil
+  "Custom theme to use."
+  :group 'hgf-theme
+  :type 'symbol)
+
+(defcustom hgf-theme-dark 'gruvbox-dark-hard
+  "Default dark theme."
+  :group 'hgf-theme)
+
+(defcustom hgf-theme-light 'gruvbox-light-hard
+  "Default light theme."
+  :group 'hgf-theme)
 
 ;; *** Gruvbox
 (use-package gruvbox-theme
   :config
-  (defun hgf-toggle-theme ()
-    "Toggle between dark and light variants."
-    (interactive)
-    (let ((dark-theme 'gruvbox-dark-hard)
-	  (light-theme 'gruvbox-light-hard))
-      (if (equal (car custom-enabled-themes) dark-theme)
-	  (progn
-	    (disable-theme dark-theme)
-	    (load-theme light-theme t))
-	(progn
-	  (disable-theme light-theme)
-	  (load-theme dark-theme t)))))
   (general-def "C-c z" 'hgf-toggle-theme)
-  (hgf-toggle-theme))
+  (hgf--load-theme))
 
 ;; ** Modeline
 (use-package minions
@@ -639,7 +659,5 @@ Example:
     "v" 'rectangle-mark-mode
     "<backspace>" 'kill-region))
 
-;; * Custom file
+;; * Post file
 (load (format "~/.emacs.d/machine/%s/post.el" (getenv "HOSTNAME")) 'noerror)
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file 'noerror)
