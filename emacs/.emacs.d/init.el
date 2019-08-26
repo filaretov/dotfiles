@@ -642,7 +642,6 @@ Example:
    "column -t -o' '" :replace t))
 
 (use-package selected
-  :commands selected-minor-mode
   :config
   (general-def selected-keymap
     "u" 'upcase-region
@@ -657,7 +656,8 @@ Example:
     "p" 'previous-line
     "n" 'next-line
     "v" 'rectangle-mark-mode
-    "<backspace>" 'kill-region))
+    "<backspace>" 'kill-region)
+  (selected-global-mode 1))
 
 ;; * Post file
 (load (format "~/.emacs.d/machine/%s/post.el" (getenv "HOSTNAME")) 'noerror)
