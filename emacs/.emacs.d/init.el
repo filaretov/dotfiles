@@ -324,7 +324,10 @@ Example:
 		   ""
 		   ("\\section{%s}" . "")
 		   ("\\subsection{%s}" . "")
-		   ("\\subsubsection{%s}" . ""))))
+		   ("\\subsubsection{%s}" . "")))
+    (add-to-list 'org-latex-classes
+		 '("coverletter"
+		   "\\documentclass[a4paper,11pt]{letter}\n[EXTRA]\n")))
   (general-def
     "C-c c" 'org-capture
     "C-c a" 'org-agenda
@@ -659,5 +662,7 @@ Example:
     "<backspace>" 'kill-region)
   (selected-global-mode 1))
 
+;; ** =projectile=
+(use-package projectile)
 ;; * Post file
 (load (format "~/.emacs.d/machine/%s/post.el" (getenv "HOSTNAME")) 'noerror)
