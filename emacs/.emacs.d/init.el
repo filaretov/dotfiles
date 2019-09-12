@@ -450,7 +450,7 @@ Example:
 ;; ** Olivetti
 (use-package olivetti
   :config
-  (setq-default olivetti-body-width 95))
+  (setq-default olivetti-body-width 120))
 
 ;; ** Hydra
 (use-package hydra
@@ -666,3 +666,4 @@ Example:
 (use-package projectile)
 ;; * Post file
 (load (format "~/.emacs.d/machine/%s/post.el" (getenv "HOSTNAME")) 'noerror)
+(put 'downcase-region 'disabled nil)
