@@ -9,7 +9,17 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(load "~/.emacs.d/bootstrap.el")
+(setq hgf-journal-path "c:/Users/filahris/Documents/Cloud/Journal")
+
+(defun emacs.d (filename)
+  "Return the complete file path."
+  (format "%s/%s" user-emacs-directory filename))
+
+(defun journal.d (filename)
+  "Return complete path."
+  (format "%s/%s" hgf-journal-path filename))
+
+(load (emacs.d "bootstrap.el"))
 
 ;; * Startup benchmarking
 (use-package benchmark-init
@@ -42,16 +52,28 @@
 (setq user-full-name "Hristo Filaretov"
       user-mail-address "h.filaretov@campus.tu-berlin.de")
 
-;; ** Custom group
+;; ** General custom group
 (defgroup hgf nil
   "Global custom group."
   :link '(info-link "(hgf)Custom"))
 
+;; *** Paths custom group
+
+(defgroup hgf-paths nil
+  "A group for all frequent and important paths."
+  :link '(info-link "(hgf)Custom paths")
+  :group 'hgf)
+
+(defcustom hgf-journal-path nil
+  "Path to journal file."
+  :group 'hgf-paths
+  :type 'string)
+
 ;; ** Custom directory
-(setq custom-theme-directory (concat user-emacs-directory "themes/"))
+(setq custom-theme-directory (emacs.d "themes/"))
 
 ;; ** Custom file
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file (emacs.d "custom.el"))
 (load custom-file 'noerror)
 
 ;; ** Visual clutter
@@ -110,8 +132,8 @@
 ;; ** Font
 (cond ((eq system-type 'windows-nt)
        (set-face-attribute 'default nil
-			   :family "Inconsolata"
-			   :height 120 ))
+			   :family "Consolas"
+			   :height 110))
       ((eq system-type 'darwin)
        (set-face-attribute 'default nil
 			   :family "Source Code Pro"
@@ -479,11 +501,11 @@ Example:
     ("." nil "stop"))
   (defhydra hydra-freq-files (:exit t)
     "Frequent files"
-    ("e" (find-file user-init-file) "conf")
-    ("i" (find-file "~/.journal/inbox.org") "inbox")
-    ("n" (find-file "~/.journal/notes.org") "notes")
-    ("u" (find-file "~/.journal/uniplan.org") "uniplan")
-    ("t" (find-file "~/.journal/time.ledger") "time")
+    ("e" (find-file (emacs.d "init.el")) "conf")
+    ("i" (find-file (journal.d "inbox.org")) "inbox")
+    ("n" (find-file (journal.d "notes.org")) "notes")
+    ("u" (find-file (journal.d "uniplan.org")) "uniplan")
+    ("t" (find-file (journal.d "time.ledger")) "time")
     ("w" (find-file "~/.config/i3/config") "i3wm")
     ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
   (defhydra hydra-package (:exit t)
@@ -661,6 +683,7 @@ Example:
     "!" 'hgf-shell-command-on-region-replace
     "t" 'hgf-tabulate-region
     "s" 'replace-string
+    "c" 'replace-rectangle
     "a" 'sort-lines
     "x" 'exchange-point-and-mark
     "p" 'previous-line
