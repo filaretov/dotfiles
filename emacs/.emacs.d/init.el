@@ -9,15 +9,13 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setq hgf-journal-path "c:/Users/filahris/Documents/Cloud/Journal")
-
 (defun emacs.d (filename)
   "Return the complete file path."
   (format "%s%s" user-emacs-directory filename))
 
 (defun journal.d (filename)
   "Return complete path."
-  (format "%s/%s" hgf-journal-path filename))
+  (format "%s%s" hgf-journal-path filename))
 
 (load (emacs.d "bootstrap.el"))
 
@@ -64,7 +62,7 @@
   :link '(info-link "(hgf)Custom paths")
   :group 'hgf)
 
-(defcustom hgf-journal-path nil
+(defcustom hgf-journal-path "~/.journal/"
   "Path to journal file."
   :group 'hgf-paths
   :type 'string)
