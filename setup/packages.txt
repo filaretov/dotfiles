@@ -1,0 +1,17 @@
+# emacs
+emacs
+
+# desktop
+pass
+xserver-xorg
+xorg
+i3
+xterm
+udisks2
+xclip
+stow
+rofi
+firefox-esr
+
+# dev
+git
