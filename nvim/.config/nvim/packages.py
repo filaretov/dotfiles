@@ -1,6 +1,7 @@
 import argparse
 from os import system
 
+pack_dir = "~/.config/nvim/pack/foo/start/"
 packages = [
   'dracula/vim',
   'elixir-editors/vim-elixir',
@@ -42,7 +43,7 @@ def pull():
         cmd = "git clone"
         repo_url = "https://github.com/{}.git".format(package)
         repo_name = package.replace("/", "-")
-        dest_dir = "~/.config/nvim/pack/foo/" + repo_name
+        dest_dir = pack_dir + repo_name
         exec("{} {} {}".format(cmd, repo_url, dest_dir))
 
 def main():
