@@ -77,6 +77,9 @@ bindsym $mod+Shift+e exit
 # start the operating system
 bindsym $mod+e exec emacs
 
+# start the editor
+bindsym $mod+n exec "terminator -e 'nvim -c :terminal'"
+
 # scratchpad
 bindsym $mod+m       move scratchpad
 bindsym $mod+Shift+m scratchpad show
