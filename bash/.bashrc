@@ -34,6 +34,8 @@ export EDITOR="$VISUAL"
 # python specific
 export PYTHONDONTWRITEBYTECODE=1
 
+shopt -s extglob
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/hgf/.miniconda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"

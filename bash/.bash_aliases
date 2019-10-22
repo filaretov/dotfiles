@@ -101,3 +101,4 @@ function copy() {
 	xclip -sel clip < $@
 }
 
+alias ssh-add-all='ls ~/.ssh/!(*.pub|config|known_hosts) | xargs ssh-add'
