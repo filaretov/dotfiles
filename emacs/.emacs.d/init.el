@@ -19,11 +19,6 @@
 
 (load (emacs.d "bootstrap.el"))
 
-;; * Startup benchmarking
-(use-package benchmark-init
-  :config
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
 ;; * =use-package=
 (use-package use-package
   :config

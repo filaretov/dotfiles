@@ -8,7 +8,7 @@
 	("melpa" . "https://melpa.org/packages/")
         ("org" . "https://orgmode.org/elpa/")))
 
-(load (emacs.d (format "machine/%s/pre.el" (getenv "HOSTNAME"))) 'noerror)
+(load (emacs.d (format "machine/%s/pre.el" (system-name))) 'noerror)
 
 (unless (package-installed-p 'use-package)
   (progn
