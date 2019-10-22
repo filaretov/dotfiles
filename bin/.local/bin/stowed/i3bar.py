@@ -126,6 +126,17 @@ def print_line(message):
     sys.stdout.flush()
 
 
+def empty():
+    return i3_json("nil", "")
+
+
+def attempt(func):
+    try:
+        return func()
+    except:
+        return empty()
+
+
 if __name__ == "__main__":
     # Skip the first line which contains the version header.
     prefix = ","
@@ -140,6 +151,6 @@ if __name__ == "__main__":
 
     modules = [pom_task, xkb_layout, vsc_check, battery, clock, lambda: sep(0)]
     while True:
-        line = [mod() for mod in modules]
+        line = [attempt(mod) for mod in modules]
         print_line(prefix + json.dumps(line))
         time.sleep(0.5)

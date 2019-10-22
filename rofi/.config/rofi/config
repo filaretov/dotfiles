@@ -1,0 +1,10 @@
+/* -*- mode: css; -*- */
+/* SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de> */
+/* SPDX-License-Identifier: MIT */
+rofi.modi:                           run,drun,window
+rofi.width:                          32
+rofi.lines:                          5
+rofi.columns:                        1
+rofi.font:                           Source Code Pro 10
+
+#include "themes/Arc.theme"
