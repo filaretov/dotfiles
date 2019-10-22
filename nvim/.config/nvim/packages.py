@@ -22,6 +22,7 @@ packages = [
   'tpope/vim-surround',
   'tpope/vim-unimpaired',
   'vim-pandoc/vim-pandoc-syntax',
+  'arcticicestudio/nord-vim',
   ]
 
 def get_args():

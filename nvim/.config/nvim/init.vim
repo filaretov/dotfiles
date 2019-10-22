@@ -75,6 +75,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
+color nord
 
 augroup vimrcEx
   au!

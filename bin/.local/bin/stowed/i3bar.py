@@ -115,11 +115,6 @@ def brightness():
     return i3_json("brightness", text)
 
 
-def sep(n):
-    text = " " * n
-    return i3_json("sep", text, separator=False)
-
-
 def print_line(message):
     """ Non-buffered printing to stdout. """
     sys.stdout.write(f"{message}\n")
@@ -149,7 +144,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [pom_task, xkb_layout, vsc_check, battery, clock, lambda: sep(0)]
+    modules = [brightness, xkb_layout, vsc_check, battery, clock]
     while True:
         line = [attempt(mod) for mod in modules]
         print_line(prefix + json.dumps(line))
