@@ -5,6 +5,7 @@
   title_receive_bg_color = "#8FBCBB"
   title_inactive_fg_color = "#D8DEE9"
   title_inactive_bg_color = "#4C566A"
+  inactive_color_offset = 1.0
 [keybindings]
 [profiles]
   [[default]]
