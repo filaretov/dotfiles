@@ -16,7 +16,7 @@ alias mv='mv -i'
 
 # Changing directories and managing files
 alias ..="cd .."
-alias ...="cd ../../"
+alias ...="source ~/.bashrc"
 
 # Package managing made easier for me
 function command_exists() {
@@ -102,3 +102,9 @@ function copy() {
 }
 
 alias ssh-add-all='ls ~/.ssh/!(*.pub|config|known_hosts) | xargs ssh-add'
+alias nv=nvr
+
+alias search="apt search"
+alias install="sudo apt install"
+alias update="sudo apt update"
+alias upgrade="sudo apt upgrade"

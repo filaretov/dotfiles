@@ -183,11 +183,7 @@ smap <C-j> <Plug>(neosnippet_expand_or_jump)
 " }}}
 
 " Terminal mode mappings {{{
-" Escape mode
 tnoremap <ESC> <C-\><C-n>
-tnoremap <M-q> <C-\><C-n>:Nuake<cr>
-inoremap <M-q> <ESC>:Nuake<cr>
-" }}}
 " }}}
 
 " Text FileType Settings {{{ augroup filetype_txt
@@ -222,6 +218,7 @@ endif
 augroup terminal
   autocmd!
   autocmd TermOpen * setlocal nonumber
+  autocmd TermOpen * setlocal matchpairs=
 augroup END
 
 augroup pandoc
