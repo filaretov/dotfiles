@@ -75,7 +75,7 @@ bindsym $mod+Shift+r exec "i3-msg restart"
 bindsym $mod+Shift+e exit
 
 # start the operating system
-bindsym $mod+e exec emacs
+bindsym $mod+e exec terminator -e ranger
 
 # start the editor
 bindsym $mod+n exec "terminator -e 'nvim -c :terminal'"
