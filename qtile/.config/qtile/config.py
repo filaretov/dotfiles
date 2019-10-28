@@ -13,6 +13,10 @@ from typing import List
 alt = "mod1"
 hyper = "mod3"
 mod = "mod4"
+shift = "shift"
+ctrl = "control"
+space = "space"
+enter = "Return"
 
 keys = [
     # Switch between windows in current stack pane
@@ -20,37 +24,43 @@ keys = [
     Key([mod], "k", lazy.layout.up()),
     Key([mod], "h", lazy.layout.left()),
     Key([mod], "l", lazy.layout.right()),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down()),
-    Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
-    Key([mod, "shift"], "h", lazy.layout.shuffle_left()),
-    Key([mod, "shift"], "l", lazy.layout.shuffle_right()),
-    Key([mod, "control"], "j", lazy.layout.grow_down()),
-    Key([mod, "control"], "k", lazy.layout.grow_up()),
-    Key([mod, "control"], "h", lazy.layout.grow_left()),
-    Key([mod, "control"], "l", lazy.layout.grow_right()),
+    Key([mod, shift], "j", lazy.layout.shuffle_down()),
+    Key([mod, shift], "k", lazy.layout.shuffle_up()),
+    Key([mod, shift], "h", lazy.layout.shuffle_left()),
+    Key([mod, shift], "l", lazy.layout.shuffle_right()),
+    Key([mod, ctrl], "j", lazy.layout.grow_down()),
+    Key([mod, ctrl], "k", lazy.layout.grow_up()),
+    Key([mod, ctrl], "h", lazy.layout.grow_left()),
+    Key([mod, ctrl], "l", lazy.layout.grow_right()),
     # Switch window focus to other pane(s) of stack
     # Swap panes of split stack
-    Key([mod, "shift"], "space", lazy.layout.rotate()),
+    Key([mod, shift], space, lazy.layout.rotate()),
 
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-    Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
+    Key([mod, shift], enter, lazy.layout.toggle_split()),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout()),
     Key([mod], "q", lazy.window.kill()),
-    Key([mod, "shift"], "r", lazy.restart()),
-    Key([mod, "shift"], "q", lazy.shutdown()),
+    Key([mod, shift], "r", lazy.restart()),
+    Key([mod, shift], "q", lazy.shutdown()),
     Key([mod], "r", lazy.spawncmd()),
 
     # Launch programs
     Key([mod], "e", lazy.spawn("terminator -e ranger")),
     Key([mod], "p", lazy.spawn("/home/hgf/.local/bin/stowed/pass_rofi.sh")),
-    Key([mod], "Return", lazy.spawn("terminator")),
-    Key([mod], "space", lazy.spawn("rofi -show drun")),
-    Key([alt], "space", lazy.spawn("rofi -show drun")),
+    Key([mod], enter, lazy.spawn("terminator -e xonsh")),
+    Key([mod, shift], enter, lazy.spawn("terminator")),
+    Key([mod], space, lazy.spawn("rofi -show drun")),
+    Key([alt], space, lazy.spawn("rofi -show drun")),
+
+    # XF86 keys
+
+    Key([], "XF86MonBrightnessUp",   lazy.spawn("xbacklight -inc  10")),
+    Key([], "XF86MonBrightnessDown", lazy.spawn("xbacklight -dec  10")),
 ]
 
 # }}}
@@ -72,13 +82,8 @@ groups = [Group(i) for i in "1234567890"]
 for i in groups:
     keys.extend(
         [
-            # mod1 + letter of group = switch to group
             Key([mod], i.name, lazy.group[i.name].toscreen()),
-            # mod1 + shift + letter of group = switch to & move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True)),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod1 + shift + letter of group = move focused window to group
-            Key([mod, "shift"], i.name, lazy.window.togroup(i.name)),
+            Key([mod, shift], i.name, lazy.window.togroup(i.name)),
         ]
     )
 
