@@ -223,13 +223,6 @@ bar {
 	strip_workspace_numbers no
 }
 
-# * Autostart
-exec redshift-gtk
-exec nm-applet
-exec compton -bfD 4
-exec_always ~/.local/bin/stowed/set_xkeyboard
-exec_always feh --bg-scale ~/.background
-
 # * Floating windows
 for_window [class="(?i)blueman-manager"] floating enable
 for_window [class="Gnome-terminal" title="CALCULATOR"] move scratchpad
