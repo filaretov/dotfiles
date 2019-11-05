@@ -9,7 +9,7 @@ if [ -a /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-#User specific aliases and functions
+# User specific aliases and functions
 if [[ -a ~/.bash_aliases ]]
 then
 	source ~/.bash_aliases
@@ -21,7 +21,7 @@ then
 	source ~/.bash_extra
 fi
 
-#User specific proxy settings
+# User specific proxy settings
 if [ -f ~/.proxy.bash ]; then
 	. ~/.proxy.bash
 fi

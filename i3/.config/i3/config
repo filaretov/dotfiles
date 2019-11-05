@@ -79,6 +79,7 @@ bindsym $mod+e exec terminator -e ranger
 
 # start the editor
 bindsym $mod+n exec "terminator -e 'nvim -c :terminal'"
+bindsym $mod+g exec "terminator -T ALSAMIXER -e 'alsamixer'"
 
 # scratchpad
 bindsym $mod+m       move scratchpad
@@ -226,5 +227,6 @@ bar {
 # * Floating windows
 for_window [class="(?i)blueman-manager"] floating enable
 for_window [class="Gnome-terminal" title="CALCULATOR"] move scratchpad
+for_window [class="(?i)x-terminal-emulator" title="ALSAMIXER"] floating enable
 bindsym $mod+c [title="CALCULATOR"] scratchpad show
 bindsym $mod+Shift+c exec gnome-terminal --profile=calc
