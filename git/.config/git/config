@@ -9,11 +9,11 @@
 	st = status --short
 	co = checkout
 	cb = checkout -b
-	ci = commit
-	po = push
-	pi = pull
-	cia = commit --amend
+	c = commit
 	cm = commit -m
+	p = pull
+	pp = push
+	can = commit --amend --no-edit
 	aa = add --all
 	rc = rebase --continue
 	ls = ls-files
