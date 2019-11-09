@@ -101,7 +101,7 @@ def xkb_layout():
 
 
 def clock():
-    text = strftime("%D %a %H:%M", localtime())
+    text = strftime("%d/%m/%y %a %H:%M", localtime())
     return i3_json("clock", text, separator=False)
 
 
