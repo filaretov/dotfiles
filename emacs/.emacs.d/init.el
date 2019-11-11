@@ -57,7 +57,7 @@
   :link '(info-link "(hgf)Custom paths")
   :group 'hgf)
 
-(defcustom hgf-journal-path "~/.journal/"
+(defcustom hgf-journal-path "~/cloud/journal/"
   "Path to journal file."
   :group 'hgf-paths
   :type 'string)
