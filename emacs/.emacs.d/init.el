@@ -559,7 +559,7 @@ Example:
   (setq magit-repository-directories
 	(hgf-make-magit-repolist
 	 (hgf-filter-git-repos
-	  (hgf-list-subdirs "~/Development")))))
+	  (hgf-list-subdirs "~/dev")))))
 
 (advice-add 'magit-list-repositories :before #'hgf-repolist-refresh)
 
