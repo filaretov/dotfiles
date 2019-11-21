@@ -2,10 +2,9 @@
 " SPDX-License-Identifier: MIT
 " vim: foldmethod=marker foldlevelstart=0:
 
-" Plugins {{{
-" }}}
-
 " Plugin Settings {{{
+
+packloadall
 
 let g:pandoc#syntax#conceal#use = 0
 let s:nvim_config = $HOME.'/.config/nvim'
@@ -75,7 +74,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-color nord
+color dracula
 
 augroup vimrcEx
   au!
@@ -115,10 +114,11 @@ set guicursor+=i-c:ver1
 "set leader key to:
 let mapleader = "\<Space>"
 let maplocalleader = ","
-
-" Completion options {{{
 set completeopt=menu,preview,longest
-" }}}
+set omnifunc=lsp#omnifunc
+
+" This is optional, but you may find it useful
+autocmd CompleteDone * pclose
 
 " Navigation
 nnoremap j gj
@@ -185,6 +185,7 @@ smap <C-j> <Plug>(neosnippet_expand_or_jump)
 " Terminal mode mappings {{{
 tnoremap <ESC> <C-\><C-n>
 " }}}
+" }}}
 
 " Text FileType Settings {{{ augroup filetype_txt
 augroup filetype_text
@@ -250,4 +251,47 @@ function! YankUnityTestGroupName()
 endfunction
 
 nnoremap <space>h :<c-u>call SynGroup()<cr>
+" }}}
+
+
+" Extra {{{
+
+let settings = {
+      \   "pyls" : {
+      \     "enable" : v:true,
+      \     "trace" : { "server" : "verbose", },
+      \     "commandPath" : "",
+      \     "configurationSources" : [ "pycodestyle" ],
+      \     "plugins" : {
+      \       "jedi_completion" : { "enabled" : v:true, },
+      \       "jedi_hover" : { "enabled" : v:true, },
+      \       "jedi_references" : { "enabled" : v:true, },
+      \       "jedi_signature_help" : { "enabled" : v:true, },
+      \       "jedi_symbols" : {
+      \         "enabled" : v:true,
+      \         "all_scopes" : v:true,
+      \       },
+      \       "mccabe" : {
+      \         "enabled" : v:true,
+      \         "threshold" : 15,
+      \       },
+      \       "preload" : { "enabled" : v:true, },
+      \       "pycodestyle" : { "enabled" : v:true, },
+      \       "pydocstyle" : {
+      \         "enabled" : v:false,
+      \         "match" : "(?!test_).*\\.py",
+      \         "matchDir" : "[^\\.].*",
+      \       },
+      \       "pyflakes" : { "enabled" : v:true, },
+      \       "rope_completion" : { "enabled" : v:true, },
+      \       "yapf" : { "enabled" : v:true, },
+      \     } }}
+
+"call nvim_lsp#setup("pyls", settings)
+call lsp#add_filetype_config({
+      \ 'filetype': 'python',
+      \ 'name': 'pyls',
+      \ 'cmd': 'pyls'
+      \ })
+
 " }}}
