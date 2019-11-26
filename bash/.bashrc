@@ -54,3 +54,4 @@ unset __conda_setup
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.local/bin/stowed:$PATH"
+export PATH="/snap/bin:$PATH"
