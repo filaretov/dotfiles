@@ -1,6 +1,7 @@
 ;; * Licensing
 ;; SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 ;; SPDX-License-Identifier: MIT
+
 ;; * Bootstrap
 
 ;; Added by Package.el.  This must come before configurations of
@@ -19,6 +20,9 @@
 
 (load (emacs.d "bootstrap.el"))
 
+;; REMOVE WHEN DEBIAN GETS EMACS 26.3
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 ;; * =use-package=
 (use-package use-package
   :config
@@ -33,11 +37,8 @@
     "C-x C-r" 'hgf-rename-this-file
     "C-x C-k" 'hgf-delete-this-file
     "C-c k" 'kill-this-buffer
-    "M-j" 'hgf-join-line
-    "M-i" 'imenu
     "M-o" 'other-window
-    "M-i" 'imenu
-    "C-c b" 'hgf-switch-to-previous-buffer)
+    "M-i" 'imenu)
   (global-set-key [remap dabbrev-expand] 'hippie-expand))
 
 ;; * Default wrangling
@@ -182,10 +183,42 @@
   :group 'hgf-theme)
 
 ;; *** Gruvbox
-(use-package gruvbox-theme
+(use-package gruvbox-theme)
+
+;; *** Solarized
+(use-package solarized-theme
   :config
-  (general-def "C-c z" 'hgf-toggle-theme)
-  (hgf--load-theme))
+  ;; make the fringe stand out from the background
+  (setq solarized-distinct-fringe-background t)
+
+  ;; Don't change the font for some headings and titles
+  (setq solarized-use-variable-pitch nil)
+
+  ;; make the modeline high contrast
+  (setq solarized-high-contrast-mode-line nil)
+
+  ;; Use less bolding
+  (setq solarized-use-less-bold t)
+
+  ;; Use more italics
+  (setq solarized-use-more-italic nil)
+
+  ;; Use less colors for indicators such as git:gutter, flycheck and similar
+  (setq solarized-emphasize-indicators nil)
+
+  ;; Don't change size of org-mode headlines (but keep other size-changes)
+  (setq solarized-scale-org-headlines nil)
+
+  ;; Avoid all font-size changes
+  (setq solarized-height-minus-1 1.0)
+  (setq solarized-height-plus-1 1.0)
+  (setq solarized-height-plus-2 1.0)
+  (setq solarized-height-plus-3 1.0)
+  (setq solarized-height-plus-4 1.0))
+
+;; ** Load it all
+(general-def "C-c z" 'hgf-toggle-theme)
+(hgf--load-theme)
 
 ;; ** Modeline
 (use-package minions
@@ -469,6 +502,12 @@ Example:
 (use-package csharp-mode)
 
 ;; * Minor modes
+;; ** Evil
+(use-package evil
+  :config
+  (general-evil-define-key 'normal 'global
+      "gb" 'hgf-switch-to-previous-buffer))
+
 ;; ** Olivetti
 (use-package olivetti
   :config
@@ -605,19 +644,6 @@ Example:
   (use-package flx)
   (use-package smex))
 
-;; ** God mode
-(use-package god-mode
-  :config
-  (defun hgf-update-cursor ()
-    (setq cursor-type (if (or god-local-mode buffer-read-only)
-			  'box
-			'bar)))
-  (add-hook 'god-mode-enabled-hook 'hgf-update-cursor)
-  (add-hook 'god-mode-disabled-hook 'hgf-update-cursor)
-  (general-def "M-`" 'god-mode-all)
-  (general-def god-local-mode-map
-    "i" 'god-mode-all
-    "." 'repeat))
 
 ;; * Utilities
 ;; ** =expand-region=

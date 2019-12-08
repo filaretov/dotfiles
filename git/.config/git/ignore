@@ -31,3 +31,5 @@ GPATH
 GRTAGS
 GTAGS
 .#*
+
+.ipynv_checkpoints/

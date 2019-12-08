@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: MIT
 set  fish_greeting "Don't panic!"
 
-alias search "dnf search"
-alias remove "sudo dnf remove"
+alias install "sudo apt install"
+alias search "apt search"
+alias remove "sudo apt remove"
 alias clk-in "echo i (date +\"%Y/%m/%d %H:%M\") Work:Fraunhofer IPK >> ~/.journal/ipk.time"
 alias clk-out "echo o (date +\"%Y/%m/%d %H:%M\") >> ~/.journal/ipk.time"
 alias calc "conda activate stats; and python -ic 'import numpy as np'; and conda deactivate"
@@ -20,3 +21,6 @@ end
 function fish_title
   true
 end
+
+### Conda
+source "$HOME/.config/fish/conda.fish"
