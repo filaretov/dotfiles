@@ -391,8 +391,7 @@
 ;; ** Magit
 (use-package magit
   :config
-  (general-def "C-c d" 'magit-list-repositories)
-  (general-def magit-status-mode-map "q" #'my/magit-kill-buffers))
+  (general-def "C-c d" 'magit-list-repositories))
 
 ;; *** Repolist
 (defun my/list-subdirs (dir)
