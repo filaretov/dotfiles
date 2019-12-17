@@ -1,19 +1,39 @@
 # emacs
 emacs
 
-# desktop
-evince
-pass
-xserver-xorg
+# vim
+vim
+neovim
+
+# desktop applications
+sudo
 xorg
+xserver-xorg
 i3
-xterm
-udisks2
-xclip
-stow
-rofi
+termite
+evince
 firefox-esr
 nextcloud-desktop
+rofi
+compton
+libreoffice
+
+# cli tools
+htop
+feh
+imagemagick
+pass
+stow
+udisks2
+xclip
 
 # dev
 git
+make
+build-essential
+
+# power management
+acpi
+tlp
+acpi-call-dkms
+tp-smapi-dkms

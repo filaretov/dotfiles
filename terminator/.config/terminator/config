@@ -12,7 +12,7 @@
     icon_bell = False
     background_color = "#2e3440"
     cursor_color = "#D8DEE9"
-    font = Source Code Pro 11
+    font = Inconsolata 12
     foreground_color = "#d8dee9"
     show_titlebar = False
     scrollbar_position = hidden

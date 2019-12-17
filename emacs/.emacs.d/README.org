@@ -1,0 +1,13 @@
+* Preamble
+  Thank you to everyone who has decided to share their own Emacs
+  configuration with the world. I owe a lot to the learned yak shavers
+  of this world.
+
+  Special thanks to:
+  - [[https://harryrschwartz.com/][Harry Schwartz]]
+
+* Base
+  This configuration assumes that =use-package= and =general= are
+  always available and the preferred method of package and keybinding
+  management. Also, as much as possible will be forced into
+  =use-package= declarations.
