@@ -27,7 +27,10 @@
   (setq load-prefer-newer t))
 
 ;; ** Keybindings
-(use-package general)
+(use-package general
+  :config
+  (general-def
+    "M-i" 'imenu))
 
 ;; * Personal Information
 (setq user-full-name "Hristo Filaretov"
@@ -131,7 +134,7 @@
 			   :weight 'semi-bold))
       (t ;; t for true operating system
        (set-face-attribute 'default nil
-			   :family "Hack"
+			   :family "Source Code Pro"
 			   :height 100
 			   :weight 'regular)))
 
