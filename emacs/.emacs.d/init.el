@@ -161,10 +161,36 @@
 (setq-default fill-column 100
 	      cursor-type 'bar)
 
+;; * Code Completion
+(use-package flycheck
+  :hook (prog-mode . flycheck-mode))
+
+(use-package company
+  :hook (prog-mode . company-mode)
+  :config (setq company-tooltip-align-annotations t
+		company-minimum-prefix-length 1))
+
+(use-package lsp-mode
+  :commands lsp
+  :config (require 'lsp-clients))
+
+(use-package lsp-ui)
+
 ;; * Major modes
 ;; ** C
 ;; ** C++
 ;; ** Go
+;; ** Rust
+(use-package toml-mode)
+
+(use-package rust-mode
+  :hook (rust-mode .lsp))
+
+(use-package cargo
+  :hook (rust-mode . cargo-minor-mode))
+
+(use-package flycheck-rust
+  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 ;; ** Python
 ;; ** Bash
 ;; ** Markdown
@@ -297,9 +323,7 @@
     "C-e" 'end-of-line
     "C-a" 'beginning-of-line
     "C-k" 'kill-line
-    "C-y" 'yank
-    "C-n" 'evil-next-line
-    "C-p" 'evil-previous-line))
+    "C-y" 'yank))
 
 (use-package evil-magit)
 
