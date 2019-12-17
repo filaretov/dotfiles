@@ -86,6 +86,24 @@
           'executable-make-buffer-file-executable-if-script-p)
 
 ;; * Theming
+;; ** Solarized
+(use-package solarized-theme
+  :config
+  (setq solarized-use-variable-pitch nil
+        solarized-height-plus-1 1.0
+        solarized-height-plus-2 1.0
+        solarized-height-plus-3 1.0
+        solarized-height-plus-4 1.0
+	solarized-distrinct-fringe-background t
+	solarized-use-less-bold t
+	solarized-use-less-italic t
+	solarized-scale-org-headlines nil
+	solarized-emphasize-indicators t)
+  (general-def "C-c z" 'my/toggle-theme))
+
+;; ** Dracula
+(use-package dracula-theme)
+
 ;; ** Helpers
 (defun my/load-theme (theme)
   "Disable all themes and load a new one."
@@ -110,23 +128,6 @@
       (my/load-theme dark))))
 
 (my/toggle-theme)
-;; ** Solarized
-(use-package solarized-theme
-  :config
-  (setq solarized-use-variable-pitch nil
-        solarized-height-plus-1 1.0
-        solarized-height-plus-2 1.0
-        solarized-height-plus-3 1.0
-        solarized-height-plus-4 1.0
-	solarized-distrinct-fringe-background t
-	solarized-use-less-bold t
-	solarized-use-less-italic t
-	solarized-scale-org-headlines nil
-	solarized-emphasize-indicators t)
-  (general-def "C-c z" 'my/toggle-theme))
-
-;; ** Dracula
-(use-package dracula-theme)
 
 ;; ** Fonts
 (cond ((eq system-type 'windows-nt)
@@ -174,13 +175,21 @@
 (use-package company
   :hook (prog-mode . company-mode)
   :config (setq company-tooltip-align-annotations t
-		company-minimum-prefix-length 1))
+		company-minimum-prefix-length 1)
+  :config
+  (general-def 'insert
+    "C-SPC" 'company-complete))
 
 (use-package lsp-mode
+  :hook (rust-mode . lsp)
   :commands lsp
   :config (require 'lsp-clients))
 
-(use-package lsp-ui)
+(use-package lsp-ui :commands lsp-ui-mode)
+
+(use-package company-lsp :commands company-lsp)
+
+(use-package yasnippet)
 
 ;; * Major modes
 ;; ** C
@@ -190,7 +199,10 @@
 (use-package toml-mode)
 
 (use-package rust-mode
-  :hook (rust-mode .lsp))
+  :hook (rust-mode .lsp)
+  :config
+  (add-hook 'rust-mode-hook
+	    (lambda () (setq indent-tabs-mode nil))))
 
 (use-package cargo
   :hook (rust-mode . cargo-minor-mode))
