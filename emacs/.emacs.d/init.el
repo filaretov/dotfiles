@@ -1,3 +1,9 @@
+;;; init.el --- my attempt at configuring Emacs
+
+;;; Commentary:
+;;; Yak shaving is a way of life.
+
+;;; Code:
 ;; * Preamble
 ;; Remove when Debian gets Emacs 26.3
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
@@ -557,8 +563,10 @@
 
 ;; ** Threading macro
 (defmacro ~> (init &rest lst)
-  "Evaluate transformation pipeline. Either append argument at
-the end or replace all :arg occurences.
+  "Pipe INIT through LST.
+
+Evaluate transformation pipeline LST. Either append argument at
+the end or replace all :arg occurences (starting with INIT).
 
 Example:
 (pipe (number-sequence 1 10)
@@ -585,3 +593,5 @@ Example:
 	      (append el `(,acc))))
 	  lst
 	  :initial-value init))
+
+;;; init.el ends here
