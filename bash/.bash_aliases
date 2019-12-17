@@ -101,6 +101,16 @@ function copy() {
 	xclip -sel clip < $@
 }
 
+function mnt-raspi() {
+	udisksctl mount -b /dev/sdb1
+	udisksctl mount -b /dev/sdb2
+}
+
+function umnt-raspi() {
+	udisksctl unmount -b /dev/sdb1
+	udisksctl unmount -b /dev/sdb2
+}
+
 alias ssh-add-all='ls ~/.ssh/!(*.pub|config|known_hosts) | xargs ssh-add'
 alias nv=nvr
 
