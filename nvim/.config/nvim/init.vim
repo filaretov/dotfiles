@@ -74,6 +74,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
+set background=dark
 color dracula
 
 augroup vimrcEx

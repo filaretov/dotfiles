@@ -78,27 +78,29 @@
 
 ;; * Theming
 ;; ** Helpers
-(defun hgf-load-theme (theme)
+(defun my/load-theme (theme)
   "Disable all themes and load a new one."
   (interactive)
   (progn
-    (hgf-disable-all-themes)
+    (my/disable-all-themes)
     (load-theme theme t)))
 
-(defun hgf-disable-all-themes ()
+(defun my/disable-all-themes ()
   "Disable all custom enabled themes."
   (interactive)
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
 
-(defun hgf-toggle-theme ()
+(defun my/toggle-theme ()
   "Toggle customvar between light and dark themes."
   (interactive)
-  (if (equal (car custom-enabled-themes) 'solarized-dark)
-      (hgf-load-theme 'solarized-light)
-    (hgf-load-theme 'solarized-dark))
-  (hgf-load-theme))
+  (let ((dark 'dracula)
+	(light 'solarized-light))
+    (if (equal (car custom-enabled-themes) dark)
+	(my/load-theme light)
+      (my/load-theme dark))))
 
+(my/toggle-theme)
 ;; ** Solarized
 (use-package solarized-theme
   :config
@@ -112,8 +114,10 @@
 	solarized-use-less-italic t
 	solarized-scale-org-headlines nil
 	solarized-emphasize-indicators t)
-  (load-theme 'solarized-dark t)
-  (general-def "C-c z" 'hgf-toggle-theme))
+  (general-def "C-c z" 'my/toggle-theme))
+
+;; ** Dracula
+(use-package dracula-theme)
 
 ;; ** Fonts
 (cond ((eq system-type 'windows-nt)
@@ -127,9 +131,21 @@
 			   :weight 'semi-bold))
       (t ;; t for true operating system
        (set-face-attribute 'default nil
-			   :family "Source Code Pro"
+			   :family "Hack"
 			   :height 100
 			   :weight 'regular)))
+
+(defun my/org-mode-hook ()
+  "Disable header variable font size."
+  (dolist (face '(org-level-1
+		  org-level-2
+		  org-level-3
+		  org-level-4
+		  org-level-5
+		  org-document-title))
+    (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
+
+(add-hook 'org-mode-hook 'my/org-mode-hook)
 ;; ** Modeline
 (use-package minions
   :config
@@ -236,11 +252,11 @@
   (auctex-latexmk-setup)
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
-(defun hgf--bibtex-hook ()
+(defun my/bibtex-hook ()
   (progn
     (setq comment-start "%")))
 
-(add-hook 'bibtex-mode-hook 'hgf--bibtex-hook)
+(add-hook 'bibtex-mode-hook 'my/bibtex-hook)
 
 (setq-default TeX-auto-save t
 	      TeX-parse-self t
@@ -260,14 +276,39 @@
 
 ;; * Evil
 (use-package evil
+  :init
+  (setq evil-want-integration t
+	evil-want-keybinding nil
+	evil-want-abbrev-expand-on-insert-exit nil)
   :config
   (evil-mode 1)
-  (general-def 'insert
-    "C-e" 'end-of-line
-    "C-a" 'beginning-of-line)
+  (setq evil-emacs-state-cursos 'bar
+	evil-search-module 'evil-search
+	evil-ex-search-case 'smart)
   (general-def 'normal
     "L" 'evil-end-of-line
-    "H" 'evil-first-non-blank))
+    "H" 'evil-first-non-blank-of-visual-line
+    "C-s" 'swiper
+    "C-u" 'evil-scroll-up)
+  (general-def 'insert
+    "C-e" 'end-of-line
+    "C-a" 'beginning-of-line
+    "C-k" 'kill-line
+    "C-y" 'yank
+    "C-n" 'evil-next-line
+    "C-p" 'evil-previous-line))
+
+(use-package evil-magit)
+
+(use-package evil-numbers)
+
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-exchange
+  :config
+  (evil-exchange-cx-install))
 
 ;; * Minor modes
 ;; ** Which key
@@ -308,32 +349,137 @@
 ;; ** Hydra
 (use-package hydra
   :config
-  (defhydra hydra-shell ()
+  (defhydra hydra-shell (:exit t)
     "Execute shell command."
     ("m" (start-process "hydramake" nil "make") "make"))
+  (defhydra hydra-window ()
+    "Window management"
+    ("o" other-window "other")
+    ("h" windmove-left "left")
+    ("j" windmove-down "down")
+    ("k" windmove-up "up")
+    ("l" windmove-right "right")
+    ("s" split-window-below "sp-below")
+    ("v" split-window-right "sp-right")
+    ("d" delete-window "delete")
+    ("f" find-file "file")
+    ("b" ivy-switch-buffer "buffer")
+    ("m" kill-this-buffer "murder")
+    ("1" delete-other-windows "highlander")
+    ("." nil "stop"))
+  (defhydra hydra-files (:exit t)
+    "Frequent files"
+    ("e" (find-file (emacs.d "init.el")) "conf")
+    ("i" (find-file (journal.d "inbox.org")) "inbox")
+    ("n" (find-file (journal.d "notes.org")) "notes")
+    ("u" (find-file (journal.d "uniplan.org")) "uniplan")
+    ("t" (find-file (journal.d "time.ledger")) "time")
+    ("w" (find-file "~/.config/i3/config") "i3wm")
+    ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
+  (defhydra hydra-package (:exit t)
+    "Package management"
+    ("r" (package-refresh-contents) "refresh")
+    ("i" (call-interactively #'package-install) "install")
+    ("u" (package-utils-upgrade-all) "upgrade")
+    ("d" (call-interactively #'package-delete) "delete"))
   (general-def
-    "C-c s" 'hydra-shell/body))
+    "C-c s" 'hydra-shell/body
+    "C-c f" 'hydra-files/body
+    "C-c p" 'hydra-package/body
+    "C-c w" 'hydra-window/body))
+
+;; ** Magit
+(use-package magit
+  :config
+  (general-def "C-c d" 'magit-list-repositories)
+  (general-def magit-status-mode-map "q" #'my/magit-kill-buffers))
+
+;; *** Repolist
+(defun my/list-subdirs (dir)
+  "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
+  (let ((base dir)
+	(result))
+    (dolist (f (directory-files base) result)
+      (let ((name (concat base "/" f)))
+	(when (and (file-directory-p name)
+		   (not (equal f ".."))
+		   (not (equal f ".")))
+	  (add-to-list 'result name))))
+    result))
+
+(defun my/contains-git-repo-p (dir)
+  "Check if there's  a .git directory in DIR."
+  (let ((dirs (directory-files dir)))
+    (member ".git" dirs)))
+
+(defun my/filter-git-repos (dirs)
+  "Remove all directories without a .git subdirectory in DIRS."
+  (let ((result))
+    (dolist (dir dirs result)
+      (when (my/contains-git-repo-p dir)
+	(add-to-list 'result dir)))
+    result))
+
+(defun my/make-magit-repolist (dirs)
+  "Make a list of the form (dir 0) for the magit-list-repositories function."
+  (let ((result))
+    (dolist (dir dirs result)
+      (add-to-list 'result `(,dir 0)))
+    result))
+
+(defun my/repolist-refresh ()
+  (setq magit-repository-directories
+	(~> "~/dev"
+	    (my/list-subdirs)
+	    (my/filter-git-repos)
+	    (my/make-magit-repolist))))
+
+(advice-add 'magit-list-repositories :before #'my/repolist-refresh)
+
+(setq magit-repolist-columns
+      '(("Name" 12 magit-repolist-column-ident nil)
+	("Branch" 10 magit-repolist-column-branch nil)
+	("Dirty" 6 magit-repolist-column-dirty nil)
+	("B<U" 3 magit-repolist-column-unpulled-from-upstream
+	 ((:right-align t)
+	  (:help-echo "Upstream changes not in branch")))
+	("B>U" 3 magit-repolist-column-unpushed-to-upstream
+	 ((:right-align t)
+	  (:help-echo "Local changes not in upstream")))
+	("Version" 30 magit-repolist-column-version nil)
+	("Path" 99 magit-repolist-column-path nil)))
+
 ;; * Custom
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 ;; * Utils
 ;; * Helper functions
+;; ** Directories
+(setq my/journal-path "~/cloud/journal/")
+(defun emacs.d (filename)
+  "Return the complete file path."
+  (format "%s%s" user-emacs-directory filename))
+
+(defun journal.d (filename)
+  "Return complete path."
+  (format "%s%s" my/journal-path filename))
+
 ;; ** Switch to previous buffer
-(defun hgf-switch-to-previous-buffer ()
+(defun my/switch-to-previous-buffer ()
   "Switch to previously open buffer.
   Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 ;; ** Join lines
-(defun hgf--join-lines-region ()
-  (let ((n (hgf--count-lines-region))
+(defun my/join-lines-region ()
+  (let ((n (my/count-lines-region))
 	(flip-p (eq (region-end) (point))))
     (progn
       (when flip-p (exchange-point-and-mark))
       (dotimes (_ (max 1 (1- n))) (join-line -1)))))
 
-(defun hgf--count-lines-region ()
+(defun my/count-lines-region ()
   (interactive)
   (let ((numlines (count-lines (region-beginning) (region-end)))
 	(beginning-of-line-p (= (line-beginning-position) (point))))
@@ -341,10 +487,10 @@
 	(1+ numlines)
       numlines)))
 
-(defun hgf-join-line ()
+(defun my/join-line ()
   (interactive)
   (if (region-active-p)
-      (hgf--join-lines-region)
+      (my/join-lines-region)
     (join-line -1)))
 
 ;; ** Delete file
@@ -352,7 +498,7 @@
   (let ((filename (buffer-file-name)))
     (and filename (file-exists-p filename))))
 
-(defun hgf-delete-this-file ()
+(defun my/delete-this-file ()
   "Removes file connected to current buffer and kills buffer."
   (interactive)
   (let ((filename (buffer-file-name))
@@ -366,7 +512,7 @@
 	(message "File %s successfully removed" filename)))))
 
 ;; ** Rename file
-(defun hgf-rename-this-file ()
+(defun my/rename-this-file ()
   "Renames current buffer and associated file."
   (interactive)
   (let ((name (buffer-name))
