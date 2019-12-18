@@ -272,6 +272,7 @@
     "C-c t" (lambda () (interactive) (org-capture nil "t")))
   (use-package htmlize)
   (use-package ox-extra
+    :commands '(ox-extras-activate)
     :ensure org-plus-contrib
     :config
     (ox-extras-activate '(ignore-headlines))))
