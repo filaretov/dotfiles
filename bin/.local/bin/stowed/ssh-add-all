@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+from os import system
+
+sshd = Path('~/.ssh/').expanduser()
+files = sshd.iterdir()
+private_keys = [f for f in files if f.name.startswith('id_') and not f.name.endswith('.pub')]
+# Debian is too ancient for f-strings :(
+ssh_add = lambda f: system("ssh-add {} 2> /dev/null".format(f))
+for key in private_keys:
+    ssh_add(key)
+
