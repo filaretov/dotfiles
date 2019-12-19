@@ -221,6 +221,7 @@ augroup terminal
   autocmd!
   autocmd TermOpen * setlocal nonumber
   autocmd TermOpen * setlocal matchpairs=
+  autocmd TermOpen * setlocal scrolloff=0
 augroup END
 
 augroup pandoc
