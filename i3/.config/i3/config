@@ -216,7 +216,7 @@ bindsym $mod+d exec dmenu_run
 
 # * Bar
 bar {
-	#status_command ~/.local/bin/stowed/i3bar.py
+	status_command ~/.local/bin/stowed/i3bar.py
 	position top
 	mode dock
 	font pango: Source Code Pro 10

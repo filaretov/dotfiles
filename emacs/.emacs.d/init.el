@@ -7,6 +7,7 @@
 ;; * Preamble
 ;; Remove when Debian gets Emacs 26.3
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 (require 'package)
 
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
@@ -38,13 +39,107 @@
   (general-def
     "M-i" 'imenu))
 
+;; * Theming
+;; ** Solarized
+(use-package solarized-theme
+  :config
+  (setq solarized-use-variable-pitch nil
+        solarized-height-plus-1 1.0
+        solarized-height-plus-2 1.0
+        solarized-height-plus-3 1.0
+        solarized-height-plus-4 1.0
+	solarized-distinct-fringe-background t
+	solarized-use-less-bold t
+	solarized-scale-org-headlines nil
+	solarized-emphasize-indicators t)
+  (general-def "C-c z" 'my/toggle-theme))
+
+;; ** Dracula
+(use-package dracula-theme)
+
+;; ** Nord
+(use-package nord-theme)
+
+;; ** Helpers
+(defun my/load-theme (theme)
+  "Disable all themes and load THEME."
+  (interactive)
+  (progn
+    (my/disable-all-themes)
+    (load-theme theme t)))
+
+(defun my/disable-all-themes ()
+  "Disable all custom enabled themes."
+  (interactive)
+  (dolist (theme custom-enabled-themes)
+    (disable-theme theme)))
+
+(defun my/toggle-theme ()
+  "Toggle customvar between light and dark themes."
+  (interactive)
+  (let ((dark 'nord)
+	(light 'solarized-light-high-contrast))
+    (if (equal (car custom-enabled-themes) dark)
+	(my/load-theme light)
+      (my/load-theme dark))))
+
+(my/load-theme 'nord)
+
+;; ** Fonts
+(cond ((eq system-type 'windows-nt)
+       (set-face-attribute 'default nil
+			   :family "Consolas"
+			   :height 110))
+      ((eq system-type 'darwin)
+       (set-face-attribute 'default nil
+			   :family "Source Code Pro"
+			   :height 120
+			   :weight 'semi-bold))
+      (t ;; t for true operating system
+       (set-face-attribute 'default nil
+			   :family "Source Code Pro"
+			   :height 100
+			   :weight 'regular)))
+
+(defun my/org-mode-hook ()
+  "Disable header variable font size."
+  (progn
+    (dolist (face '(org-level-1
+		    org-level-2
+		    org-level-3
+		    org-level-4
+		    org-level-5
+		    org-document-title))
+      (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
+  (set-face-attribute 'org-block nil :foreground nil))
+
+(add-hook 'org-mode-hook 'my/org-mode-hook)
+;; ** Modeline
+(use-package minions
+  :config
+  (setq minions-mode-line-lighter ""
+	minions-mode-line-delimiters '("" . ""))
+  (minions-mode 1)
+  (column-number-mode 1))
+
 ;; * Personal Information
 (setq user-full-name "Hristo Filaretov"
-      user-mail-address "h.filaretov@campus.tu-berlin.de"
-      calendar-latitude 52.52
-      calendar-latitude 13.41
-      calendar-location-name "Berlin, Germany")
+      user-mail-address "h.filaretov@campus.tu-berlin.de")
 
+;; * Default wrangling
+;; ** Enable all
+(global-auto-revert-mode 1)
+(show-paren-mode 1)
+(global-hl-line-mode 1)
+
+;; ** Disable all
+(scroll-bar-mode 0)
+(tool-bar-mode 0)
+(menu-bar-mode 0)
+(blink-cursor-mode 0)
+(fringe-mode 0)
+
+;; ** Tweak
 (setq gc-cons-threshold 200000000
       vc-follow-symlinks t
       sentence-end-double-space nil
@@ -66,15 +161,6 @@
       auto-save-default nil
       make-backup-files nil)
 
-(scroll-bar-mode 0)
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(blink-cursor-mode 0)
-(fringe-mode 0)
-(delete-selection-mode 1)
-(global-auto-revert-mode 1)
-(show-paren-mode 1)
-(global-hl-line-mode 1)
 
 ;; ** Scrolling
 (setq scroll-margin 2
@@ -84,85 +170,6 @@
 
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
-
-;; * Theming
-;; ** Solarized
-(use-package solarized-theme
-  :config
-  (setq solarized-use-variable-pitch nil
-        solarized-height-plus-1 1.0
-        solarized-height-plus-2 1.0
-        solarized-height-plus-3 1.0
-        solarized-height-plus-4 1.0
-	solarized-distrinct-fringe-background t
-	solarized-use-less-bold t
-	solarized-use-less-italic t
-	solarized-scale-org-headlines nil
-	solarized-emphasize-indicators t)
-  (general-def "C-c z" 'my/toggle-theme))
-
-;; ** Dracula
-(use-package dracula-theme)
-
-;; ** Helpers
-(defun my/load-theme (theme)
-  "Disable all themes and load a new one."
-  (interactive)
-  (progn
-    (my/disable-all-themes)
-    (load-theme theme t)))
-
-(defun my/disable-all-themes ()
-  "Disable all custom enabled themes."
-  (interactive)
-  (dolist (theme custom-enabled-themes)
-    (disable-theme theme)))
-
-(defun my/toggle-theme ()
-  "Toggle customvar between light and dark themes."
-  (interactive)
-  (let ((dark 'dracula)
-	(light 'solarized-light))
-    (if (equal (car custom-enabled-themes) dark)
-	(my/load-theme light)
-      (my/load-theme dark))))
-
-(my/toggle-theme)
-
-;; ** Fonts
-(cond ((eq system-type 'windows-nt)
-       (set-face-attribute 'default nil
-			   :family "Consolas"
-			   :height 110))
-      ((eq system-type 'darwin)
-       (set-face-attribute 'default nil
-			   :family "Source Code Pro"
-			   :height 120
-			   :weight 'semi-bold))
-      (t ;; t for true operating system
-       (set-face-attribute 'default nil
-			   :family "Source Code Pro"
-			   :height 100
-			   :weight 'regular)))
-
-(defun my/org-mode-hook ()
-  "Disable header variable font size."
-  (dolist (face '(org-level-1
-		  org-level-2
-		  org-level-3
-		  org-level-4
-		  org-level-5
-		  org-document-title))
-    (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
-
-(add-hook 'org-mode-hook 'my/org-mode-hook)
-;; ** Modeline
-(use-package minions
-  :config
-  (setq minions-mode-line-lighter ""
-	minions-mode-line-delimiters '("" . ""))
-  (minions-mode 1)
-  (column-number-mode 1))
 
 ;; * Typing text
 (setq-default fill-column 100
@@ -174,16 +181,17 @@
 
 (use-package company
   :hook (prog-mode . company-mode)
-  :config (setq company-tooltip-align-annotations t
-		company-minimum-prefix-length 1)
+  :config
+  (setq company-tooltip-align-annotations t
+	company-minimum-prefix-length 1)
   :config
   (general-def 'insert
     "C-SPC" 'company-complete))
 
-(use-package lsp-mode
-  :hook (rust-mode . lsp)
-  :commands lsp
-  :config (require 'lsp-clients))
+;; (use-package lsp-mode
+;;   :hook (prog-mode . lsp)
+;;   :commands lsp
+;;   :config (require 'lsp-clients))
 
 (use-package lsp-ui :commands lsp-ui-mode)
 
@@ -194,12 +202,15 @@
 ;; * Major modes
 ;; ** C
 ;; ** C++
+;; ** Elixir
+(use-package elixir-mode)
+
 ;; ** Go
 ;; ** Rust
 (use-package toml-mode)
 
 (use-package rust-mode
-  :hook (rust-mode .lsp)
+  ;;:hook (rust-mode .lsp)
   :config
   (add-hook 'rust-mode-hook
 	    (lambda () (setq indent-tabs-mode nil))))
@@ -225,23 +236,24 @@
 	org-src-fontify-natively t
 	org-src-preserve-indentation t
 	org-src-tab-acts-natively t
-	org-goto-interface 'outline-path-completionp
 	org-outline-path-complete-in-steps nil
 	org-M-RET-may-split-line nil
 	org-cycle-separator-lines 0
-	org-latex-with-hyperref nil)
+	org-latex-hyperref-template nil)
   (setq org-agenda-files
-	'("~/.journal/tasks.org"
-	  "~/.journal/inbox.org"))
-  (setq org-archive-location "~/.journal/archive.org::* From %s")
+	'("~/cloud/journal/tasks.org"
+	  "~/cloud/journal/inbox.org"))
+  (setq org-archive-location "~/cloud/journal/archive.org::* From %s")
   (setq org-capture-templates
-	'(("t" "Todo" entry (file "~/.journal/tasks.org")
+	'(("t" "Todo" entry (file "~/cloud/journal/tasks.org")
 	   "* TODO %?\n")
-	  ("n" "Note" entry (file "~/.journal/notes.org")
+	  ("n" "Note" entry (file "~/cloud/journal/notes.org")
 	   "*  %?\n")
-	  ("i" "In" entry (file "~/.journal/inbox.org")
+	  ("i" "In" entry (file "~/cloud/journal/inbox.org")
 	   "* TODO %?\nSCHEDULED: %t")))
-
+  (setq org-todo-keywords
+	'((sequence "TODO" "|" "DONE")
+	  (sequence "READ" "WATCH" "LISTEN" "|" "DONE")))
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (with-eval-after-load 'ox-latex
     (add-to-list 'org-latex-classes
@@ -272,7 +284,7 @@
     "C-c t" (lambda () (interactive) (org-capture nil "t")))
   (use-package htmlize)
   (use-package ox-extra
-    :commands '(ox-extras-activate)
+    :commands ox-extras-activate
     :ensure org-plus-contrib
     :config
     (ox-extras-activate '(ignore-headlines))))
@@ -301,6 +313,7 @@
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
 (defun my/bibtex-hook ()
+  "My bibtex hook."
   (progn
     (setq comment-start "%")))
 
@@ -419,7 +432,8 @@
     ("i" (find-file (journal.d "inbox.org")) "inbox")
     ("n" (find-file (journal.d "notes.org")) "notes")
     ("u" (find-file (journal.d "uniplan.org")) "uniplan")
-    ("t" (find-file (journal.d "time.ledger")) "time")
+    ("s" (find-file (journal.d "scratch.org")) "scratch")
+    ("r" (find-file (journal.d "reading-list.org")) "to read")
     ("w" (find-file "~/.config/i3/config") "i3wm")
     ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
   (defhydra hydra-package (:exit t)
@@ -473,6 +487,7 @@
     result))
 
 (defun my/repolist-refresh ()
+  "Hi."
   (setq magit-repository-directories
 	(~> "~/dev"
 	    (my/list-subdirs)
@@ -502,17 +517,17 @@
 ;; ** Directories
 (setq my/journal-path "~/cloud/journal/")
 (defun emacs.d (filename)
-  "Return the complete file path."
+  "Return the file path of FILENAME relative to the Emacs directory."
   (format "%s%s" user-emacs-directory filename))
 
 (defun journal.d (filename)
-  "Return complete path."
+  "Return the file path of FILENAME relative to the Journal directory."
   (format "%s%s" my/journal-path filename))
 
 ;; ** Switch to previous buffer
 (defun my/switch-to-previous-buffer ()
   "Switch to previously open buffer.
-  Repeated invocations toggle between the two most recently open buffers."
+Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 

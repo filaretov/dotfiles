@@ -1,0 +1,128 @@
+* Preamble
+  Thanks to all the wonderful yak shavers in the world.
+
+* Packaging
+  I use =use-package=.
+  
+** Proper
+   #+begin_src emacs-lisp
+   (use-package use-package
+     :config
+     (require 'use-package-ensure)
+     (setq use-package-always-ensure t)
+     (global-set-key [remap dabbrev-expand] 'hippie-expand))
+   #+end_src
+  
+** Auto compiling
+   I /assume/ this is good for all the packages I download and occasionally update.
+
+   #+begin_src emacs-lisp
+   (use-package auto-compile
+     :config
+     (auto-compile-on-load-mode)
+     (setq load-prefer-newer t))
+   #+end_src
+
+* Keybindings
+  I use =general= for all keybindings. It's like =use-package= for my keybindings! Tidy.
+
+  #+begin_src emacs-lisp
+  (use-package general
+    :config
+    (general-def
+      "M-i" 'imenu))
+  #+end_src
+
+* Personal Information
+  Let Emacs know more about me.
+
+  #+begin_src emacs-lisp
+  (setq user-full-name "Hristo Filaretov"
+	user-mail-address "h.filaretov@campus.tu-berlin.de"
+	calendar-latitude 52.52
+	calendar-latitude 13.41
+	calendar-location-name "Berlin, Germany")
+  #+end_src
+
+* Default wrangling
+  
+** Removing all that GUI stuff
+   #+begin_src emacs-lisp
+   (scroll-bar-mode 0)
+   (tool-bar-mode 0)
+   (menu-bar-mode 0)
+   (blink-cursor-mode 0)
+   (fringe-mode 0)
+   #+end_src
+   
+** Text editing
+
+   #+begin_src emacs-lisp
+   (delete-selection-mode 1)
+   (global-auto-revert-mode 1)
+   (show-paren-mode 1)
+   (global-hl-line-mode 1)
+
+   (add-hook 'after-save-hook
+	     'executable-make-buffer-file-executable-if-script-p)
+   #+end_src
+   
+** Scrolling
+   #+begin_src emacs-lisp
+   (setq scroll-margin 2
+	 scroll-step 1
+	 scroll-conservatively 10000
+	 scroll-preserve-screen-position 1)
+   #+end_src
+   
+** Default values
+   Some default values that make sense to me.
+
+   #+begin_src emacs-lisp
+   (setq gc-cons-threshold 200000000
+	 vc-follow-symlinks t
+	 sentence-end-double-space nil
+	 require-final-newline t
+	 confirm-kill-emacs 'y-or-n-p
+	 inhibit-startup-screen t
+	 inhibit-startup-message t
+	 initial-scratch-message nil
+	 ring-bell-function 'ignore
+	 mode-line-default-help-echo nil
+	 show-paren-delay 0.0
+	 mouse-yank-at-point t
+	 default-input-method "TeX")
+
+   (fset 'yes-or-no-p 'y-or-n-p)
+   #+end_src
+
+* Theme
+** Dracula
+   #+begin_src emacs-lisp
+   (use-package dracula-theme)
+   #+end_src
+
+** Fixes
+   Some annoyances I've had to fix manually.
+   
+*** Org Heading Levels
+    I don't really like variable font sizes in my plain text documents.
+
+    #+begin_src emacs-lisp
+    (dolist (face '(org-level-1
+		    org-level-2
+		    org-level-3
+		    org-level-4
+		    org-level-5
+		    org-document-title))
+      (set-face-attribute face nil :weight 'semi-bold :height 1.0))
+    #+end_src
+
+*** Org Blocks
+    Org source blocks had an orange foreground because of Dracula. That is very annoying.
+    
+    #+begin_src emacs-lisp
+    (set-face-attribute 'org-block nil :foreground nil)
+    #+end_src
+
+
