@@ -11,38 +11,20 @@ from time import localtime, strftime
 
 HOME = os.path.expanduser("~")
 
-def i3_json(
-    name,
-    text,
-    min_width=None,
-    align=None,
-    urgent=None,
-    instance=None,
-    separator=None,
-    separator_block_width=None,
-):
-    i3_block = {"name": name, "full_text": text}
-    if min_width is not None:
-        i3_block["min_width"] = min_width
-    if align is not None:
-        i3_block["align"] = align
-    if urgent is not None:
-        i3_block["urgent"] = urgent
-    if instance is not None:
-        i3_block["instance"] = instance
-    if separator is not None:
-        i3_block["separator"] = separator
-    if separator_block_width is not None:
-        i3_block["separator_block_width"] = separator_block_width
+
+def i3_json(name, text, **args):
+    i3_block = {**{"name": name, "full_text": text}, **args}
     return i3_block
 
-def pom_task():
+
+def current_task():
     try:
-        with open("/tmp/pom_task") as f:
+        with open(HOME + "/.current_task") as f:
             task_name = f.read().strip()
     except:
         task_name = ""
-    return i3_json("pom", task_name)
+    return i3_json("pom", f" {task_name} ", color="#a3be8c")
+
 
 def repo_is_dirty(dir):
     if ".git" in os.listdir(dir):
@@ -56,8 +38,7 @@ def repo_is_dirty(dir):
         except subprocess.CalledProcessError:
             rv = ""
         return rv
-    else:
-        return False
+    return False
 
 
 def vsc_check():
@@ -65,7 +46,8 @@ def vsc_check():
     git_repos = glob(HOME + "/dev/*/")
     dirty = any([repo_is_dirty(dir) for dir in git_repos])
     text = "X " if dirty else "OK"
-    return i3_json("vsc_check", f"repos: {text}")
+    symbol = ""
+    return i3_json("vsc_check", f"{symbol} {text}")
 
 
 def _plugged():
@@ -78,7 +60,7 @@ def _battery_level():
     batteries = subprocess.check_output(["acpi", "-b"]).decode().split("\n")[:-1]
     left_output = [x.partition("%")[0] for x in batteries]
     battery_level = [int(x.split(" ")[-1]) for x in left_output]
-    avg = sum(battery_level)/len(battery_level)
+    avg = sum(battery_level) / len(battery_level)
     return int(avg)
 
 
@@ -89,7 +71,8 @@ def battery():
         symbol = "chr"
     else:
         symbol = "bat"
-    text = f"{symbol}: {battery_level}"
+    symbol = ""
+    text = f"{symbol}   {battery_level}"
     return i3_json("battery_level", text)
 
 
@@ -101,7 +84,9 @@ def xkb_layout():
 
 
 def clock():
-    text = strftime("%d/%m/%y %a %H:%M", localtime())
+    date = strftime("%d/%m/%y %a %H:%M", localtime())
+    symbol = ""
+    text = f"{symbol}  {date}"
     return i3_json("clock", text, separator=False)
 
 
@@ -110,7 +95,8 @@ def brightness():
         value = float(subprocess.check_output(["xbacklight"]).decode())
     except subprocess.CalledProcessError:
         value = -1.0
-    text = f"scrn: {value:3.0f}"
+    symbol = ""
+    text = f"{symbol}  {value:3.0f}"
     return i3_json("brightness", text)
 
 
@@ -143,7 +129,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [brightness, xkb_layout, vsc_check, battery, clock]
+    modules = [current_task, brightness, xkb_layout,  battery, clock]
     while True:
         line = [attempt(mod) for mod in modules]
         print_line(prefix + json.dumps(line))
