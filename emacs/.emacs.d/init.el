@@ -63,7 +63,11 @@
 ;; ** Helpers
 (defun my/load-theme (theme)
   "Disable all themes and load THEME."
-  (interactive)
+  (interactive (list
+		(intern
+		 (completing-read "Load custom theme: "
+				  (mapcar 'symbol-name
+					  (custom-available-themes))))))
   (progn
     (my/disable-all-themes)
     (load-theme theme t)))
@@ -114,6 +118,22 @@
   (set-face-attribute 'org-block nil :foreground nil))
 
 (add-hook 'org-mode-hook 'my/org-mode-hook)
+
+(defun my/outline-mode-hook ()
+  "Disable header variable font size."
+  (progn
+    (dolist (face '(outline-1
+		    outline-2
+		    outline-3
+		    outline-4
+		    outline-5
+		    outline-6
+		    outline-7
+		    outline-8))
+      (set-face-attribute face nil :weight 'semi-bold :height 1.0))))
+
+(add-hook 'outshine-mode-hook 'my/outline-mode-hook)
+(add-hook 'outline-mode-hook 'my/outline-mode-hook)
 ;; ** Modeline
 (use-package minions
   :config
@@ -148,6 +168,7 @@
       inhibit-startup-screen t
       inhibit-startup-message t
       initial-scratch-message nil
+      initial-major-mode 'org-mode
       ring-bell-function 'ignore
       mode-line-default-help-echo nil
       show-paren-delay 0.0
@@ -169,7 +190,7 @@
       scroll-preserve-screen-position 1)
 
 (add-hook 'after-save-hook
-          'executable-make-buffer-file-executable-if-script-p)
+	  'executable-make-buffer-file-executable-if-script-p)
 
 ;; * Typing text
 (setq-default fill-column 100
@@ -206,6 +227,8 @@
 (use-package elixir-mode)
 
 ;; ** Go
+(use-package go-mode)
+
 ;; ** Rust
 (use-package toml-mode)
 
@@ -243,17 +266,15 @@
   (setq org-agenda-files
 	'("~/cloud/journal/tasks.org"
 	  "~/cloud/journal/inbox.org"))
-  (setq org-archive-location "~/cloud/journal/archive.org::* From %s")
+  (setq org-archive-location "~/cloud/journal/archive.org::")
   (setq org-capture-templates
-	'(("t" "Todo" entry (file "~/cloud/journal/tasks.org")
-	   "* TODO %?\n")
-	  ("n" "Note" entry (file "~/cloud/journal/notes.org")
+	'(("n" "Note" entry (file "~/cloud/journal/notes.org")
 	   "*  %?\n")
-	  ("i" "In" entry (file "~/cloud/journal/inbox.org")
-	   "* TODO %?\nSCHEDULED: %t")))
+	  ("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
+	   "* TODO %?\n")))
   (setq org-todo-keywords
-	'((sequence "TODO" "|" "DONE")
-	  (sequence "READ" "WATCH" "LISTEN" "|" "DONE")))
+	'((sequence "TODO" "DONE")
+	  (sequence "READ" "WATCH" "LISTEN" "DONE")))
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (with-eval-after-load 'ox-latex
     (add-to-list 'org-latex-classes
@@ -435,7 +456,7 @@
     ("s" (find-file (journal.d "scratch.org")) "scratch")
     ("r" (find-file (journal.d "reading-list.org")) "to read")
     ("w" (find-file "~/.config/i3/config") "i3wm")
-    ("p" (find-file "~/Development/crucible/tasks/packages.yml") "packages"))
+    ("p" (find-file (journal.d "poetry.org") "packages")))
   (defhydra hydra-package (:exit t)
     "Package management"
     ("r" (package-refresh-contents) "refresh")
@@ -623,3 +644,15 @@ Example:
 	  :initial-value init))
 
 ;;; init.el ends here
+;; ** Activate current task
+(defun my/activate-current-task ()
+  "Activate task under cursor."
+  (interactive)
+  (progn
+    (message "hi")
+    (let ((task (mapconcat 'identity (org-get-outline-path t) ":")))
+      (progn
+	(message task)
+	(write-region task nil "~/.current_task")))))
+
+(general-def "C-c h" 'my/activate-current-task)
