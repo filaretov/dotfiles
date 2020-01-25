@@ -7,6 +7,10 @@ function dirty
         cd $d/..
         set git_status (git status --porcelain)
         if test -n "$git_status"
+            if test "$argv[1]" = "cd"
+                cd (string replace -a '.git' '' "$d")
+                return 0
+            end
             echo (string replace "$HOME" '' (string replace -a '/.git' '' "$d"))
         end
     end
