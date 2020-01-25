@@ -417,6 +417,10 @@
   (use-package flx)
   (use-package smex))
 
+(use-package ivy-rich
+  :config
+  (ivy-rich-mode 1))
+
 ;; ** Outshine
 (use-package outshine
   :config
@@ -501,7 +505,7 @@
     result))
 
 (defun my/make-magit-repolist (dirs)
-  "Make a list of the form (dir 0) for the magit-list-repositories function."
+  "Make a list of the form (dir 0) for the magit-list-repositories function from DIRS."
   (let ((result))
     (dolist (dir dirs result)
       (add-to-list 'result `(,dir 0)))
@@ -530,6 +534,12 @@
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
 
+;; ** Projectile
+(use-package projectile
+  :config
+  (setq projectile-project-search-path '("~/dev/" "~/cloud/"))
+  (projectile-mode 1))
+
 ;; * Custom
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
@@ -554,6 +564,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;; ** Join lines
 (defun my/join-lines-region ()
+  "Join lines like J in Vim."
   (let ((n (my/count-lines-region))
 	(flip-p (eq (region-end) (point))))
     (progn
@@ -561,6 +572,7 @@ Repeated invocations toggle between the two most recently open buffers."
       (dotimes (_ (max 1 (1- n))) (join-line -1)))))
 
 (defun my/count-lines-region ()
+  "Count the lines in the region."
   (interactive)
   (let ((numlines (count-lines (region-beginning) (region-end)))
 	(beginning-of-line-p (= (line-beginning-position) (point))))
@@ -569,6 +581,7 @@ Repeated invocations toggle between the two most recently open buffers."
       numlines)))
 
 (defun my/join-line ()
+  "Join lines in the opposite direction."
   (interactive)
   (if (region-active-p)
       (my/join-lines-region)
@@ -576,11 +589,12 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;; ** Delete file
 (defun visiting-file-p ()
+  "Check whether current buffer is visiting an existing file."
   (let ((filename (buffer-file-name)))
     (and filename (file-exists-p filename))))
 
 (defun my/delete-this-file ()
-  "Removes file connected to current buffer and kills buffer."
+  "Remove file connected to current buffer and kill buffer."
   (interactive)
   (let ((filename (buffer-file-name))
 	(buffer (current-buffer))
@@ -594,7 +608,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
 ;; ** Rename file
 (defun my/rename-this-file ()
-  "Renames current buffer and associated file."
+  "Rename current buffer and associated file."
   (interactive)
   (let ((name (buffer-name))
 	(filename (buffer-file-name)))
@@ -650,7 +664,7 @@ Example:
   (interactive)
   (progn
     (message "hi")
-    (let ((task (mapconcat 'identity (org-get-outline-path t) ":")))
+    (let ((task (mapconcat 'identity (org-get-outline-path t) " -> ")))
       (progn
 	(message task)
 	(write-region task nil "~/.current_task")))))

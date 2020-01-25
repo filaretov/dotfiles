@@ -1,1 +1,1 @@
-nil
+("~/dev/dotfiles/" "~/cloud/journal/" "~/dev/vde/" "~/dev/tub-presentation/" "~/dev/semsese/" "~/dev/scipy/" "~/dev/rustlings/" "~/dev/polybar/" "~/dev/ot-br-posix/" "~/dev/numpy/" "~/dev/neovim/" "~/dev/ml1-ws1920/" "~/dev/mi1-ws1920/" "~/dev/i3status-rust/" "~/dev/hud/" "~/dev/hkm/" "~/dev/flow-project.github.io/" "~/dev/flow/" "~/dev/chummer5a/" "~/dev/bsc/")
