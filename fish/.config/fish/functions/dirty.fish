@@ -1,7 +1,7 @@
 function dirty
     set curr_pwd (pwd)
     cd ~/dev
-    set dirs (fdfind --absolute-path --max-depth 4 --type --type d --hidden '.git$')
+    set dirs (fdfind --absolute-path --max-depth 3 --type --type d --hidden '.git$')
 
     for d in $dirs
         cd $d/..
