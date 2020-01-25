@@ -7,4 +7,5 @@ end
 
 set -x PATH ~/.local/bin $PATH
 set -x PATH ~/.local/bin/stowed $PATH
+set -x PATH ~/dev/go/bin $PATH
 set -x PATH ~/dev/sensor_controller_studio/bin $PATH
