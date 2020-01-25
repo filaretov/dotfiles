@@ -22,6 +22,7 @@ packages = [
     "tpope/vim-unimpaired",
     "vim-pandoc/vim-pandoc-syntax",
     "arcticicestudio/nord-vim",
+    "fatih/vim-go",
 ]
 
 
