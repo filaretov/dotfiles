@@ -32,4 +32,4 @@ GRTAGS
 GTAGS
 .#*
 
-.ipynv_checkpoints/
+.ipynb_checkpoints/

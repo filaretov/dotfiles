@@ -1,7 +1,5 @@
 # SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 # SPDX-License-Identifier: MIT
-bin/
-i3/.config/i3/config
 nvim/.config/nvim/sessions/
 nvim/.config/nvim/pack/
 vim/.vim/tmp/
@@ -40,8 +38,5 @@ nvim/.config/nvim/spell/en.utf-8.spl
 nvim/.config/nvim/spell/en.utf-8.sug
 vim/.vim/autoload/pathogen.vim
 
-
 fonts/.local/share/fonts/*/.uuid
 fonts/.local/share/fonts/.uuid
-
-fish/.config/fish/functions/z.fish
