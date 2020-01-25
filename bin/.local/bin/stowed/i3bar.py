@@ -23,17 +23,17 @@ def current_task():
             task_name = f.read().strip()
     except:
         task_name = ""
-    return i3_json("pom", f" {task_name} ", color="#a3be8c")
+    return i3_json("pom", f"{task_name} ", color="#a3be8c")
 
 
-def repo_is_dirty(dir):
-    if ".git" in os.listdir(dir):
+def repo_is_dirty(directory):
+    if ".git" in os.listdir(directory):
         try:
             rv = subprocess.check_output(
-                ["git", "diff", "@{u}.."], cwd=dir, stderr=subprocess.STDOUT
+                ["git", "diff", "@{u}.."], cwd=directory, stderr=subprocess.STDOUT
             ).decode()
             rv += subprocess.check_output(
-                ["git", "status", "--porcelain"], cwd=dir, stderr=subprocess.STDOUT
+                ["git", "status", "--porcelain"], cwd=directory, stderr=subprocess.STDOUT
             ).decode()
         except subprocess.CalledProcessError:
             rv = ""
@@ -68,10 +68,9 @@ def battery():
     plugged = _plugged()
     battery_level = _battery_level()
     if plugged:
-        symbol = "chr"
+        symbol = ""
     else:
-        symbol = "bat"
-    symbol = ""
+        symbol = ""
     text = f"{symbol}   {battery_level}"
     return i3_json("battery_level", text)
 
@@ -129,7 +128,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [current_task, brightness, xkb_layout,  battery, clock]
+    modules = [current_task, brightness, xkb_layout, battery, clock]
     while True:
         line = [attempt(mod) for mod in modules]
         print_line(prefix + json.dumps(line))
