@@ -101,7 +101,7 @@
 			   :weight 'semi-bold))
       (t ;; t for true operating system
        (set-face-attribute 'default nil
-			   :family "Source Code Pro"
+			   :family "Go Mono"
 			   :height 100
 			   :weight 'regular)))
 
@@ -459,7 +459,7 @@
     ("u" (find-file (journal.d "uniplan.org")) "uniplan")
     ("s" (find-file (journal.d "scratch.org")) "scratch")
     ("r" (find-file (journal.d "reading-list.org")) "to read")
-    ("w" (find-file "~/.config/i3/config") "i3wm")
+    ("w" (find-file (journal.d "wiki.org")) "wiki")
     ("p" (find-file (journal.d "poetry.org") "packages")))
   (defhydra hydra-package (:exit t)
     "Package management"
