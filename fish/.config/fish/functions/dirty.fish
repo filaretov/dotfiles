@@ -12,15 +12,13 @@ function dirty
         if contains "pull" $argv
             git pull
         end
-        set what (git status --porcelain=1)
-        if test -n "$what"
-            echo $what
+        set git_dirty ""
+        set is_dirty (string trim (git status --porcelain=1))
+        if test -n "$is_dirty"
             set git_dirty "*"
-            return 0
         end
         set git_ab (git status --porcelain=1 --branch | grep -o '\[ahead.*\]\|\[behind.*\]')
         if test -n "$git_dirty" -o -n "$git_ab"
-            echo $git_dirty $git_ab
             if contains "cd" $argv
                 cd $d
                 return 0
