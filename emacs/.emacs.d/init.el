@@ -101,7 +101,7 @@
 			   :weight 'semi-bold))
       (t ;; t for true operating system
        (set-face-attribute 'default nil
-			   :family "Go Mono"
+			   :family "Source Code Pro"
 			   :height 100
 			   :weight 'regular)))
 
