@@ -23,6 +23,7 @@ packages = [
     "vim-pandoc/vim-pandoc-syntax",
     "arcticicestudio/nord-vim",
     "fatih/vim-go",
+    "ledger/vim-ledger",
 ]
 
 
