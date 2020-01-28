@@ -221,30 +221,6 @@
 (use-package yasnippet)
 
 ;; * Major modes
-;; ** C
-;; ** C++
-;; ** Elixir
-(use-package elixir-mode)
-
-;; ** Go
-(use-package go-mode)
-
-;; ** Rust
-(use-package toml-mode)
-
-(use-package rust-mode
-  ;;:hook (rust-mode .lsp)
-  :config
-  (add-hook 'rust-mode-hook
-	    (lambda () (setq indent-tabs-mode nil))))
-
-(use-package cargo
-  :hook (rust-mode . cargo-minor-mode))
-
-(use-package flycheck-rust
-  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-;; ** Python
-;; ** Bash
 ;; ** Markdown
 (use-package markdown-mode
   :mode (("README\\.md\\'" . markdown-mode)
@@ -310,14 +286,9 @@
     :config
     (ox-extras-activate '(ignore-headlines))))
 
-;; ** Fish
-(use-package fish-mode)
 
 ;; ** Ledger
 (use-package ledger-mode)
-
-;; ** YAML
-(use-package yaml-mode)
 
 ;; ** TeX
 (use-package tex
@@ -534,11 +505,6 @@
 	("Version" 30 magit-repolist-column-version nil)
 	("Path" 99 magit-repolist-column-path nil)))
 
-;; ** Projectile
-(use-package projectile
-  :config
-  (setq projectile-project-search-path '("~/dev/" "~/cloud/"))
-  (projectile-mode 1))
 
 ;; * Custom
 (setq custom-file "~/.emacs.d/custom.el")
