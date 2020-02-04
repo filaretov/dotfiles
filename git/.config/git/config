@@ -10,9 +10,10 @@
 	co = checkout
 	cb = checkout -b
 	c = commit
-	cm = commit -m
 	p = pull
 	pp = push
+	cm = commit -m
+	cam = commit -am
 	can = commit --amend --no-edit
 	aa = add --all
 	rc = rebase --continue
