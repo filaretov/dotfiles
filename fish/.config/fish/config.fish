@@ -10,6 +10,9 @@ alias clk-out "echo o (date +\"%Y/%m/%d %H:%M\") >> ~/.journal/ipk.time"
 alias calc "conda activate stats; and python -ic 'import numpy as np'; and conda deactivate"
 alias mnt "udisksctl mount -b"
 alias umnt "udisksctl unmount -b"
+alias c "conda"
+alias ca "conda activate"
+alias jl "jupyter lab"
 
 # Find local fish file
 set -l lc_file "$HOME/.config/fish/"(hostname)".fish"
