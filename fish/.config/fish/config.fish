@@ -13,6 +13,10 @@ alias umnt "udisksctl unmount -b"
 alias c "conda"
 alias ca "conda activate"
 alias jl "jupyter lab"
+alias ls "exa"
+alias ll "exa -l --git"
+alias la "exa -a"
+alias lla "exa -la --git"
 
 # Find local fish file
 set -l lc_file "$HOME/.config/fish/"(hostname)".fish"
