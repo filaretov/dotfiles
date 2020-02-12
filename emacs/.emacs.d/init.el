@@ -160,8 +160,7 @@
 (fringe-mode 0)
 
 ;; ** Tweak
-(setq gc-cons-threshold 200000000
-      vc-follow-symlinks t
+(setq vc-follow-symlinks t
       sentence-end-double-space nil
       require-final-newline t
       confirm-kill-emacs 'y-or-n-p
@@ -184,7 +183,7 @@
 
 
 ;; ** Scrolling
-(setq scroll-margin 2
+(setq scroll-margin 0
       scroll-step 1
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
@@ -197,27 +196,6 @@
 	      cursor-type 'bar)
 
 ;; * Code Completion
-(use-package flycheck
-  :hook (prog-mode . flycheck-mode))
-
-(use-package company
-  :hook (prog-mode . company-mode)
-  :config
-  (setq company-tooltip-align-annotations t
-	company-minimum-prefix-length 1)
-  :config
-  (general-def 'insert
-    "C-SPC" 'company-complete))
-
-;; (use-package lsp-mode
-;;   :hook (prog-mode . lsp)
-;;   :commands lsp
-;;   :config (require 'lsp-clients))
-
-(use-package lsp-ui :commands lsp-ui-mode)
-
-(use-package company-lsp :commands company-lsp)
-
 (use-package yasnippet)
 
 ;; * Major modes
