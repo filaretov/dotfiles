@@ -103,7 +103,7 @@
        (set-face-attribute 'default nil
 			   :family "Source Code Pro"
 			   :height 100
-			   :weight 'regular)))
+			   :weight 'normal)))
 
 (defun my/org-mode-hook ()
   "Disable header variable font size."

@@ -33,3 +33,7 @@ end
 
 ### Conda
 source "$HOME/.config/fish/conda.fish"
+if type -f starship >/dev/null ^/dev/null
+    starship init fish | source
+    function __conda_add_prompt; end
+end
