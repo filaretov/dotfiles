@@ -101,7 +101,7 @@
 			   :weight 'semi-bold))
       (t ;; t for true operating system
        (set-face-attribute 'default nil
-			   :family "Source Code Pro"
+			   :family "Fira Code"
 			   :height 100
 			   :weight 'normal)))
 
