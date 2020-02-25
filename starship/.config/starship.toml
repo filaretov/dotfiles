@@ -1,3 +1,5 @@
+add_newline = false
+
 [character]
 symbol = "λ"
 
@@ -10,6 +12,20 @@ symbol = "conda::"
 [rust]
 symbol = "rust::"
 
+[golang]
+symbol = "go::"
+
+[nodejs]
+symbol = "node::"
+
 [package]
 symbol = "pkg::"
 
+[java]
+symbol = "java::"
+
+[ruby]
+symbol = "ruby::"
+
+[line_break]
+disabled = true
