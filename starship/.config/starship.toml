@@ -1,0 +1,14 @@
+[character]
+symbol = "λ"
+
+[python]
+symbol = "py::"
+
+[conda]
+symbol = "conda::"
+
+[rust]
+symbol = "rust::"
+
+[package]
+symbol = "pkg::"
