@@ -7,7 +7,7 @@ symbol = "λ"
 symbol = "py::"
 
 [conda]
-symbol = "conda::"
+symbol = ""
 
 [rust]
 symbol = "rust::"
