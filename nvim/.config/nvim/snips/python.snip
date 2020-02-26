@@ -16,8 +16,13 @@ options indent
         def ${1}(self${2}):
                 ${0}
 
-snippet mif
+snippet main
 options indent
         if __name__ == "__main__":
-                ${0}
+                main()${0}
+
+snippet ds
+options indent
+        """${0}
+                """
 
