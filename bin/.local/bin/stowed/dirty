@@ -1,0 +1,3 @@
+#!/bin/bash
+
+$HOME/.miniconda/envs/cli/bin/python $HOME/dev/dotfiles/tools/dirty.py ~/dev
