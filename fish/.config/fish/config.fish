@@ -17,6 +17,7 @@ alias ls "exa"
 alias ll "exa -l --git"
 alias la "exa -a"
 alias lla "exa -la --git"
+alias tree "exa --tree"
 
 # Find local fish file
 set -l lc_file "$HOME/.config/fish/"(hostname)".fish"

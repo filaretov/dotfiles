@@ -11,7 +11,7 @@ def get_package_list():
     return packages
 
 def install_package_list(pkgs):
-    cmd = f"sudo apt install {' '.join(pkgs)}"
+    cmd = f"sudo dnf install {' '.join(pkgs)}"
     system(cmd)
 
 if __name__ == "__main__":

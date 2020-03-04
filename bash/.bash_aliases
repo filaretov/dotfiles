@@ -25,7 +25,7 @@ function command_exists() {
 
 function search(){
 	if command_exists dnf; then
-		dnf search $@
+		sudo dnf search $@
 	elif command_exists pacman; then
 		pacman -Ss $@
 	elif command_exists apt; then
@@ -114,10 +114,6 @@ function umnt-raspi() {
 alias ssh-add-all='ls ~/.ssh/!(*.pub|config|known_hosts) | xargs ssh-add'
 alias nv=nvr
 
-alias search="apt search"
-alias install="sudo apt install"
-alias update="sudo apt update"
-alias upgrade="sudo apt upgrade"
 alias pip3="python -m pip3"
 alias pip3="python3 -m pip"
 alias mnt="udisksctl mount -b"

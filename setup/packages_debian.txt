@@ -7,12 +7,21 @@ neovim
 
 # desktop applications
 sudo
+xorg
+xserver-xorg
+i3
+termite
+evince
+firefox-esr
+nextcloud-desktop
 rofi
+compton
+libreoffice
 
 # cli tools
 htop
 feh
-ImageMagick
+imagemagick
 pass
 stow
 udisks2
@@ -21,7 +30,10 @@ xclip
 # dev
 git
 make
+build-essential
 
 # power management
 acpi
 tlp
+acpi-call-dkms
+tp-smapi-dkms
