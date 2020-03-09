@@ -5,6 +5,6 @@ rofi.modi:                           run,drun,window
 rofi.width:                          32
 rofi.lines:                          5
 rofi.columns:                        1
-rofi.font:                           Source Code Pro 10
+rofi.font:                           Fira Code 10
 
 #include "themes/Arc.theme"

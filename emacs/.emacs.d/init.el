@@ -87,7 +87,7 @@
 	(my/load-theme light)
       (my/load-theme dark))))
 
-(my/load-theme 'nord)
+(my/load-theme 'dracula)
 
 ;; ** Fonts
 (cond ((eq system-type 'windows-nt)

@@ -2,7 +2,7 @@ from os import system
 
 remove_comments = lambda x: not x.startswith("#")
 
-packages_file = "packages.txt"
+packages_file = "packages_debian.txt"
 
 def get_package_list():
     with open(packages_file) as f:
@@ -11,7 +11,7 @@ def get_package_list():
     return packages
 
 def install_package_list(pkgs):
-    cmd = f"sudo dnf install {' '.join(pkgs)}"
+    cmd = f"sudo apt install {' '.join(pkgs)}"
     system(cmd)
 
 if __name__ == "__main__":
