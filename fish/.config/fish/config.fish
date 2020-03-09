@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 set  fish_greeting "Don't panic!"
 
-alias install "sudo apt install"
-alias search "apt search"
+alias install "sudo dnf install"
+alias search "sudo dnf search"
 alias remove "sudo apt remove"
 alias clk-in "echo i (date +\"%Y/%m/%d %H:%M\") Work:Fraunhofer IPK >> ~/.journal/ipk.time"
 alias clk-out "echo o (date +\"%Y/%m/%d %H:%M\") >> ~/.journal/ipk.time"
@@ -24,7 +24,7 @@ set -l lc_file "$HOME/.config/fish/"(hostname)".fish"
 if test -e $lc_file
     source $lc_file
 else
-    echo "No local fish file in "(pwd)" $lc_file"
+    echo "No local fish file in $lc_file"
 end
 
 # Because of funky emacs ansi-term behaviour

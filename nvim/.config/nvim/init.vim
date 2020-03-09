@@ -30,13 +30,14 @@ set history=1000
 set scrolloff=4     " scroll page once 4 lines from top/bottom
 set backspace=2
 set hidden          " allow closing unsaved buffers
-set path+=**        " useful for using :find et al.
+set path=**         " useful for using :find et al.
 set wildmenu        " Display all matching files when tab completing
 set wildignorecase  " Wild menu ignores case
 set encoding=utf-8
 set noequalalways   " Don't resize automatically after closing, opening
 set inccommand=nosplit
 set nowrap
+set textwidth=120
 " Show some whitespace
 set listchars=tab:\ \ ,trail:·,nbsp:+
 set list
@@ -186,14 +187,6 @@ smap <C-j> <Plug>(neosnippet_expand_or_jump)
 " Terminal mode mappings {{{
 tnoremap <ESC> <C-\><C-n>
 " }}}
-" }}}
-
-" Text FileType Settings {{{ augroup filetype_txt
-augroup filetype_text
-  autocmd!
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-augroup end
 " }}}
 
 " Filetype augroups {{{
