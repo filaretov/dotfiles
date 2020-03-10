@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 # SPDX-License-Identifier: MIT
-set  fish_greeting "Don't panic!"
+
+set fish_path "$HOME/.config/fish"
+set fish_greeting "Don't panic!"
 
 alias install "sudo dnf install"
 alias search "sudo dnf search"
@@ -20,7 +22,7 @@ alias lla "exa -la --git"
 alias tree "exa --tree"
 
 # Find local fish file
-set -l lc_file "$HOME/.config/fish/"(hostname)".fish"
+set -l lc_file "$fish_path/"(hostname)".fish"
 if test -e $lc_file
     source $lc_file
 else
@@ -33,8 +35,10 @@ function fish_title
 end
 
 ### Conda
-source "$HOME/.config/fish/conda.fish"
+source "$fish_path/conda.fish"
 if type -f starship >/dev/null ^/dev/null
     starship init fish | source
     function __conda_add_prompt; end
 end
+
+source $fish_path/themes/nord.fish
