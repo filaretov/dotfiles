@@ -228,7 +228,7 @@ bar {
 	status_command ~/.local/bin/stowed/i3bar.py
 	position top
 	mode dock
-	font pango: Fira Code 10
+	font pango: Fira Code 9
 	tray_output primary
 	strip_workspace_numbers no
 	separator_symbol "  "
@@ -251,3 +251,5 @@ for_window [class="Gnome-terminal" title="CALCULATOR"] move scratchpad
 for_window [class="(?i)x-terminal-emulator" title="ALSAMIXER"] floating enable
 bindsym $mod+c [title="CALCULATOR"] scratchpad show
 bindsym $mod+Shift+c exec gnome-terminal --profile=calc
+
+exec ~/.local/bin/stowed/wm_startup.sh

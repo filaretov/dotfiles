@@ -46,7 +46,7 @@ def vsc_check():
     git_repos = glob(HOME + "/dev/*/")
     dirty = any([repo_is_dirty(dir) for dir in git_repos])
     text = "X " if dirty else "OK"
-    symbol = ""
+    symbol = "vsc:"
     return i3_json("vsc_check", f"{symbol} {text}")
 
 
@@ -68,9 +68,9 @@ def battery():
     plugged = _plugged()
     battery_level = _battery_level()
     if plugged:
-        symbol = ""
+        symbol = "chr"
     else:
-        symbol = ""
+        symbol = "bat"
     text = f"{symbol}   {battery_level}"
     return i3_json("battery_level", text)
 
@@ -84,7 +84,7 @@ def xkb_layout():
 
 def clock():
     date = strftime("%d/%m/%y %a %H:%M", localtime())
-    symbol = ""
+    symbol = ""
     text = f"{symbol}  {date}"
     return i3_json("clock", text, separator=False)
 
@@ -94,7 +94,7 @@ def brightness():
         value = float(subprocess.check_output(["xbacklight"]).decode())
     except subprocess.CalledProcessError:
         value = -1.0
-    symbol = ""
+    symbol = "scr"
     text = f"{symbol}  {value:3.0f}"
     return i3_json("brightness", text)
 
