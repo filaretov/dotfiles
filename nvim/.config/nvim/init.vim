@@ -4,7 +4,36 @@
 
 " Plugin Settings {{{
 
-packloadall
+call plug#begin(stdpath('data') . '/plugged')
+
+" Completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Filetypes
+
+Plug 'elixir-editors/vim-elixir'
+Plug 'kballard/vim-fish'
+Plug 'rust-lang/rust.vim'
+Plug 'sgur/vim-editorconfig'
+Plug 'shougo/neosnippet.vim'
+Plug 'tommcdo/vim-exchange'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'fatih/vim-go'
+Plug 'ledger/vim-ledger'
+
+" Themes
+Plug 'arcticicestudio/nord-vim'
+Plug 'sjl/badwolf'
+Plug 'dracula/vim', {'as': 'dracula.vim'}
+call plug#end()
 
 let g:pandoc#syntax#conceal#use = 0
 let s:nvim_config = $HOME.'/.config/nvim'
@@ -46,9 +75,39 @@ set tabstop=8
 set shiftwidth=8
 set softtabstop=8
 
+" Backup
+set nobackup
+set nowritebackup
+
+set updatetime=300
+
+set cmdheight=2
+
+set shortmess+=c
+
+set signcolumn=yes
+
+" completion
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+
 set undofile
 set swapfile
 set gdefault
+set number
+
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " Grepping {{{
 
@@ -248,3 +307,6 @@ endfunction
 nnoremap <space>h :<c-u>call SynGroup()<cr>
 " }}}
 
+" Rust {{{
+let g:rustfmt_autosave = 1
+" }}}
