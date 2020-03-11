@@ -2,18 +2,25 @@
 " SPDX-License-Identifier: MIT
 " vim: foldmethod=marker foldlevelstart=0:
 
-" Plugin Settings {{{
+" Helper values {{{
+let s:nvim_config = $HOME.'/.config/nvim'
+" }}}
 
+" Plug {{{
 call plug#begin(stdpath('data') . '/plugged')
 
 " Completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Filetypes
-
+Plug 'rust-lang/rust.vim'
 Plug 'elixir-editors/vim-elixir'
 Plug 'kballard/vim-fish'
-Plug 'rust-lang/rust.vim'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'fatih/vim-go'
+Plug 'ledger/vim-ledger'
+
+" Goodies
 Plug 'sgur/vim-editorconfig'
 Plug 'shougo/neosnippet.vim'
 Plug 'tommcdo/vim-exchange'
@@ -25,18 +32,15 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'fatih/vim-go'
-Plug 'ledger/vim-ledger'
 
 " Themes
 Plug 'arcticicestudio/nord-vim'
 Plug 'sjl/badwolf'
 Plug 'dracula/vim', {'as': 'dracula.vim'}
 call plug#end()
+" }}}
 
 let g:pandoc#syntax#conceal#use = 0
-let s:nvim_config = $HOME.'/.config/nvim'
 
 " Neosnippets
 let g:neosnippet#disable_select_mode_mappings = 1
@@ -81,8 +85,6 @@ set nowritebackup
 
 set updatetime=300
 
-set cmdheight=2
-
 set shortmess+=c
 
 set signcolumn=yes
@@ -108,6 +110,7 @@ set gdefault
 set number
 
 inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <c-x><c-o> coc#refresh()
 
 " Grepping {{{
 
@@ -175,8 +178,6 @@ set guicursor+=i-c:ver1
 "set leader key to:
 let mapleader = "\<Space>"
 let maplocalleader = ","
-set completeopt=menu,preview,longest
-set omnifunc=lsp#omnifunc
 
 " This is optional, but you may find it useful
 autocmd CompleteDone * pclose
