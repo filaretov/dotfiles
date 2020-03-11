@@ -30,7 +30,6 @@ emacs/.emacs.d/.lsp-session-v1
 emacs/.emacs.d/projectile-bookmarks.eld
 
 fish/.config/fish/fish_variables
-fish/.config/fish/functions/z.fish
 nvim/.config/nvim/settings.json
 nvim/.config/nvim/spell/de.utf-8.add
 nvim/.config/nvim/spell/de.utf-8.add.spl
