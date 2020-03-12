@@ -311,3 +311,9 @@ nnoremap <space>h :<c-u>call SynGroup()<cr>
 " Rust {{{
 let g:rustfmt_autosave = 1
 " }}}
+
+" GNVim {{{
+if exists('g:gnvim')
+  source $HOME/.config/nvim/ginit.vim
+end
+" }}}
