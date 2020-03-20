@@ -16,7 +16,7 @@ alias c "conda"
 alias ca "conda activate"
 alias jl "jupyter lab"
 alias ls "exa"
-alias ll "exa -l --git"
+alias ll "exa -l --git --group-directories-first"
 alias la "exa -a"
 alias lla "exa -la --git"
 alias tree "exa --tree"
@@ -46,6 +46,8 @@ source $fish_path/themes/nord.fish
 function zoxide-add --on-event fish_prompt
     zoxide add
 end
+
+set -x EDITOR "nvim"
 
 abbr -a zi "z -i"
 abbr -a za "zoxide add"
