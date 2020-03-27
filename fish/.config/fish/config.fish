@@ -31,7 +31,7 @@ end
 
 # Because of funky emacs ansi-term behaviour
 function fish_title
-  true
+    true
 end
 
 ### Conda
@@ -44,7 +44,9 @@ end
 source $fish_path/themes/nord.fish
 
 function zoxide-add --on-event fish_prompt
-    zoxide add
+    if test "0$fish_private_mode" -ne 1
+        zoxide add
+end
 end
 
 set -x EDITOR "nvim"
