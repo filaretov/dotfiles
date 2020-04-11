@@ -40,54 +40,8 @@
     "M-i" 'imenu))
 
 ;; * Theming
-;; ** Solarized
-(use-package solarized-theme
-  :config
-  (setq solarized-use-variable-pitch nil
-        solarized-height-plus-1 1.0
-        solarized-height-plus-2 1.0
-        solarized-height-plus-3 1.0
-        solarized-height-plus-4 1.0
-	solarized-distinct-fringe-background t
-	solarized-use-less-bold t
-	solarized-scale-org-headlines nil
-	solarized-emphasize-indicators t)
-  (general-def "C-c z" 'my/toggle-theme))
-
-;; ** Dracula
-(use-package dracula-theme)
-
-;; ** Nord
 (use-package nord-theme)
-
-;; ** Helpers
-(defun my/load-theme (theme)
-  "Disable all themes and load THEME."
-  (interactive (list
-		(intern
-		 (completing-read "Load custom theme: "
-				  (mapcar 'symbol-name
-					  (custom-available-themes))))))
-  (progn
-    (my/disable-all-themes)
-    (load-theme theme t)))
-
-(defun my/disable-all-themes ()
-  "Disable all custom enabled themes."
-  (interactive)
-  (dolist (theme custom-enabled-themes)
-    (disable-theme theme)))
-
-(defun my/toggle-theme ()
-  "Toggle customvar between light and dark themes."
-  (interactive)
-  (let ((dark 'nord)
-	(light 'solarized-light-high-contrast))
-    (if (equal (car custom-enabled-themes) dark)
-	(my/load-theme light)
-      (my/load-theme dark))))
-
-(my/load-theme 'nord)
+(load-theme 'nord t)
 
 ;; ** Fonts
 (cond ((eq system-type 'windows-nt)
@@ -150,7 +104,6 @@
 ;; ** Enable all
 (global-auto-revert-mode 1)
 (show-paren-mode 1)
-(global-hl-line-mode 1)
 
 ;; ** Disable all
 (scroll-bar-mode 0)

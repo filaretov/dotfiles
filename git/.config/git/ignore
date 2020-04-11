@@ -3,6 +3,7 @@
 __pycache__/
 .vscode/
 .coverage
+htmlcov/
 tags
 *.swp
 *~
