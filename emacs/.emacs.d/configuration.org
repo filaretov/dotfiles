@@ -583,3 +583,15 @@ Example:
 (general-def "C-c h" 'my/activate-current-task)
 
 #+end_src
+
+* Triage
+#+begin_src emacs-lisp
+(general-def
+"<f1>" 'vterm-toggle)
+(general-def 'vterm-mode-map
+"<f1>" 'vterm-toggle)
+(general-def
+"C-c t" 'vterm-toggle)
+(general-def 'vterm-mode-map
+"C-c t" 'vterm-toggle)
+#+end_src
