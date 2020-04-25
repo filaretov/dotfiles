@@ -26,3 +26,15 @@ options indent
         """${0}
                 """
 
+snippet embed
+        from IPython import embed
+        embed()
+
+snippet data
+        from dataclasses import dataclass
+
+snippet @d
+options indent
+        @dataclass
+        class ${1}:
+            ${0}

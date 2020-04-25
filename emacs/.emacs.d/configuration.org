@@ -207,63 +207,6 @@
 	 ("\\.markdown\\'" . markdown-mode)))
 
 ;; ** Org
-(use-package org
-  :config
-  (setq org-adapt-indentation t
-	org-hide-leading-stars t
-	org-src-fontify-natively t
-	org-src-preserve-indentation t
-	org-src-tab-acts-natively t
-	org-outline-path-complete-in-steps nil
-	org-M-RET-may-split-line nil
-	org-cycle-separator-lines 0
-	org-latex-hyperref-template nil)
-  (setq org-agenda-files '(
-"~/cloud/journal/tasks.org"
-"~/cloud/journal/inbox.org"
-"~/cloud/journal/notes.org"
-"~/cloud/journal/wiki.org"
-))
-  (setq org-archive-location "~/cloud/journal/archive.org::")
-  (setq org-capture-templates
-	'(("n" "Note" entry (file "~/cloud/journal/notes.org")
-	   "*  %?\n")
-	  ("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
-	   "* TODO %?\n")))
-  (add-hook 'org-mode-hook 'auto-fill-mode)
-  (with-eval-after-load 'ox-latex
-    (add-to-list 'org-latex-classes
-		 '("book"
-		   "\\documentclass{book}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
-		   ("\\chapter{%s}" . "\\chapter*{%s}")
-		   ("\\section{%s}" . "\\section*{%s}")
-		   ("\\subsection{%s}" . "\\subsection*{%s}")
-		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-    (add-to-list 'org-latex-classes
-		 '("ieee"
-		   "\\documentclass{IEEEtran}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
-		   ("\\section{%s}" . "")
-		   ("\\subsection{%s}" . "")
-		   ("\\subsubsection{%s}" . "")))
-    (add-to-list 'org-latex-classes
-		 '("blank"
-		   ""
-		   ("\\section{%s}" . "")
-		   ("\\subsection{%s}" . "")
-		   ("\\subsubsection{%s}" . "")))
-    (add-to-list 'org-latex-classes
-		 '("coverletter"
-		   "\\documentclass[a4paper,11pt]{letter}\n[EXTRA]\n")))
-  (general-def
-    "C-c c" 'org-capture
-    "C-c a" 'org-agenda
-    "C-c t" (lambda () (interactive) (org-capture nil "t")))
-  (use-package htmlize)
-  (use-package ox-extra
-    :commands ox-extras-activate
-    :ensure org-plus-contrib
-    :config
-    (ox-extras-activate '(ignore-headlines))))
 
 
 ;; ** Ledger
@@ -370,13 +313,12 @@
     ("e" (find-file (emacs.d "configuration.org")) "config")
     ("i" (find-file (journal.d "inbox.org")) "inbox")
     ("n" (find-file (journal.d "notes.org")) "notes")
-    ("u" (find-file (journal.d "uniplan.org")) "uniplan")
+    ("u" (find-file (journal.d "uni.org")) "uni")
     ("s" (find-file (journal.d "scratch.org")) "scratch")
-    ("r" (find-file (journal.d "reading-list.org")) "to read")
     ("w" (find-file (journal.d "wiki.org")) "wiki")
     ("t" (find-file (journal.d "tasks.org")) "tasks")
-    ("s" (find-file (journal.d "scratch.org")) "scratch")
-    ("p" (find-file (journal.d "poetry.org") "packages")))
+    ("f" (find-file (journal.d "fraunhofer.org")) "fraunhofer")
+    ("s" (find-file (journal.d "scratch.org")) "scratch"))
   (defhydra hydra-package (:exit t)
     "Package management"
     ("r" (package-refresh-contents) "refresh")
@@ -581,6 +523,71 @@ Example:
 	(write-region task nil "~/.current_task")))))
 
 (general-def "C-c h" 'my/activate-current-task)
+
+#+end_src
+* Org
+#+begin_src emacs-lisp
+  (use-package org
+    :config
+    (setq org-adapt-indentation t
+	  org-hide-leading-stars t
+	  org-src-fontify-natively t
+	  org-src-preserve-indentation nil
+	  org-src-tab-acts-natively t
+	  org-outline-path-complete-in-steps nil
+	  org-M-RET-may-split-line nil
+	  org-cycle-separator-lines 0
+	  org-latex-hyperref-template nil)
+    (setq org-agenda-files '(
+  "~/cloud/journal/tasks.org"
+  "~/cloud/journal/inbox.org"
+  "~/cloud/journal/notes.org"
+  "~/cloud/journal/wiki.org"
+  ))
+    (setq org-archive-location "~/cloud/journal/archive.org::")
+    (setq org-capture-templates
+	  '(("n" "Note" entry (file "~/cloud/journal/notes.org")
+	     "*  %?\n")
+	    ("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
+	     "* TODO %?\n")))
+    (setq org-todo-keywords
+          '((sequence "TODO" "NEXT" "|" "DONE")))
+    (setq org-todo-keyword-faces
+          '(("NEXT" . "magenta")))
+    (add-hook 'org-mode-hook 'auto-fill-mode)
+    (with-eval-after-load 'ox-latex
+      (add-to-list 'org-latex-classes
+		   '("book"
+		     "\\documentclass{book}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
+		     ("\\chapter{%s}" . "\\chapter*{%s}")
+		     ("\\section{%s}" . "\\section*{%s}")
+		     ("\\subsection{%s}" . "\\subsection*{%s}")
+		     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (add-to-list 'org-latex-classes
+		   '("ieee"
+		     "\\documentclass{IEEEtran}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
+		     ("\\section{%s}" . "")
+		     ("\\subsection{%s}" . "")
+		     ("\\subsubsection{%s}" . "")))
+      (add-to-list 'org-latex-classes
+		   '("blank"
+		     ""
+		     ("\\section{%s}" . "")
+		     ("\\subsection{%s}" . "")
+		     ("\\subsubsection{%s}" . "")))
+      (add-to-list 'org-latex-classes
+		   '("coverletter"
+		     "\\documentclass[a4paper,11pt]{letter}\n[EXTRA]\n")))
+    (general-def
+      "C-c c" 'org-capture
+      "C-c a" 'org-agenda
+      "C-c t" (lambda () (interactive) (org-capture nil "t")))
+    (use-package htmlize)
+    (use-package ox-extra
+      :commands ox-extras-activate
+      :ensure org-plus-contrib
+      :config
+      (ox-extras-activate '(ignore-headlines))))
 
 #+end_src
 
