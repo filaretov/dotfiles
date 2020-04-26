@@ -4,24 +4,14 @@ emacs
 # vim
 vim
 neovim
-
-# desktop applications
-sudo
 rofi
-
-# cli tools
 htop
 feh
-ImageMagick
 pass
 stow
 udisks2
 xclip
-
-# dev
 git
 make
-
-# power management
 acpi
 tlp

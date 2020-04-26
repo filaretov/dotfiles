@@ -2,7 +2,7 @@ from os import system
 
 remove_comments = lambda x: not x.startswith("#")
 
-packages_file = "packages_debian.txt"
+packages_file = "packages.txt"
 
 def get_package_list():
     with open(packages_file) as f:
