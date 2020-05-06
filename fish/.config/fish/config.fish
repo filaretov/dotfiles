@@ -4,8 +4,8 @@
 set fish_path "$HOME/.config/fish"
 set fish_greeting "Don't panic!"
 
-alias install "sudo dnf install"
-alias search "sudo dnf search"
+alias install "sudo apt install"
+alias search "sudo apt search"
 alias remove "sudo apt remove"
 alias clk-in "echo i (date +\"%Y/%m/%d %H:%M\") Work:Fraunhofer IPK >> ~/.journal/ipk.time"
 alias clk-out "echo o (date +\"%Y/%m/%d %H:%M\") >> ~/.journal/ipk.time"
@@ -20,6 +20,7 @@ alias ll "exa -l --git --group-directories-first"
 alias la "exa -a"
 alias lla "exa -la --git"
 alias tree "exa --tree"
+alias n "nvr -s"
 
 # Find local fish file
 set -l lc_file "$fish_path/"(hostname)".fish"
@@ -43,15 +44,8 @@ end
 
 source $fish_path/themes/nord.fish
 
-function zoxide-add --on-event fish_prompt
-    if test "0$fish_private_mode" -ne 1
-        zoxide add
-end
-end
-
 set -x EDITOR "nvim"
 
-abbr -a zi "z -i"
-abbr -a za "zoxide add"
-abbr -a zq "zoxide query"
-abbr -a zr "zoxide remove"
+if test -e "$fish_path/z.fish"
+    source "$fish_path/z.fish"
+end

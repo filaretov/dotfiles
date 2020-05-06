@@ -55,9 +55,8 @@
 			   :weight 'semi-bold))
       (t ;; t for true operating system
        (set-face-attribute 'default nil
-			   :family "Fira Code"
-			   :height 100
-			   :weight 'normal)))
+			   :family "Iosevka Medium"
+			   :height 100)))
 #+end_src
   
 * Face modifications
@@ -551,7 +550,7 @@ Example:
 	    ("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
 	     "* TODO %?\n")))
     (setq org-todo-keywords
-          '((sequence "TODO" "NEXT" "|" "DONE")))
+          '((sequence "WAIT" "TODO" "|" "DONE")))
     (setq org-todo-keyword-faces
           '(("NEXT" . "magenta")))
     (add-hook 'org-mode-hook 'auto-fill-mode)

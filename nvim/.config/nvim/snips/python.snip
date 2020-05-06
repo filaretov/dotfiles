@@ -11,6 +11,18 @@ options indent
         def ${1}(${2}):
                 ${0}
 
+snippet fi
+options head
+        from ${1} import ${0}
+
+snippet i
+options head
+        import ${0}
+
+snippet for
+        for ${1} in ${2}:
+            ${0}
+
 snippet cd
 options indent
         def ${1}(self${2}):
@@ -26,15 +38,32 @@ options indent
         """${0}
                 """
 
-snippet embed
-        from IPython import embed
-        embed()
+snippet ipy
+        from IPython import embed; embed()
 
 snippet data
         from dataclasses import dataclass
 
 snippet @d
-options indent
+options head
         @dataclass
         class ${1}:
             ${0}
+
+snippet np
+options head
+        import numpy as np
+
+snippet pd
+options head
+        import pandas as pd
+
+snippet plt
+options head
+        import matplotlib.pyplot as plt
+
+snippet pre
+options head
+        import numpy as np
+        import pandas as pd
+        import matplotlib.pyplot as plt
