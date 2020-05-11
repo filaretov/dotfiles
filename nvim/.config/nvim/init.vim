@@ -134,6 +134,7 @@ nnoremap <leader>fe :edit $MYVIMRC<cr>
 nnoremap <leader>fs :source $MYVIMRC<cr>
 nnoremap <leader>fn :edit ~/cloud/journal/notes.md<cr>
 nnoremap <leader>fu :edit ~/cloud/journal/uni.md<cr>
+nnoremap <leader>fw :edit ~/cloud/journal/wiki.md<cr>
 " }}}
 
 " OS clipboard
