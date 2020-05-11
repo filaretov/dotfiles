@@ -32,7 +32,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'Lenovsky/nuake'
 
 " Themes
 Plug 'arcticicestudio/nord-vim'
@@ -44,7 +43,7 @@ call plug#end()
 " Plugin Settings {{{
 let g:pandoc#syntax#conceal#use = 0
 
-" Neosnippets
+" Neosnippet
 let g:neosnippet#disable_select_mode_mappings = 1
 let g:neosnippet#snippets_directory= s:nvim_config . '/snips/'
 let g:neosnippet#disable_runtime_snippets = {
@@ -55,86 +54,26 @@ let g:neosnippet#disable_runtime_snippets = {
 
 " Basic Settings {{{
 
-filetype plugin indent on
-syntax enable
-
-set ignorecase      " ignores case when searching
-set smartcase       " case-sensitive when using capital in search
-set number
-set history=1000
-set scrolloff=4     " scroll page once 4 lines from top/bottom
-set backspace=2
-set hidden          " allow closing unsaved buffers
-set path=**         " useful for using :find et al.
-set wildmenu        " Display all matching files when tab completing
-set wildignorecase  " Wild menu ignores case
-set encoding=utf-8
-set noequalalways   " Don't resize automatically after closing, opening
+set hidden
+set ignorecase
+set smartcase
 set inccommand=nosplit
 set nowrap
+set number
+set path=**
+set scrolloff=4
 set textwidth=90
-" Show some whitespace
-set listchars=tab:\ \ ,trail:·,nbsp:+
+set wildignorecase
 set list
-" Tab settings
-set tabstop=8
-set shiftwidth=8
-set softtabstop=8
-
 set shell=/usr/bin/fish
-
-" Backup
 set nobackup
 set nowritebackup
-
-set updatetime=300
-
 set shortmess+=c
-
 set signcolumn=yes
-
 set fillchars=fold:\ 
-
-" completion
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
 set undofile
 set swapfile
 set gdefault
-
-inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <silent><expr> <c-x><c-o> coc#refresh()
-
-" Grepping {{{
-
-function! BuildGrepExclude()
-  let s:exclude = ""
-  if filereadable('.gitignore')
-          let s:exclude = s:exclude . " --exclude-from='.gitignore'"
-  endif
-  let s:global_gitignore = $HOME . "/.config/git/ignore"
-  if filereadable(s:global_gitignore)
-    let s:exclude = s:exclude . " --exclude-from=" . s:global_gitignore
-  endif
-  return s:exclude
-endfunction
-
-let g:grepprg_string="grep -n " . BuildGrepExclude() . " $*"
-let &grepprg=g:grepprg_string
-
-command! -nargs=+ Grep execute 'silent grep! -r <args>' | copen 10
-
-" }}}
-
 let g:tex_flavor='latex'
 
 " Colourscheme
@@ -161,8 +100,6 @@ set cino=N-s,i0,g0
 " }}}
 
 " Status Line {{{
-set noruler           " hide ruler to always use glorious statusline
-set laststatus=2      " always show statusline
 set statusline=
 set statusline+=%t
 set statusline+=\ %y
@@ -181,9 +118,6 @@ set guicursor+=i-c:ver1
 let mapleader = "\<Space>"
 let maplocalleader = ","
 
-" This is optional, but you may find it useful
-autocmd CompleteDone * pclose
-
 " Navigation
 nnoremap j gj
 nnoremap k gk
@@ -198,15 +132,9 @@ nnoremap <C-s> :w<cr>
 " vimrc
 nnoremap <leader>fe :edit $MYVIMRC<cr>
 nnoremap <leader>fs :source $MYVIMRC<cr>
-" notes
 nnoremap <leader>fn :edit ~/cloud/journal/notes.md<cr>
+nnoremap <leader>fu :edit ~/cloud/journal/uni.md<cr>
 " }}}
-
-" open a terminal
-let g:nuake_size = 0.5
-nnoremap <silent> <F4> :Nuake<cr>
-inoremap <silent> <F4> <C-\><C-n>:Nuake<cr>
-tnoremap <silent> <F4> <C-\><C-n>:Nuake<cr>
 
 " OS clipboard
 nnoremap <leader>y "+y
@@ -220,15 +148,6 @@ nnoremap <leader>es :NeoSnippetEdit -split<cr>
 nnoremap x "_x
 " Turn off highlighting
 nnoremap <silent> <c-l> :noh<cr>
-" Add empty line after cursor
-nnoremap <leader>o o<Esc>k
-" Add empty line before cursor
-nnoremap <leader>O O<Esc>j
-" making things
-nnoremap <space>m :!make<cr>
-nnoremap <space>c :!make clean<cr>
-" Indentation
-nnoremap <leader>= mz=ip`z
 
 " Commenting
 nnoremap <M-;> :<C-u>Commentary<cr>

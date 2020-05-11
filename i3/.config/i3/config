@@ -94,26 +94,9 @@ bindsym $mod+Shift+p exec scrot
 # Sreen brightness and audio volume controls
 bindsym XF86MonBrightnessUp   exec brightnessctl s +10%
 bindsym XF86MonBrightnessDown exec brightnessctl s -- -10%
-bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl set-sink-volume 0 +5%    # increase sound volume
-bindsym XF86AudioLowerVolume  exec --no-startup-id pactl set-sink-volume 0 -5%    # decrease sound volume
-bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute   0 toggle # mute     sound
-
-# * Launcher mode
-set $mode_launcher Launch: [b]rowser [e]macs [t]erm [s]t [f]iles [c]hat
-bindsym $mod+o mode "$mode_launcher"
-
-mode "$mode_launcher" {
-     set $esc mode "default"
-     bindsym b exec firefox; $esc
-     bindsym e exec emacs; $esc
-     bindsym t exec gnome-terminal; $esc
-     bindsym s exec st; $esc
-     bindsym f exec nautilus; $esc
-     bindsym c exec telegram-desktop; $esc
-
-     bindsym Escape mode "default"
-     bindsym Return mode "default"
-}
+bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume  exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMicMute      exec --no-startup-id pactl set-source-mute 1 toggle
 
 # * Workspaces
 # ** Workspace Variables
@@ -246,7 +229,7 @@ bar {
 	status_command ~/.local/bin/stowed/i3bar.py
 	position top
 	mode dock
-	font pango: Iosevka 9
+	font pango: Iosevka Medium 9
 	tray_output primary
 	strip_workspace_numbers no
 	separator_symbol "  "
