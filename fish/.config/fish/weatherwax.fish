@@ -10,3 +10,5 @@ set -x PATH ~/.local/bin $PATH
 set -x PATH ~/.local/bin/stowed $PATH
 set -x PATH ~/dev/go/bin $PATH
 set -x PATH ~/media/packages/julia-1.4.1/bin/ $PATH
+
+alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"

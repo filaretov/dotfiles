@@ -49,3 +49,4 @@ set -x EDITOR "nvim"
 if test -e "$fish_path/z.fish"
     source "$fish_path/z.fish"
 end
+
