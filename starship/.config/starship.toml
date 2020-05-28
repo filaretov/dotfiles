@@ -1,31 +1,65 @@
-add_newline = true
+add_newline = false
+
+prompt_order = [
+    "time",
+    "username",
+    "hostname",
+    # "kubernetes",
+    "directory",
+    "git_branch",
+    "git_commit",
+    "git_state",
+    "git_status",
+    "hg_branch",
+    "docker_context",
+    # "package",
+    "dotnet",
+    # "elixir",
+    # "elm",
+    # "erlang",
+    # "golang",
+    # "haskell",
+    # "java",
+    # "julia",
+    # "nodejs",
+    # "ocaml",
+    # "php",
+    # "purescript",
+    # "python",
+    # "ruby",
+    # "rust",
+    # "terraform",
+    # "zig",
+    # "nix_shell",
+    "conda",
+    # "memory_usage",
+    # "aws",
+    "env_var",
+    # "crystal",
+    # "cmd_duration",
+    # "custom",
+    "line_break",
+    "jobs",
+    "battery",
+    "character",
+]
+
+[directory]
+prefix = ""
+style = "cyan"
 
 [character]
 symbol = "λ"
 
-[python]
-symbol = "py::"
-
 [conda]
 symbol = ""
-
-[rust]
-symbol = "rust::"
-
-[golang]
-symbol = "go::"
-
-[nodejs]
-symbol = "node::"
-
-[package]
-symbol = "pkg::"
-
-[java]
-symbol = "java::"
-
-[ruby]
-symbol = "ruby::"
+style = "cyan"
 
 [line_break]
-disabled = false
+disabled = true
+
+[git_branch]
+symbol = ""
+
+[jobs]
+symbol = "+"

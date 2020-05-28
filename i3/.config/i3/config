@@ -94,6 +94,7 @@ bindsym $mod+Shift+p exec scrot
 # Sreen brightness and audio volume controls
 bindsym XF86MonBrightnessUp   exec brightnessctl s +10%
 bindsym XF86MonBrightnessDown exec brightnessctl s -- -10%
+bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute 0 toggle
 bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl set-sink-volume 0 +5%
 bindsym XF86AudioLowerVolume  exec --no-startup-id pactl set-sink-volume 0 -5%
 bindsym XF86AudioMicMute      exec --no-startup-id pactl set-source-mute 1 toggle
@@ -227,7 +228,7 @@ client.background       $nord0
 # * Bar
 bar {
 	status_command ~/.local/bin/stowed/i3bar.py
-	position top
+	position bottom
 	mode dock
 	font pango: Iosevka Medium 9
 	tray_output primary

@@ -20,10 +20,10 @@ def i3_json(name, text, **args):
 def current_task():
     try:
         with open(HOME + "/.current_task") as f:
-            task_name = f.read().strip()
+            task_name = f"{f.read().strip()}"
     except:
         task_name = ""
-    return i3_json("pom", f"{task_name} ", color="#a3be8c")
+    return i3_json("pom", f"{task_name} ", color="#a4be8c")
 
 
 def repo_is_dirty(directory):

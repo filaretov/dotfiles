@@ -19,6 +19,7 @@ Plug 'kballard/vim-fish'
 Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'fatih/vim-go'
 Plug 'ledger/vim-ledger'
+Plug 'cespare/vim-toml'
 
 " Goodies
 Plug 'sgur/vim-editorconfig'
@@ -126,12 +127,16 @@ nnoremap H ^
 " Strong right
 nnoremap L $
 " Saving
+nnoremap <leader>w :w<cr>
 nnoremap <C-s> :w<cr>
+
+" Last buffer
+nnoremap <leader><tab> :b#<cr>
 
 " Quickly opening files {{{
 " vimrc
 nnoremap <leader>fe :edit $MYVIMRC<cr>
-nnoremap <leader>fs :source $MYVIMRC<cr>
+nnoremap <leader>fs :NeoSnippetEdit -split<cr>
 nnoremap <leader>fn :edit ~/cloud/journal/notes.md<cr>
 nnoremap <leader>fu :edit ~/cloud/journal/uni.md<cr>
 nnoremap <leader>fw :edit ~/cloud/journal/wiki.md<cr>
@@ -144,7 +149,6 @@ vnoremap <leader>y "+y
 vnoremap <leader>p "+p
 nnoremap <leader>P o<c-r>+<ESC>==
 " Snippets
-nnoremap <leader>es :NeoSnippetEdit -split<cr>
 " Don't mess up reg when using x
 nnoremap x "_x
 " Turn off highlighting
@@ -158,7 +162,6 @@ nnoremap <M-;> :<C-u>Commentary<cr>
 vnoremap . :norm.<CR>
 " Don't replace "" when pasting in visual
 vnoremap p "_c<Esc>p
-vmap <leader>e <Plug>(neosnippet_expand_target)
 
 vnoremap <M-;> :Commentary<cr>
 
@@ -167,8 +170,6 @@ vnoremap <M-;> :Commentary<cr>
 " Insert mode mappings {{{
 " I'm stupid and <C-i> is actually the same as Tab
 " I'm stupid and <C-j> is used a few lines below for neosnippet
-" Insert today
-inoremap <C-k><C-t> <C-r>=strftime("%Y-%m-%d")<cr>
 
 " Snippets
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
@@ -217,31 +218,8 @@ augroup END
 " }}}
 
 " Helper functions {{{
-function! SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunction
+command! Source source $MYVIMRC
 
-function! SynGroup()
-  let l:s = synID(line('.'), col('.'), 1)
-  echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
-endfunction
-
-function! YankUnityTestGroupName()
-  let l:line = search("TEST_GROUP", "bn")
-  let l:line_txt = getline(l:line)
-  let l:test_name = substitute(l:line_txt, "^.*(\\(.*\\))$", "\\1", "")
-  return l:test_name
-endfunction
-
-function! MyTerm()
-  enew
-  call termopen('/usr/bin/fish', {'name':'this_should_be_my_name'})
-endfunction
-
-nnoremap <space>h :<c-u>call SynGroup()<cr>
 " }}}
 
 " Rust {{{
