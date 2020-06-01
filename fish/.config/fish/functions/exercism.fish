@@ -1,16 +1,17 @@
 function exercism
     switch $argv[1]
         case "download"
-            set -l directory (command exercism $argv)
-            set -l exercism_ws (exercism workspace)"/users"
+            set -l directory (command exercism $argv ^/dev/null)
             cd $directory
+
+            # this will only match when downloading students' submissions
+            set -l exercism_ws (exercism workspace)"/users"
             switch $directory
             case "$exercism_ws/*/python/*"
                 pytest
             case "$exercism_ws/*/c/*"
                 make
             case '*'
-                echo "New language! Exciting."
             end
         case '*'
             command exercism $argv

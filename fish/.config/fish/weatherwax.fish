@@ -10,6 +10,13 @@ set -x PATH ~/.local/bin $PATH
 set -x PATH ~/.local/bin/stowed $PATH
 set -x PATH ~/dev/go/bin $PATH
 set -x PATH ~/media/packages/julia-1.4.1/bin/ $PATH
+set -x PATH ~/.luarocks/bin/ $PATH
+
+set -x FZF_DEFAULT_COMMAND "rg --files"
 
 alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"
+alias q kobold
 eval (ssh-agent -c) >/dev/null; and ssh-add-all
+
+source "$fish_path/conda.fish"
+conda activate py3.8

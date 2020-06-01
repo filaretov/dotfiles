@@ -14,6 +14,7 @@ alias mnt "udisksctl mount -b"
 alias umnt "udisksctl unmount -b"
 alias c "conda"
 alias ca "conda activate"
+alias cc "conda create"
 alias jl "jupyter lab"
 alias ls "exa"
 alias ll "exa -l --git --group-directories-first"
@@ -35,8 +36,6 @@ function fish_title
     true
 end
 
-### Conda
-source "$fish_path/conda.fish"
 if type -f starship >/dev/null ^/dev/null
     starship init fish | source
     function __conda_add_prompt; end
