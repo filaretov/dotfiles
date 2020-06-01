@@ -8,7 +8,17 @@ c.tabs.show = 'never'
 # c.tabs.position = 'bottom'
 # c.tabs.width = '5%'
 
+# }}}
+
+# Completion {{{
+
 c.completion.shrink = True
+
+# }}}
+
+# Statusbar {{{
+
+c.statusbar.hide = True
 
 # }}}
 
