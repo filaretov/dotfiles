@@ -25,6 +25,7 @@ Plug 'cespare/vim-toml'
 Plug 'sgur/vim-editorconfig'
 Plug 'shougo/neosnippet.vim'
 Plug 'tommcdo/vim-exchange'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
@@ -128,32 +129,32 @@ nnoremap H ^
 nnoremap L $
 " Saving
 nnoremap <leader>w :w<cr>
-nnoremap <C-s> :w<cr>
+nnoremap <C-s> :<C-u>w<cr>
 
 " Last buffer
 nnoremap <leader><tab> :b#<cr>
 
 " Quickly opening files {{{
-" vimrc
-nnoremap <leader>fe :edit $MYVIMRC<cr>
-nnoremap <leader>fs :NeoSnippetEdit -split<cr>
-nnoremap <leader>fn :edit ~/cloud/journal/notes.md<cr>
-nnoremap <leader>fu :edit ~/cloud/journal/uni.md<cr>
-nnoremap <leader>fw :edit ~/cloud/journal/wiki.md<cr>
+nnoremap <C-p> :<C-u>FZF<cr>
+nnoremap <leader>fe :<C-u>edit $MYVIMRC<cr>
+nnoremap <leader>fs :<C-u>NeoSnippetEdit -split<cr>
+nnoremap <leader>fn :<C-u>edit ~/cloud/journal/notes.md<cr>
+nnoremap <leader>fu :<C-u>edit ~/cloud/journal/uni.md<cr>
+nnoremap <leader>fw :<C-u>edit ~/cloud/journal/wiki.md<cr>
 " }}}
 
-" OS clipboard
+" OS clipboard {{{
 nnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>y "+y
 vnoremap <leader>p "+p
 nnoremap <leader>P o<c-r>+<ESC>==
-" Snippets
+" }}}
+
 " Don't mess up reg when using x
 nnoremap x "_x
 " Turn off highlighting
 nnoremap <silent> <c-l> :noh<cr>
-
 " Commenting
 nnoremap <M-;> :<C-u>Commentary<cr>
 
@@ -163,7 +164,6 @@ vnoremap . :norm.<CR>
 " Don't replace "" when pasting in visual
 vnoremap p "_c<Esc>p
 
-vnoremap <M-;> :Commentary<cr>
 
 " }}}
 
@@ -177,6 +177,7 @@ smap <C-j> <Plug>(neosnippet_expand_or_jump)
 " }}}
 
 " Terminal mode mappings {{{
+nnoremap <leader>t :<C-u>te<cr>
 tnoremap <ESC> <C-\><C-n>
 " }}}
 " }}}
