@@ -51,6 +51,9 @@ style = "cyan"
 [character]
 symbol = "λ"
 
+[python]
+symbol = ""
+
 [conda]
 symbol = ""
 style = "cyan"
