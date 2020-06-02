@@ -2,11 +2,17 @@
 
 # config.load_autoconfig()
 
+# Binds {{{
+
+config.bind("t", "config-cycle tabs.show never always")
+
+# }}}
+
 # Tabs {{{
 
-c.tabs.show = 'never'
-# c.tabs.position = 'bottom'
-# c.tabs.width = '5%'
+c.tabs.show = "never"
+c.tabs.position = "left"
+c.tabs.width = "10%"
 
 # }}}
 
@@ -18,7 +24,7 @@ c.completion.shrink = True
 
 # Statusbar {{{
 
-c.statusbar.hide = True
+c.statusbar.hide = False
 
 # }}}
 
@@ -27,32 +33,32 @@ c.statusbar.hide = True
 ## Nord {{{
 nord = {
     # Polar Night
-    "dark0": "#2E3440", # darkest
+    "dark0": "#2E3440",  # darkest
     "dark1": "#3B4252",
     "dark2": "#434C5E",
-    "dark3": "#4C566A", # lightest
+    "dark3": "#4C566A",  # lightest
     # Snow Storm
-    "light0": "#D8DEE9", # darkest
+    "light0": "#D8DEE9",  # darkest
     "light1": "#E5E9F0",
-    "light2": "#ECEFF4", # lightest
+    "light2": "#ECEFF4",  # lightest
     # Frost
-    "lime": "#8FBCBB", # greenish
-    "cyan": "#88C0D0", # cyan
-    "lblue": "#81A1C1", # light blue
-    "blue": "#5E81AC", # blue
+    "lime": "#8FBCBB",  # greenish
+    "cyan": "#88C0D0",  # cyan
+    "lblue": "#81A1C1",  # light blue
+    "blue": "#5E81AC",  # blue
     # Aurora
-    "red": "#BF616A", # red
-    "orange": "#D08770", # orange
-    "yellow": "#EBCB8B", # yellow
-    "green": "#A3BE8C", # green
-    "magenta": "#B48EAD", # magenta
+    "red": "#BF616A",  # red
+    "orange": "#D08770",  # orange
+    "yellow": "#EBCB8B",  # yellow
+    "green": "#A3BE8C",  # green
+    "magenta": "#B48EAD",  # magenta
 }
 ## }}}
 
 ## Defs {{{
 c.colors.completion.category.bg = nord["dark0"]
 c.colors.completion.item.selected.bg = nord["dark3"]
-c.colors.completion.item.selected.fg = nord["light0"]
+c.colors.completion.item.selected.fg = nord["light2"]
 c.colors.completion.item.selected.border.bottom = nord["dark3"]
 c.colors.completion.item.selected.border.top = nord["dark3"]
 c.colors.completion.item.selected.match.fg = nord["blue"]
@@ -64,14 +70,14 @@ c.colors.completion.odd.bg = nord["dark0"]
 c.colors.statusbar.insert.bg = nord["green"]
 c.colors.statusbar.insert.fg = nord["dark0"]
 c.colors.statusbar.normal.bg = nord["dark0"]
-c.colors.statusbar.normal.fg = nord["light0"]
+c.colors.statusbar.normal.fg = nord["light2"]
 c.colors.tabs.bar.bg = nord["dark0"]
 c.colors.tabs.even.bg = nord["dark0"]
 c.colors.tabs.odd.bg = nord["dark0"]
-c.colors.tabs.even.fg = nord["light0"]
-c.colors.tabs.odd.fg = nord["light0"]
-c.colors.tabs.selected.even.bg = nord["light0"]
-c.colors.tabs.selected.odd.bg = nord["light0"]
+c.colors.tabs.even.fg = nord["light2"]
+c.colors.tabs.odd.fg = nord["light2"]
+c.colors.tabs.selected.even.bg = nord["light2"]
+c.colors.tabs.selected.odd.bg = nord["light2"]
 c.colors.tabs.selected.even.fg = nord["dark0"]
 c.colors.tabs.selected.odd.fg = nord["dark0"]
 
@@ -81,6 +87,9 @@ c.colors.statusbar.url.success.https.fg = nord["green"]
 c.colors.statusbar.url.error.fg = nord["red"]
 c.colors.statusbar.url.hover.fg = nord["cyan"]
 c.colors.statusbar.url.warn.fg = nord["red"]
+
+c.colors.statusbar.command.bg = nord["dark0"]
+c.colors.statusbar.command.fg = nord["light2"]
 
 ## }}}
 
@@ -119,8 +128,6 @@ c.colors.statusbar.url.warn.fg = nord["red"]
 # c.colors.statusbar.caret.fg = nord["base3"]
 # c.colors.statusbar.caret.selection.bg = nord["violet"]
 # c.colors.statusbar.caret.selection.fg = nord["base3"]
-# c.colors.statusbar.command.bg = nord["base03"]
-# c.colors.statusbar.command.fg = nord["base3"]
 # c.colors.statusbar.command.private.bg = nord["base01"]
 # c.colors.statusbar.command.private.fg = nord["base3"]
 # c.colors.statusbar.passthrough.bg = nord["magenta"]
