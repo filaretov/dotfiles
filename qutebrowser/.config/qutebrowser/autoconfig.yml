@@ -10,5 +10,7 @@ settings:
     global:
       normal:
         t: set tabs.show always
+  statusbar.hide:
+    global: false
   tabs.show:
     global: never

@@ -154,9 +154,11 @@ nnoremap <leader>P o<c-r>+<ESC>==
 " Don't mess up reg when using x
 nnoremap x "_x
 " Turn off highlighting
-nnoremap <silent> <c-l> :noh<cr>
+nnoremap <silent> <c-n> :nohl<cr>
 " Commenting
-nnoremap <M-;> :<C-u>Commentary<cr>
+nnoremap <silent> <M-;> :<C-u>Commentary<cr>
+
+nnoremap <C-l> zz
 
 " Visual {{{
 " Repeat last command on all selected lines

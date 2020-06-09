@@ -4,7 +4,8 @@
 
 # Binds {{{
 
-config.bind("t", "config-cycle tabs.show never always")
+config.bind(",t", "config-cycle tabs.show never always")
+config.bind(",s", "config-cycle statusbar.hide false true")
 
 # }}}
 
