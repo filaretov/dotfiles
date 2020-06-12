@@ -46,7 +46,7 @@ prompt_order = [
 
 [directory]
 prefix = ""
-style = "cyan"
+style = "green"
 
 [character]
 symbol = "λ"
@@ -56,13 +56,15 @@ symbol = ""
 
 [conda]
 symbol = ""
-style = "cyan"
+style = "blue"
 
 [line_break]
 disabled = true
 
 [git_branch]
 symbol = ""
+style = "blue"
 
 [jobs]
 symbol = "+"
+
