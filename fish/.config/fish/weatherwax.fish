@@ -12,6 +12,7 @@ set -x PATH ~/dev/go/bin $PATH
 set -x PATH ~/media/packages/julia-1.4.1/bin/ $PATH
 set -x PATH ~/.luarocks/bin/ $PATH
 set -x PATH ~/.deno/bin/ $PATH
+set -x PATH ~/.racket/bin/ $PATH
 
 set -x FZF_DEFAULT_COMMAND "rg --files"
 
