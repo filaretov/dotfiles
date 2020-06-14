@@ -8,6 +8,7 @@ function exercism
             set -l exercism_ws (exercism workspace)"/users"
             switch $directory
             case "$exercism_ws/*/python/*"
+                conda activate py3.8
                 pytest
             case "$exercism_ws/*/c/*"
                 make
