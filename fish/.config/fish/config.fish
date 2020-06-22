@@ -18,6 +18,9 @@ alias lla "exa -la --git"
 alias tree "exa --tree"
 alias n "nvr -s"
 alias clip "xclip -sel clip"
+alias q quest
+alias por "poetry run"
+alias pos "poetry shell"
 
 # Find local fish file
 set -l lc_file "$fish_path/"(hostname)".fish"
@@ -45,3 +48,4 @@ if test -e "$fish_path/z.fish"
     source "$fish_path/z.fish"
 end
 
+status --is-interactive; and source (pyenv init -|psub)

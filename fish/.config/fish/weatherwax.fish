@@ -13,11 +13,11 @@ set -x PATH ~/media/packages/julia-1.4.1/bin/ $PATH
 set -x PATH ~/.luarocks/bin/ $PATH
 set -x PATH ~/.deno/bin/ $PATH
 set -x PATH ~/.racket/bin/ $PATH
+set -x PATH ~/.pyenv/bin/ $PATH
 
 set -x FZF_DEFAULT_COMMAND "rg --files"
 
 alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"
-alias q kobold
 eval (ssh-agent -c) >/dev/null; and ssh-add-all
 
 source "$fish_path/conda.fish"
