@@ -36,6 +36,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 
 " Themes
+Plug 'cocopon/inspecthi.vim'
 Plug 'arcticicestudio/nord-vim'
 Plug 'sjl/badwolf'
 Plug 'dracula/vim', {'as': 'dracula.vim'}
@@ -71,7 +72,6 @@ set shell=/usr/bin/fish
 set nobackup
 set nowritebackup
 set shortmess+=c
-set signcolumn=yes
 set fillchars=fold:\ 
 set undofile
 set swapfile
