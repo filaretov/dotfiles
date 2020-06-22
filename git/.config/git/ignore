@@ -35,4 +35,5 @@ GRTAGS
 GTAGS
 .#*
 
+*.egg-info/
 .ipynb_checkpoints/
