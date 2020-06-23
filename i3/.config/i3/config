@@ -101,16 +101,16 @@ bindsym XF86AudioMicMute      exec --no-startup-id pactl set-source-mute 1 toggl
 
 # * Workspaces
 # ** Workspace Variables
-set $ws1 "1: term "
-set $ws2 "2: edit "
-set $ws3 "3: file "
+set $ws1 "1: 1 "
+set $ws2 "2: 2 "
+set $ws3 "3: 3 "
 set $ws4 "4: 4 "
 set $ws5 "5: 5 "
 set $ws6 "6: 6 "
-set $ws7 "7: plot "
-set $ws8 "8: docs "
-set $ws9 "9: wild "
-set $ws0 "10: web "
+set $ws7 "7: 7 "
+set $ws8 "8: 8 "
+set $ws9 "9: 9 "
+set $ws0 "10: 0 "
 
 # ** Assign programs to ws
 assign [class="Emacs"]          $ws2
@@ -233,7 +233,7 @@ bar {
 	mode dock
 	font pango: Iosevka Medium 9
 	tray_output primary
-	strip_workspace_numbers no
+	strip_workspace_numbers yes
 	separator_symbol "  "
 	colors {
 		background $nord0
