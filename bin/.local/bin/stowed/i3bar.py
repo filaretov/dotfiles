@@ -4,12 +4,10 @@
 import sys
 import json
 import time
-import os
 import subprocess
+from pathlib import Path
 from glob import glob
 from time import localtime, strftime
-
-HOME = os.path.expanduser("~")
 
 
 def i3_json(name, text, **args):
@@ -17,9 +15,14 @@ def i3_json(name, text, **args):
     return i3_block
 
 
+def ssid():
+    rv = subprocess.check_output(["iwgetid", "-r"]).decode().strip()
+    return i3_json("ssid", f"wifi: {rv}")
+
+
 def current_task():
     try:
-        with open(HOME + "/.current_task") as f:
+        with open(Path.home().joinpath(".current_task")) as f:
             task_name = f"{f.read().strip()}"
     except:
         task_name = ""
@@ -43,7 +46,7 @@ def repo_is_dirty(directory):
 
 def vsc_check():
     # No unpushed changes if output is empty
-    git_repos = glob(HOME + "/dev/*/")
+    git_repos = Path.home().joinpath("dev").iterdir()
     dirty = any([repo_is_dirty(dir) for dir in git_repos])
     text = "X " if dirty else "OK"
     symbol = "vsc:"
@@ -128,7 +131,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [current_task, brightness, xkb_layout, battery, clock]
+    modules = [current_task, ssid, brightness, xkb_layout, battery, clock]
     while True:
         line = [attempt(mod) for mod in modules]
         print_line(prefix + json.dumps(line))

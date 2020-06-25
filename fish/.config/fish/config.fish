@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 set fish_path "$HOME/.config/fish"
-set fish_greeting "Don't panic!"
+set fish_greeting ""
 
 alias install "sudo apt install"
 alias search "sudo apt search"
