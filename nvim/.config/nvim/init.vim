@@ -176,6 +176,8 @@ vnoremap p "_c<Esc>p
 " Snippets
 imap <C-j> <Plug>(neosnippet_expand_or_jump)
 smap <C-j> <Plug>(neosnippet_expand_or_jump)
+
+inoremap <C-k>d <C-R>=strftime("%Y-%m-%d")<cr>
 " }}}
 
 " Terminal mode mappings {{{
@@ -222,6 +224,8 @@ augroup END
 
 " Helper functions {{{
 command! Source source $MYVIMRC
+
+command! Time edit ~/cloud/t.timedot
 
 " }}}
 

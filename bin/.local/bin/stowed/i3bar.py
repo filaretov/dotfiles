@@ -94,11 +94,13 @@ def clock():
 
 def brightness():
     try:
-        value = float(subprocess.check_output(["xbacklight"]).decode())
+        value = float(subprocess.check_output(["brightnessctl", "get"]).decode())
+        max = float(subprocess.check_output(["brightnessctl", "max"]).decode())
     except subprocess.CalledProcessError:
         value = -1.0
+    value = value / max
     symbol = "scr"
-    text = f"{symbol}  {value:3.0f}"
+    text = f"{symbol}  {value:.0%}"
     return i3_json("brightness", text)
 
 

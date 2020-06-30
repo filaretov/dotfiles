@@ -21,6 +21,7 @@ alias clip "xclip -sel clip"
 alias q quest
 alias por "poetry run"
 alias pos "poetry shell"
+alias dk "diskonaut"
 
 # Find local fish file
 set -l lc_file "$fish_path/"(hostname)".fish"
