@@ -4,6 +4,9 @@
 	name = Hristo Filaretov
 	email = h.filaretov@campus.tu-berlin.de
 
+[init]
+  templateDir = ~/.git-template/
+
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	st = status --short
