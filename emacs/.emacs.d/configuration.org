@@ -1,141 +1,212 @@
+# -*- eval: (olivetti-mode) -*-
+#+title: Emacs Configuration
+#+author: Hristo Filaretov
+
 * Preamble
-  Most of this is based on Harry Schwartz's [[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org][configuration]].
-  
-  I assume that =use-package= and =general= are always available and sprinkle their incantations
-  generously throughout the configuration.
+Most of this is based on Harry Schwartz's [[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org][configuration]] and is also inspired by many his talks and blog posts.
+
+I assume that =use-package= and =general= are always available and sprinkle their incantations
+generously throughout the configuration.
 
 * Packaging
-  I use =use-package= for packaging my used packages.
+I use =use-package= for packaging my used packages.
 
 #+begin_src emacs-lisp
-(use-package use-package
-  :config
-  (require 'use-package-ensure)
-  (setq use-package-always-ensure t)
-  (global-set-key [remap dabbrev-expand] 'hippie-expand))
+  (use-package use-package
+    :config
+    (require 'use-package-ensure)
+    (setq use-package-always-ensure t)
+    (global-set-key [remap dabbrev-expand] 'hippie-expand))
 #+end_src
 
-* Keybindings.
-  I use =general= for my keybindings. It's generally quite good. The keybindings themselves will be
-  sprinkled throughout this file.
+* Keybindings
+I use =general= for my keybindings. It's generally quite good. The keybindings themselves will be
+sprinkled throughout this file.
 
 #+begin_src emacs-lisp
-(use-package general
-  :config
-  (general-def
-    "M-i" 'imenu))
+  (use-package general
+    :config
+    (general-def 'normal
+      "M-i" 'imenu
+      "C-s" 'save-buffer))
+#+end_src
+
+* Common paths
+Building common paths.
+
+#+begin_src emacs-lisp
+  (setq my/journal-path "~/cloud/journal/")
+  (defun emacs.d (filename)
+    "Return the file path of FILENAME relative to the Emacs directory."
+    (format "%s%s" user-emacs-directory filename))
+
+  (defun journal-path (filename)
+    "Return the file path of FILENAME relative to the Journal directory."
+    (format "%s%s" my/journal-path filename))
+#+end_src
+
+* Macros
+I only have a single macro defined. And it probably exists in the standard library, or a commonly
+used package. And yet here we are.
+
+#+begin_src emacs-lisp
+  (defmacro ~> (init &rest lst)
+    "Pipe INIT through LST.
+
+  Evaluate transformation pipeline LST. Either append argument at
+  the end or replace all :arg occurences (starting with INIT).
+
+  Example:
+  (pipe (number-sequence 1 10)
+	(-filter 'evenp)
+	(mapcar '1+))
+  => (3 5 7 9 11)
+
+  (pipe (number-sequence 1 10)
+      (-filter 'evenp)
+      (mapcar '1+)
+      (-filter (lambda (x) (= 0 (mod x 3))))
+      (mapcar '1+)
+      (-filter (lambda (x) (= 0 (mod x 5)))))
+  => (10)
+
+  (pipe 1
+	(1+)
+	(1+)
+	((lambda (x y) (+ y x)) :arg 100))
+  => 103"
+    (reduce (lambda (acc el)
+	      (if (member :arg el)
+		  (-replace :arg acc el)
+		(append el `(,acc))))
+	    lst
+	    :initial-value init))
+#+end_src
+
+* Add =resources= to =load-path=
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/resources/")
 #+end_src
 
 * Personal information
-  Just letting Emacs know who I am.
-#+begin_src emacs-lisp
-(setq user-full-name "Hristo Filaretov"
-      user-mail-address "h.filaretov@campus.tu-berlin.de")
-#+end_src
-* Theme
-  I am partial to Nord.
+Just letting Emacs know who I am.
 
 #+begin_src emacs-lisp
-(use-package nord-theme
-  :config
-  (load-theme 'nord t))
+  (setq user-full-name "Hristo Filaretov"
+	user-mail-address "h.filaretov@campus.tu-berlin.de")
 #+end_src
 
 * Fonts
-  Depending on the operating system, there are a few options.
+Depending on the operating system, there are a few options.
+
 #+begin_src emacs-lisp
-(cond ((eq system-type 'windows-nt)
-       (set-face-attribute 'default nil
-			   :family "Consolas"
-			   :height 110))
-      ((eq system-type 'darwin)
-       (set-face-attribute 'default nil
-			   :family "Source Code Pro"
-			   :height 120
-			   :weight 'semi-bold))
-      (t ;; t for true operating system
-       (set-face-attribute 'default nil
-			   :family "Iosevka Term"
-			   :height 100)))
+  (cond ((eq system-type 'windows-nt)
+	 (set-face-attribute 'default nil
+			     :family "Consolas"
+			     :height 110))
+	((eq system-type 'darwin)
+	 (set-face-attribute 'default nil
+			     :family "Source Code Pro"
+			     :height 120
+			     :weight 'semi-bold))
+	(t ;; t for true operating system
+	 (progn
+	   (set-face-attribute 'default nil
+			       :family "Iosevka Term"
+			       :height 100)
+	   (set-face-attribute 'fixed-pitch nil
+			       :family "Iosevka Term"
+			       :height 100)
+	   (set-face-attribute 'variable-pitch nil
+			       :family "Source Serif Pro"
+			       :height 110))))
 #+end_src
-  
+
 * Face modifications
-  Some things aren't meant to be. Like variable sized fonts in my org files.
+Some things aren't meant to be. Like variable sized fonts in my org files.
+
 #+begin_src emacs-lisp
-(defun my/org-mode-hook ()
-  "Disable header variable font size."
-  (progn
-    (dolist (face '(org-level-1
-		    org-level-2
-		    org-level-3
-		    org-level-4
-		    org-level-5
-		    org-document-title))
-      (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
-  (set-face-attribute 'org-block nil :foreground nil))
+  (defun my/org-mode-hook ()
+    "Disable header variable font size."
+    (progn
+      (dolist (face '(org-level-1
+		      org-level-2
+		      org-level-3
+		      org-level-4
+		      org-level-5
+		      org-document-title))
+	(set-face-attribute face nil :weight 'normal :height 1.0)))
+    (set-face-attribute 'org-block nil :foreground nil))
 
-(add-hook 'org-mode-hook 'my/org-mode-hook)
+  (add-hook 'org-mode-hook 'my/org-mode-hook)
 
-(defun my/outline-mode-hook ()
-  "Disable header variable font size."
-  (progn
-    (dolist (face '(outline-1
-		    outline-2
-		    outline-3
-		    outline-4
-		    outline-5
-		    outline-6
-		    outline-7
-		    outline-8))
-      (set-face-attribute face nil :weight 'semi-bold :height 1.0))))
+  (defun my/outline-mode-hook ()
+    "Disable header variable font size."
+    (progn
+      (dolist (face '(outline-1
+		      outline-2
+		      outline-3
+		      outline-4
+		      outline-5
+		      outline-6
+		      outline-7
+		      outline-8))
+	(set-face-attribute face nil :weight 'semi-bold :height 1.0))))
 
-(add-hook 'outshine-mode-hook 'my/outline-mode-hook)
-(add-hook 'outline-mode-hook 'my/outline-mode-hook)
 #+end_src
 
 * Modeline
+
 #+begin_src emacs-lisp
-(use-package minions
-  :config
-  (setq minions-mode-line-lighter ""
-	minions-mode-line-delimiters '("" . ""))
-  (minions-mode 1)
-  (column-number-mode 1))
+  (use-package minions
+    :config
+    (setq minions-mode-line-lighter ""
+	  minions-mode-line-delimiters '("" . ""))
+    (minions-mode 1)
+    (column-number-mode 1))
 #+end_src
 
 * Calendar
-  I want to view a nice pretty calendar sometimes. Mostly based on org entries, sometimes ical.
-  =calfw= seems to do exactly that!
+I want to view a nice pretty calendar sometimes. Mostly based on org entries, sometimes ical.
+=calfw= seems to do exactly that!
 
 #+begin_src emacs-lisp
-(use-package calfw
-  :config
-  (use-package calfw-org))
+  (use-package calfw
+    :config
+    (use-package calfw-org))
 #+end_src
 
 * Evil
-  Vimmy keys and feel, for us former vimfolk.
+Vimmy keys and feel, for us vimfolk.
+
 #+begin_src emacs-lisp
-(use-package evil
-  :init
-  (setq evil-want-integration t
-	evil-want-keybinding nil
-	evil-want-abbrev-expand-on-insert-exit nil)
-  :config
-  (evil-mode 1)
-  (setq evil-emacs-state-cursos 'bar
-	evil-search-module 'evil-search
-	evil-ex-search-case 'smart)
-  (general-def 'normal
-    "L" 'evil-end-of-line
-    "H" 'evil-first-non-blank-of-visual-line
-    "C-s" 'swiper
-    "C-u" 'evil-scroll-up)
-  (general-def 'insert
-    "C-e" 'end-of-line
-    "C-a" 'beginning-of-line
-    "C-k" 'kill-line
-    "C-y" 'yank)
+  (use-package evil
+    :init
+    (setq evil-want-integration t
+	  evil-want-keybinding nil
+	  evil-want-abbrev-expand-on-insert-exit nil)
+    :config
+    (evil-mode 1)
+    (setq evil-emacs-state-cursos 'bar
+	  evil-search-module 'evil-search
+	  evil-ex-search-case 'smart)
+    (general-def 'normal
+      "j" 'evil-next-visual-line
+      "k" 'evil-previous-visual-line
+      "L" 'evil-end-of-line
+      "H" 'evil-first-non-blank-of-visual-line
+      "?" 'swiper
+      "C-u" 'evil-scroll-up)
+    (general-def 'insert
+      "C-e" 'end-of-line
+      "C-a" 'beginning-of-line
+      "C-k" 'kill-line
+      "C-y" 'yank))
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init))
   (use-package evil-magit)
   (use-package evil-numbers)
   (use-package evil-surround
@@ -143,461 +214,605 @@
     (global-evil-surround-mode 1))
   (use-package evil-exchange
     :config
-    (evil-exchange-cx-install)))
+    (evil-exchange-cx-install))
+  (use-package evil-org
+    :after org
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+	      (lambda () (evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
 #+end_src
+
 * Wrangle some defaults
 ** Pot pourri
 #+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(show-paren-mode 1)
-(scroll-bar-mode 0)
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(blink-cursor-mode 0)
-(fringe-mode 0)
-(setq vc-follow-symlinks t
-      sentence-end-double-space nil
-      require-final-newline t
-      confirm-kill-emacs 'y-or-n-p
-      inhibit-startup-screen t
-      inhibit-startup-message t
-      initial-scratch-message nil
-      initial-major-mode 'org-mode
-      ring-bell-function 'ignore
-      mode-line-default-help-echo nil
-      show-paren-delay 0.0
-      mouse-yank-at-point t
-      default-input-method "TeX")
-(fset 'yes-or-no-p 'y-or-n-p)
-(add-hook 'after-save-hook
-	  'executable-make-buffer-file-executable-if-script-p)
+  (global-auto-revert-mode 1)
+  (show-paren-mode 1)
+  (scroll-bar-mode 0)
+  (tool-bar-mode 0)
+  (menu-bar-mode 0)
+  (blink-cursor-mode 0)
+  (fringe-mode 0)
+  (setq vc-follow-symlinks t
+	sentence-end-double-space nil
+	require-final-newline t
+	confirm-kill-emacs 'y-or-n-p
+	inhibit-startup-screen t
+	inhibit-startup-message t
+	initial-scratch-message nil
+	initial-major-mode 'org-mode
+	ring-bell-function 'ignore
+	mode-line-default-help-echo nil
+	show-paren-delay 0.0
+	mouse-yank-at-point t
+	default-input-method "TeX")
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (add-hook 'after-save-hook
+	    'executable-make-buffer-file-executable-if-script-p)
+
+  (setq-default fill-column 100
+		cursor-type 'bar)
 #+end_src
 
 ** Backups
 #+begin_src emacs-lisp
-(setq backup-inhibited t
-      auto-save-default nil
-      make-backup-files nil)
+  (setq backup-inhibited t
+	auto-save-default nil
+	make-backup-files nil)
 #+end_src
 
 ** Scrolling
 #+begin_src emacs-lisp
-(setq scroll-margin 0
-      scroll-step 1
-      scroll-conservatively 10000
-      scroll-preserve-screen-position 1)
+  (setq scroll-margin 0
+	scroll-step 1
+	scroll-conservatively 10000
+	scroll-preserve-screen-position 1)
 #+end_src
 
+* Interactive goodies
+Great guy, that Harry Schwartz. Most of these functions are directly copied from his dotfiles.
+
+** Open file as =sudo=
 
 #+begin_src emacs-lisp
-;; ** Backups
-;; * Typing text
-(setq-default fill-column 100
-	      cursor-type 'bar)
+  (defun hgf/find-file-as-sudo ()
+    (interactive)
+    (let ((file-name (buffer-file-name)))
+      (when file-name
+	(find-alternate-file (concat "/sudo::" file-name)))))
+#+end_src
 
-;; * Code Completion
-(use-package yasnippet)
+** Generate random scratch buffer
 
-;; * Major modes
-;; ** Markdown
-(use-package markdown-mode
-  :mode (("README\\.md\\'" . markdown-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode)))
+#+begin_src emacs-lisp
+  (defun hgf/generate-scratch-buffer ()
+    "Create and switch to a temporary scratch buffer with a random
+	 name."
+    (interactive)
+    (switch-to-buffer (make-temp-name "scratch-")))
+#+end_src
 
-;; ** Org
+* Meta modes
+** Prog mode
+I like =hl-line-mode= but only when programming. It's quite annoying when writing prose.
 
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook 'hl-line-mode)
+#+end_src
 
-;; ** Ledger
-(use-package ledger-mode)
+** Text mode
+I like =variable= pitch in my text files.
 
-;; ** TeX
+#+begin_src emacs-lisp
+  (add-hook 'text-mode-hook 'variable-pitch-mode)
+#+end_src
+
+* Major modes
+** Markdown
+I use markdown for all kinds of stuff, mostly readmes, but also a variety of documents in
+conjunction with =pandoc=.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode (("README\\.md\\'" . markdown-mode)
+	   ("\\.md\\'" . markdown-mode)
+	   ("\\.markdown\\'" . markdown-mode)))
+#+end_src
+
+** Org
+Org is amazing and I use it all the time. And once again, a large majority of this section is
+inspired by Harry Schwartz.
+
+#+begin_src emacs-lisp
+  (use-package org)
+#+end_src
+
+*** Source blocks
+#+begin_src emacs-lisp
+  (add-to-list 'org-structure-template-alist
+	       '("el" . "src emacs-lisp"))
+  (setq org-src-fontify-natively t
+	org-src-preserve-indentation nil
+	org-src-tab-acts-natively t
+	org-src-window-setup 'current-window)
+#+end_src
+
+*** Cosmetics
+I prefer my org-files non-indented. I also like to see the leading stars (otherwise there's a weird
+gap when things aren't indented.
+
+#+begin_src emacs-lisp
+  (setq org-adapt-indentation nil
+	org-hide-leading-stars nil
+	org-cycle-separator-lines 0
+	org-hide-emphasis-markers t)
+#+end_src
+
+*** Editing
+I often start new headings in the middle of editing a paragraph and I've never wanted to carry
+over the text after the point.
+
+#+begin_src emacs-lisp
+  (setq org-M-RET-may-split-line nil
+	org-outline-path-complete-in-steps nil)
+#+end_src
+
+Quickly adding a link with the title from said link. Nifty.
+
+#+begin_src emacs-lisp
+  (use-package org-cliplink
+    :config
+    (general-def
+      "C-x C-l" 'org-cliplink))
+#+end_src
+
+*** Todos and agendas
+All about them tasks.
+
+#+begin_src emacs-lisp
+  (setq org-agenda-files
+	'(
+	  "~/cloud/journal/tasks.org"
+	  "~/cloud/journal/inbox.org"
+	  "~/cloud/journal/notes.org"
+	  ))
+  (setq org-archive-location "~/cloud/journal/archive.org::")
+  (setq org-capture-templates
+	'(("n" "Note" entry (file "~/cloud/journal/notes.org")
+	   "*  %?\n")
+	  ("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
+	   "* TODO %?\n")))
+  (general-def
+    "C-c c" 'org-capture
+    "C-c a" 'org-agenda
+    "C-c t" (lambda () (interactive) (org-capture nil "t")))
+#+end_src
+
+*** References and citations
+
+#+begin_src emacs-lisp
+  (setq reftex-default-bibliography '("~/cloud/library.bib"))
+  (setq bibtex-completion-bibliography
+	'("~/cloud/library.bib"))
+#+end_src
+
+*** Ox and Latex
+I use org to write many of my latex files, including longer documents.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+		 '("book"
+		   "\\documentclass{book}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
+		   ("\\chapter{%s}" . "\\chapter*{%s}")
+		   ("\\section{%s}" . "\\section*{%s}")
+		   ("\\subsection{%s}" . "\\subsection*{%s}")
+		   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+    (add-to-list 'org-latex-classes
+		 '("ieee"
+		   "\\documentclass{IEEEtran}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
+		   ("\\section{%s}" . "")
+		   ("\\subsection{%s}" . "")
+		   ("\\subsubsection{%s}" . "")))
+    (add-to-list 'org-latex-classes
+		 '("blank"
+		   ""
+		   ("\\section{%s}" . "")
+		   ("\\subsection{%s}" . "")
+		   ("\\subsubsection{%s}" . ""))))
+  (use-package ox-extra
+    :commands ox-extras-activate
+    :ensure org-plus-contrib
+    :config
+    (ox-extras-activate '(ignore-headlines)))
+#+end_src
+
+** Ledger
+Trackin' them finances.
+
+#+begin_src emacs-lisp
+  (use-package ledger-mode)
+#+end_src
+
+** TeX
+#+begin_src emacs-lisp
 (use-package tex
-  :ensure nil
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq TeX-master nil)
-  (setq TeX-PDF-mode t))
+:ensure nil
+:config
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-master nil)
+(setq TeX-PDF-mode t))
 
 (use-package auctex-latexmk
-  :config
-  (auctex-latexmk-setup)
-  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+:config
+(auctex-latexmk-setup)
+(setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
 (defun my/bibtex-hook ()
-  "My bibtex hook."
-  (progn
-    (setq comment-start "%")))
+"My bibtex hook."
+(progn
+(setq comment-start "%")))
 
 (add-hook 'bibtex-mode-hook 'my/bibtex-hook)
 
 (setq-default TeX-auto-save t
-	      TeX-parse-self t
-	      TeX-PDF-mode t
-	      TeX-auto-local "~/.emacs.d/auctex-auto")
+TeX-parse-self t
+TeX-PDF-mode t
+TeX-auto-local "~/.emacs.d/auctex-auto")
 (setq bibtex-dialect 'biblatex)
+#+end_src emacs-lisp
 
-;; ** Eshell
-(use-package eshell
-  :config
-  (setq eshell-cmpl-ignore-case t
-	eshell-cmpl-cycle-cutoff-length nil
-	eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|\\.svn\\|\\.git\\)/\\'"
-	eshell-banner-message "Don't panic!\n"))
+** Dired
 
-;; * Minor modes
-;; ** Which key
-(use-package which-key
-  :config
-  (which-key-mode))
+#+begin_src emacs-lisp
+  (general-def 'normal "-" 'dired)
+#+end_src
 
+** Vterm
+Vterm is the nicest terminal emulator for Emacs I've found so far. But it needs module support, which requires building emacs with =--with-modules=.
 
-;; ** Olivetti
-(use-package olivetti
-  :config
-  (setq-default olivetti-body-width 120))
+#+begin_src emacs-lisp
+  (use-package vterm
+    :config
+    (setq vterm-shell "/usr/bin/fish"
+	  vterm-kill-buffer-on-exit t
+	  vterm-copy-exclude-prompt t))
+#+end_src
 
-;; ** Ivy
-(use-package ivy
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t
-	ivy-initial-inputs-alist nil
-	count-format "(%d/%d) "))
+And some nice packages to go with that.
 
-(use-package counsel
-  :config
-  (counsel-mode 1)
-  (use-package flx)
-  (use-package smex))
+#+begin_src emacs-lisp
+  (use-package vterm-toggle
+    :config
+    (general-def "C-c t" 'vterm-toggle-cd))
+#+end_src
 
-(use-package ivy-rich
-  :config
-  (ivy-rich-mode 1))
+* Minor modes
+** Hydra
+I'm not really using Hydra properly, except for the window management stuff that I seldom need to
+use.
 
-;; ** Outshine
-(use-package outshine
-  :config
-  (setq outshine-startup-folded-p t)
-  (add-hook 'conf-mode-hook #'outshine-mode 1)
-  (add-hook 'prog-mode-hook #'outshine-mode 1)
-  (add-hook 'bibtex-mode-hook #'outshine-mode 1)
-  (add-hook 'LaTeX-mode-hook #'outshine-mode 1))
+#+begin_src emacs-lisp
+  (use-package hydra
+    :config
+    (defhydra hydra-shell (:exit t)
+      "Execute shell command."
+      ("m" (start-process "hydramake" nil "make") "make"))
+    (defhydra hydra-window ()
+      "Window management"
+      ("o" other-window "other")
+      ("h" windmove-left "left")
+      ("j" windmove-down "down")
+      ("k" windmove-up "up")
+      ("l" windmove-right "right")
+      ("s" split-window-below "sp-below")
+      ("v" split-window-right "sp-right")
+      ("d" delete-window "delete")
+      ("f" find-file "file")
+      ("b" ivy-switch-buffer "buffer")
+      ("m" kill-this-buffer "murder")
+      ("1" delete-other-windows "highlander")
+      ("." nil "stop"))
+    (defhydra hydra-files (:exit t)
+      "Frequent files"
+      ("e" (find-file (emacs.d "configuration.org")) "config")
+      ("n" (find-file (journal-path "notes.org")) "notes")
+      ("u" (find-file (journal-path "uni.org")) "uni")
+      ("w" (find-file (journal-path "wiki.org")) "wiki")
+      ("t" (find-file (journal-path "tasks.org")) "tasks")
+      ("f" (find-file (journal-path "fraunhofer.org")) "fraunhofer")
+      ("c" (find-file (journal-path "calendar.org")) "calendar")
+      ("s" (hgf/generate-scratch-buffer) "scratch"))
+    (defhydra hydra-package (:exit t)
+      "Package management"
+      ("r" (package-refresh-contents) "refresh")
+      ("i" (call-interactively #'package-install) "install")
+      ("u" (package-utils-upgrade-all) "upgrade")
+      ("d" (call-interactively #'package-delete) "delete"))
+    (general-def
+      "C-c s" 'hydra-shell/body
+      "C-c f" 'hydra-files/body
+      "C-c p" 'hydra-package/body
+      "C-c w" 'hydra-window/body))
+#+end_src
 
-;; ** Hydra
-(use-package hydra
-  :config
-  (defhydra hydra-shell (:exit t)
-    "Execute shell command."
-    ("m" (start-process "hydramake" nil "make") "make"))
-  (defhydra hydra-window ()
-    "Window management"
-    ("o" other-window "other")
-    ("h" windmove-left "left")
-    ("j" windmove-down "down")
-    ("k" windmove-up "up")
-    ("l" windmove-right "right")
-    ("s" split-window-below "sp-below")
-    ("v" split-window-right "sp-right")
-    ("d" delete-window "delete")
-    ("f" find-file "file")
-    ("b" ivy-switch-buffer "buffer")
-    ("m" kill-this-buffer "murder")
-    ("1" delete-other-windows "highlander")
-    ("." nil "stop"))
-  (defhydra hydra-files (:exit t)
-    "Frequent files"
-    ("e" (find-file (emacs.d "configuration.org")) "config")
-    ("i" (find-file (journal.d "inbox.org")) "inbox")
-    ("n" (find-file (journal.d "notes.org")) "notes")
-    ("u" (find-file (journal.d "uni.org")) "uni")
-    ("s" (find-file (journal.d "scratch.org")) "scratch")
-    ("w" (find-file (journal.d "wiki.org")) "wiki")
-    ("t" (find-file (journal.d "tasks.org")) "tasks")
-    ("f" (find-file (journal.d "fraunhofer.org")) "fraunhofer")
-    ("s" (find-file (journal.d "scratch.org")) "scratch"))
-  (defhydra hydra-package (:exit t)
-    "Package management"
-    ("r" (package-refresh-contents) "refresh")
-    ("i" (call-interactively #'package-install) "install")
-    ("u" (package-utils-upgrade-all) "upgrade")
-    ("d" (call-interactively #'package-delete) "delete"))
-  (general-def
-    "C-c s" 'hydra-shell/body
-    "C-c f" 'hydra-files/body
-    "C-c p" 'hydra-package/body
-    "C-c w" 'hydra-window/body))
+** Which key
+For exploring new keys and remembering the lesser used ones.
 
-;; ** Magit
-(use-package magit
-  :config
-  (general-def "C-c d" 'magit-list-repositories))
+#+begin_src emacs-lisp
+  (use-package which-key
+    :config
+    (which-key-mode))
+#+end_src
 
-;; *** Repolist
-(defun my/list-subdirs (dir)
-  "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
-  (let ((base dir)
-	(result))
-    (dolist (f (directory-files base) result)
-      (let ((name (concat base "/" f)))
-	(when (and (file-directory-p name)
-		   (not (equal f ".."))
-		   (not (equal f ".")))
-	  (add-to-list 'result name))))
-    result))
+** Olivetti
+Centering text when writing prose.
 
-(defun my/contains-git-repo-p (dir)
-  "Check if there's  a .git directory in DIR."
-  (let ((dirs (directory-files dir)))
-    (member ".git" dirs)))
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :config
+    (setq-default olivetti-body-width 120))
+#+end_src
 
-(defun my/filter-git-repos (dirs)
-  "Remove all directories without a .git subdirectory in DIRS."
-  (let ((result))
-    (dolist (dir dirs result)
-      (when (my/contains-git-repo-p dir)
-	(add-to-list 'result dir)))
-    result))
+** Ivy
 
-(defun my/make-magit-repolist (dirs)
-  "Make a list of the form (dir 0) for the magit-list-repositories function from DIRS."
-  (let ((result))
-    (dolist (dir dirs result)
-      (add-to-list 'result `(,dir 0)))
-    result))
+#+begin_src emacs-lisp
+  (use-package ivy
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t
+	  enable-recursive-minibuffers t
+	  ivy-initial-inputs-alist nil
+	  count-format "(%d/%d) "))
 
-(defun my/repolist-refresh ()
-  "Hi."
-  (setq magit-repository-directories
-	(~> "~/dev"
-	    (my/list-subdirs)
-	    (my/filter-git-repos)
-	    (my/make-magit-repolist))))
+  (use-package counsel
+    :config
+    (counsel-mode 1)
+    (use-package flx)
+    (use-package smex))
 
-(advice-add 'magit-list-repositories :before #'my/repolist-refresh)
-
-(setq magit-repolist-columns
-      '(("Name" 12 magit-repolist-column-ident nil)
-	("Branch" 10 magit-repolist-column-branch nil)
-	("Dirty" 6 magit-repolist-column-dirty nil)
-	("B<U" 3 magit-repolist-column-unpulled-from-upstream
-	 ((:right-align t)
-	  (:help-echo "Upstream changes not in branch")))
-	("B>U" 3 magit-repolist-column-unpushed-to-upstream
-	 ((:right-align t)
-	  (:help-echo "Local changes not in upstream")))
-	("Version" 30 magit-repolist-column-version nil)
-	("Path" 99 magit-repolist-column-path nil)))
-
-
-;; * Custom
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file 'noerror)
-;; * Utils
-;; * Helper functions
-;; ** Directories
-(setq my/journal-path "~/cloud/journal/")
-(defun emacs.d (filename)
-  "Return the file path of FILENAME relative to the Emacs directory."
-  (format "%s%s" user-emacs-directory filename))
-
-(defun journal.d (filename)
-  "Return the file path of FILENAME relative to the Journal directory."
-  (format "%s%s" my/journal-path filename))
-
-;; ** Switch to previous buffer
-(defun my/switch-to-previous-buffer ()
-  "Switch to previously open buffer.
-Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-;; ** Join lines
-(defun my/join-lines-region ()
-  "Join lines like J in Vim."
-  (let ((n (my/count-lines-region))
-	(flip-p (eq (region-end) (point))))
-    (progn
-      (when flip-p (exchange-point-and-mark))
-      (dotimes (_ (max 1 (1- n))) (join-line -1)))))
-
-(defun my/count-lines-region ()
-  "Count the lines in the region."
-  (interactive)
-  (let ((numlines (count-lines (region-beginning) (region-end)))
-	(beginning-of-line-p (= (line-beginning-position) (point))))
-    (if beginning-of-line-p
-	(1+ numlines)
-      numlines)))
-
-(defun my/join-line ()
-  "Join lines in the opposite direction."
-  (interactive)
-  (if (region-active-p)
-      (my/join-lines-region)
-    (join-line -1)))
-
-;; ** Delete file
-(defun visiting-file-p ()
-  "Check whether current buffer is visiting an existing file."
-  (let ((filename (buffer-file-name)))
-    (and filename (file-exists-p filename))))
-
-(defun my/delete-this-file ()
-  "Remove file connected to current buffer and kill buffer."
-  (interactive)
-  (let ((filename (buffer-file-name))
-	(buffer (current-buffer))
-	(name (buffer-name)))
-    (if (not (visiting-file-p))
-	(kill-buffer buffer)
-      (when (yes-or-no-p "Delete this file? ")
-	(delete-file filename)
-	(kill-buffer buffer)
-	(message "File %s successfully removed" filename)))))
-
-;; ** Rename file
-(defun my/rename-this-file ()
-  "Rename current buffer and associated file."
-  (interactive)
-  (let ((name (buffer-name))
-	(filename (buffer-file-name)))
-    (if (not (visiting-file-p))
-	(error "Buffer '%s' is not visiting a file!" name)
-      (let ((new-name (read-file-name "New name: " filename)))
-	(if (get-buffer new-name)
-	    (error "A buffer named '%s' already exists!" new-name)
-	  (rename-file filename new-name 1)
-	  (rename-buffer new-name)
-	  (set-visited-file-name new-name)
-	  (set-buffer-modified-p nil)
-	  (message "File '%s' successfully renamed to '%s'"
-		   name (file-name-nondirectory new-name)))))))
-
-;; ** Threading macro
-(defmacro ~> (init &rest lst)
-  "Pipe INIT through LST.
-
-Evaluate transformation pipeline LST. Either append argument at
-the end or replace all :arg occurences (starting with INIT).
-
-Example:
-(pipe (number-sequence 1 10)
-      (-filter 'evenp)
-      (mapcar '1+))
-=> (3 5 7 9 11)
-
-(pipe (number-sequence 1 10)
-    (-filter 'evenp)
-    (mapcar '1+)
-    (-filter (lambda (x) (= 0 (mod x 3))))
-    (mapcar '1+)
-    (-filter (lambda (x) (= 0 (mod x 5)))))
-=> (10)
-
-(pipe 1
-      (1+)
-      (1+)
-      ((lambda (x y) (+ y x)) :arg 100))
-=> 103"
-  (reduce (lambda (acc el)
-	    (if (member :arg el)
-		(-replace :arg acc el)
-	      (append el `(,acc))))
-	  lst
-	  :initial-value init))
-
-;;; init.el ends here
-;; ** Activate current task
-(defun my/activate-current-task ()
-  "Activate task under cursor."
-  (interactive)
-  (progn
-    (message "hi")
-    (let ((task (mapconcat 'identity (org-get-outline-path t) " -> ")))
-      (progn
-	(message task)
-	(write-region task nil "~/.current_task")))))
-
-(general-def "C-c h" 'my/activate-current-task)
+  (use-package ivy-rich
+    :config
+    (ivy-rich-mode 1))
 
 #+end_src
-* Org
-#+begin_src emacs-lisp
-  (use-package org
-    :config
-    (setq org-adapt-indentation t
-	  org-hide-leading-stars t
-	  org-src-fontify-natively t
-	  org-src-preserve-indentation nil
-	  org-src-tab-acts-natively t
-	  org-outline-path-complete-in-steps nil
-	  org-M-RET-may-split-line nil
-	  org-cycle-separator-lines 0
-	  org-latex-hyperref-template nil)
-    (setq org-agenda-files '(
-  "~/cloud/journal/tasks.org"
-  "~/cloud/journal/inbox.org"
-  "~/cloud/journal/notes.org"
-  "~/cloud/journal/wiki.org"
-  ))
-    (setq org-archive-location "~/cloud/journal/archive.org::")
-    (setq org-capture-templates
-	  '(("n" "Note" entry (file "~/cloud/journal/notes.org")
-	     "*  %?\n")
-	    ("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
-	     "* TODO %?\n")))
-    (setq org-todo-keywords
-          '((sequence "WAIT" "TODO" "|" "DONE")))
-    (setq org-todo-keyword-faces
-          '(("NEXT" . "magenta")))
-    (add-hook 'org-mode-hook 'auto-fill-mode)
-    (with-eval-after-load 'ox-latex
-      (add-to-list 'org-latex-classes
-		   '("book"
-		     "\\documentclass{book}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
-		     ("\\chapter{%s}" . "\\chapter*{%s}")
-		     ("\\section{%s}" . "\\section*{%s}")
-		     ("\\subsection{%s}" . "\\subsection*{%s}")
-		     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-      (add-to-list 'org-latex-classes
-		   '("ieee"
-		     "\\documentclass{IEEEtran}\n[NO-DEFAULT-PACKAGES]\n[EXTRA]\n"
-		     ("\\section{%s}" . "")
-		     ("\\subsection{%s}" . "")
-		     ("\\subsubsection{%s}" . "")))
-      (add-to-list 'org-latex-classes
-		   '("blank"
-		     ""
-		     ("\\section{%s}" . "")
-		     ("\\subsection{%s}" . "")
-		     ("\\subsubsection{%s}" . "")))
-      (add-to-list 'org-latex-classes
-		   '("coverletter"
-		     "\\documentclass[a4paper,11pt]{letter}\n[EXTRA]\n")))
-    (general-def
-      "C-c c" 'org-capture
-      "C-c a" 'org-agenda
-      "C-c t" (lambda () (interactive) (org-capture nil "t")))
-    (use-package htmlize)
-    (use-package ox-extra
-      :commands ox-extras-activate
-      :ensure org-plus-contrib
-      :config
-      (ox-extras-activate '(ignore-headlines))))
 
+*** =ivy-bibtex=
+
+#+begin_src emacs-lisp
+  (use-package ivy-bibtex
+    :config
+    (setq ivy-re-builders-alist
+	  '((ivy-bibtex . ivy--regex-ignore-order)
+	    (t . ivy--regex-plus)))
+    (setq ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
+    (setq bibtex-completion-cite-default-command "autocite"
+	  bibtex-completion-cite-prompt-for-optional-arguments nil
+	  bibtex-completion-pdf-field "file")
+    (setq bibtex-completion-pdf-open-function
+	  (lambda (fpath)
+	    (call-process "zathura" nil 0 nil fpath)))
+    (general-def "C-x [" 'ivy-bibtex))
+#+end_src
+
+** Outshine
+#+begin_src emacs-lisp
+  (use-package outshine
+    :config
+    (setq outshine-startup-folded-p t)
+    (add-hook 'conf-mode-hook #'outshine-mode 1)
+    (add-hook 'prog-mode-hook #'outshine-mode 1)
+    (add-hook 'bibtex-mode-hook #'outshine-mode 1)
+    (add-hook 'LaTeX-mode-hook #'outshine-mode 1))
+#+end_src
+
+** Magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :config
+    (general-def "C-c d" 'magit-list-repositories))
+#+end_src
+
+*** Repolist
+I like Magit's repolist feature, but I prefer to build the repolist dynamically.
+
+#+begin_src emacs-lisp
+  (defun my/list-subdirs (dir)
+    "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
+    (let ((base dir)
+	  (result))
+      (dolist (f (directory-files base) result)
+	(let ((name (concat base "/" f)))
+	  (when (and (file-directory-p name)
+		     (not (equal f ".."))
+		     (not (equal f ".")))
+	    (add-to-list 'result name))))
+      result))
+
+  (defun my/contains-git-repo-p (dir)
+    "Check if there's  a .git directory in DIR."
+    (let ((dirs (directory-files dir)))
+      (member ".git" dirs)))
+
+
+  (defun my/filter-git-repos (dirs)
+    "Remove all directories without a .git subdirectory in DIRS."
+    (let ((result))
+      (dolist (dir dirs result)
+	(when (my/contains-git-repo-p dir)
+	  (add-to-list 'result dir)))
+      result))
+
+  (defun my/make-magit-repolist (dirs)
+    "Make a list of the form (dir 0) for the magit-list-repositories function from DIRS."
+    (let ((result))
+      (dolist (dir dirs result)
+	(add-to-list 'result `(,dir 0)))
+      result))
+
+  (defun my/repolist-refresh ()
+    "Hi."
+    (setq magit-repository-directories
+	  (~> "~/dev"
+	      (my/list-subdirs)
+	      (my/filter-git-repos)
+	      (my/make-magit-repolist))))
+
+  (advice-add 'magit-list-repositories :before #'my/repolist-refresh)
+
+  (setq magit-repolist-columns
+	'(("Name" 12 magit-repolist-column-ident nil)
+	  ("Branch" 10 magit-repolist-column-branch nil)
+	  ("Dirty" 6 magit-repolist-column-dirty nil)
+	  ("B<U" 3 magit-repolist-column-unpulled-from-upstream
+	   ((:right-align t)
+	    (:help-echo "Upstream changes not in branch")))
+	  ("B>U" 3 magit-repolist-column-unpushed-to-upstream
+	   ((:right-align t)
+	    (:help-echo "Local changes not in upstream")))
+	  ("Version" 30 magit-repolist-column-version nil)
+	  ("Path" 99 magit-repolist-column-path nil)))
+#+end_src
+
+** TODO Yasnippet
+
+#+begin_src emacs-lisp
+  (use-package yasnippet)
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets")
+	yas-indent-line 'fixed)
+  (yas-global-mode 1)
+#+end_src
+
+
+* Custom file
+
+#+begin_src emacs-lisp
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file 'noerror)
+#+end_src
+
+* Theme
+I sometimes like to change things up. I mainly swap around between Solarized, Nord and a simple black on white theme.
+
+#+begin_src emacs-lisp
+  (defun transparency (value)
+    "Sets the transparency of the frame window. 0=transparent/100=opaque."
+    (interactive "nTransparency Value 0 - 100 opaque:")
+    (set-frame-parameter (selected-frame) 'alpha value))
+#+end_src
+
+** Nord
+Nice and blue.
+
+#+begin_src emacs-lisp
+  (use-package nord-theme)
+#+end_src
+
+** Solarized
+
+#+begin_src emacs-lisp
+  (use-package solarized-theme
+    :config
+    (setq solarized-use-variable-pitch t
+	  solarized-height-plus-1 1.0
+	  solarized-height-plus-2 1.0
+	  solarized-height-plus-3 1.0
+	  solarized-height-plus-4 1.0
+	  solarized-height-minus-1 1.0
+	  solarized-use-less-bold t
+	  solarized-high-contrast-mode-line t))
+#+end_src
+
+** Gruvbox
+
+#+begin_src emacs-lisp
+(use-package gruvbox-theme)
+#+end_src
+
+** Fix and go
+
+#+begin_src emacs-lisp
+  (progn
+    (load-theme 'nord t)
+    (set-face-attribute  'org-block-begin-line       nil  :underline nil :inherit  'fixed-pitch :background nil)
+    (set-face-attribute  'org-block-end-line         nil  :overline  nil :inherit  'fixed-pitch :background nil)
+    (set-face-attribute  'org-block                  nil  :inherit  'fixed-pitch :background nil)
+    (set-face-attribute  'org-document-info-keyword  nil  :inherit  'fixed-pitch)
+    (set-face-attribute  'org-meta-line              nil  :inherit  'fixed-pitch :italic nil)
+    (set-face-attribute  'org-verbatim               nil  :inherit  'fixed-pitch)
+    (set-face-attribute  'org-tag                    nil  :inherit  'fixed-pitch :weight 'normal)
+    (set-face-attribute  'org-done                   nil  :weight 'normal)
+    (set-face-attribute  'org-todo                   nil  :weight 'normal)
+    (set-face-attribute  'org-level-1                nil  :weight 'normal)
+    (set-face-attribute  'org-level-2                nil  :weight 'normal)
+    (set-face-attribute  'org-level-3                nil  :weight 'normal)
+    (set-face-attribute  'org-level-4                nil  :weight 'normal)
+    (set-face-attribute  'font-lock-comment-face     nil  :inherit  'fixed-pitch))
 #+end_src
 
 * Triage
+
 #+begin_src emacs-lisp
-(general-def
-"<f1>" 'vterm-toggle)
-(general-def 'vterm-mode-map
-"<f1>" 'vterm-toggle)
-(general-def
-"C-c t" 'vterm-toggle)
-(general-def 'vterm-mode-map
-"C-c t" 'vterm-toggle)
+  (defun my/switch-to-previous-buffer ()
+    "Switch to previously open buffer.
+  Repeated invocations toggle between the two most recently open buffers."
+    (interactive)
+    (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+  ;; ** Delete file
+  (defun visiting-file-p ()
+    "Check whether current buffer is visiting an existing file."
+    (let ((filename (buffer-file-name)))
+      (and filename (file-exists-p filename))))
+
+  (defun my/delete-this-file ()
+    "Remove file connected to current buffer and kill buffer."
+    (interactive)
+    (let ((filename (buffer-file-name))
+	  (buffer (current-buffer))
+	  (name (buffer-name)))
+      (if (not (visiting-file-p))
+	  (kill-buffer buffer)
+	(when (yes-or-no-p "Delete this file? ")
+	  (delete-file filename)
+	  (kill-buffer buffer)
+	  (message "File %s successfully removed" filename)))))
+
+  ;; ** Rename file
+  (defun my/rename-this-file ()
+    "Rename current buffer and associated file."
+    (interactive)
+    (let ((name (buffer-name))
+	  (filename (buffer-file-name)))
+      (if (not (visiting-file-p))
+	  (error "Buffer '%s' is not visiting a file!" name)
+	(let ((new-name (read-file-name "New name: " filename)))
+	  (if (get-buffer new-name)
+	      (error "A buffer named '%s' already exists!" new-name)
+	    (rename-file filename new-name 1)
+	    (rename-buffer new-name)
+	    (set-visited-file-name new-name)
+	    (set-buffer-modified-p nil)
+	    (message "File '%s' successfully renamed to '%s'"
+		     name (file-name-nondirectory new-name)))))))
+
+  ;; ** Threading macro
+
+  ;; ** Activate current task
+  (defun my/activate-current-task ()
+    "Activate task under cursor."
+    (interactive)
+    (progn
+      (message "hi")
+      (let ((task (mapconcat 'identity (org-get-outline-path t) " -> ")))
+	(progn
+	  (message task)
+	  (write-region task nil "~/.current_task")))))
+
+  (general-def "C-c h" 'my/activate-current-task)
+
 #+end_src
+
