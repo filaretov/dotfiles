@@ -37,3 +37,5 @@ GTAGS
 
 *.egg-info/
 .ipynb_checkpoints/
+
+Session.vim

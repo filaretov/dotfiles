@@ -12,13 +12,16 @@ alias umnt "udisksctl unmount -b"
 alias ca "conda activate"
 alias jl "jupyter lab"
 alias ls "exa"
-alias ll "exa -l --git --group-directories-first"
+alias ll "exa --git-ignore -l --git --group-directories-first"
 alias la "exa -a"
 alias lla "exa -la --git"
 alias tree "exa --tree"
 alias n "nvr -s"
 alias clip "xclip -sel clip"
+alias kaj kajero
 alias q quest
+alias k khal
+alias t todo
 alias por "poetry run"
 alias pos "poetry shell"
 alias dk "diskonaut"

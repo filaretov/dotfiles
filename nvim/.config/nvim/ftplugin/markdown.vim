@@ -2,8 +2,17 @@
 " SPDX-License-Identifier: MIT
 " vim: foldmethod=marker foldlevelstart=0:
 
-"Syntax Options {{{
+" Options {{{
+setlocal foldlevelstart=99
+" }}}
+
+" Syntax Options {{{
 syn region markdownEqn matchgroup=markdownEqnDelimiter start="\$" end="\$" keepend contains=markdownLineStart
 syn region markdownEqn matchgroup=markdownEqnDelimiter start="^\s*\$\$.*$" end="^\s*\$\$\ze\s*$" keepend 
 hi def link markdownEqnDelimiter Comment
-"}}}
+" }}}
+
+" Mappings {{{
+inoremap <M-CR> <cr># 
+inoremap <silent> <Tab> <c-o>:s/^#/##<cr><c-o>$<c-o>:nohl<cr>
+" }}}

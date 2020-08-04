@@ -2,15 +2,12 @@
 " SPDX-License-Identifier: MIT
 " vim: foldmethod=marker foldlevelstart=0:
 
-" Helper values {{{
-let s:nvim_config = $HOME.'/.config/nvim'
-" }}}
-
 " Plug {{{
 call plug#begin(stdpath('data') . '/plugged')
 
 " Completion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lsp'
 
 " Filetypes
 Plug 'rust-lang/rust.vim'
@@ -20,12 +17,14 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'fatih/vim-go'
 Plug 'ledger/vim-ledger'
 Plug 'cespare/vim-toml'
+Plug 'jceb/vim-orgmode'
 
 " Goodies
 Plug 'sgur/vim-editorconfig'
 Plug 'shougo/neosnippet.vim'
 Plug 'tommcdo/vim-exchange'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
@@ -44,14 +43,18 @@ call plug#end()
 " }}}
 
 " Plugin Settings {{{
-let g:pandoc#syntax#conceal#use = 0
 
-" Neosnippet
+" pandoc {{{
+let g:pandoc#syntax#conceal#use = 0
+" }}}
+
+" Neosnippet {{{
 let g:neosnippet#disable_select_mode_mappings = 1
-let g:neosnippet#snippets_directory= s:nvim_config . '/snips/'
+let g:neosnippet#snippets_directory= $HOME.'/.config/nvim/snips/'
 let g:neosnippet#disable_runtime_snippets = {
       \   '_': 1,
       \ }
+" }}}
 
 " }}}
 
@@ -82,6 +85,8 @@ let g:tex_flavor='latex'
 set termguicolors
 set background=dark
 color nord
+command! Weatherwax :e ~/.config/nvim/colors/weatherwax.vim
+command! Vetinari :e ~/.config/nvim/colors/vetinari.vim
 
 augroup vimrcEx
   au!
@@ -127,9 +132,24 @@ nnoremap k gk
 nnoremap H ^
 " Strong right
 nnoremap L $
+
+nnoremap Y y$
 " Saving
 nnoremap <leader>w :w<cr>
 nnoremap <C-s> :<C-u>w<cr>
+
+" Quickly moving through windows
+nnoremap <M-h> <C-w>h
+nnoremap <M-j> <C-w>j
+nnoremap <M-k> <C-w>k
+nnoremap <M-l> <C-w>l
+nnoremap <M-s> <C-w>s
+nnoremap <M-v> <C-w>v
+nnoremap <M-q> <C-w>q
+nnoremap <M-o> <C-w>o
+nnoremap <space>s <C-w>s
+
+nnoremap <C-q> <C-c>
 
 " Last buffer
 nnoremap <leader><tab> :b#<cr>
@@ -140,7 +160,8 @@ nnoremap <leader>fe :<C-u>edit $MYVIMRC<cr>
 nnoremap <leader>fs :<C-u>NeoSnippetEdit -split<cr>
 nnoremap <leader>fn :<C-u>edit ~/cloud/journal/notes.md<cr>
 nnoremap <leader>fu :<C-u>edit ~/cloud/journal/uni.md<cr>
-nnoremap <leader>fw :<C-u>edit ~/cloud/journal/wiki.md<cr>
+nnoremap <leader>fi :<C-u>edit ~/cloud/journal/inbox.md<cr>
+nnoremap <leader>ff :<C-u>edit ~/cloud/journal/fraunhofer.md<cr>
 " }}}
 
 " OS clipboard {{{
@@ -158,15 +179,15 @@ nnoremap <silent> <c-n> :nohl<cr>
 " Commenting
 nnoremap <silent> <M-;> :<C-u>Commentary<cr>
 
-nnoremap <C-l> zz
+" Navigate quickfix list with ease
+nnoremap <silent> [q :cprevious<CR>
+nnoremap <silent> ]q :cnext<CR>
 
 " Visual {{{
 " Repeat last command on all selected lines
 vnoremap . :norm.<CR>
-" Don't replace "" when pasting in visual
+" Don't replace " when pasting in visual
 vnoremap p "_c<Esc>p
-
-
 " }}}
 
 " Insert mode mappings {{{
@@ -184,19 +205,6 @@ inoremap <C-k>d <C-R>=strftime("%Y-%m-%d")<cr>
 nnoremap <leader>t :<C-u>te<cr>
 tnoremap <ESC> <C-\><C-n>
 " }}}
-" }}}
-
-" Filetype augroups {{{
-augroup c_headers
-  autocmd!
-  autocmd BufNewFile,BufRead *.h set filetype=c
-augroup end
-
-"Include md as markdown file extension
-augroup md_extensions
-  autocmd!
-  autocmd BufNewFile,BufRead *.md set filetype=markdown
-augroup end
 
 " }}}
 
@@ -233,25 +241,34 @@ command! Time edit ~/cloud/t.timedot
 let g:rustfmt_autosave = 1
 " }}}
 
-" GNVim {{{
-if exists('g:gnvim')
-  source $HOME/.config/nvim/ginit.vim
-end
-" }}}
-
 " Triage {{{
 let g:markdown_folding = 1
 
-set foldtext=MyFoldText()
-function! MyFoldText()
-  let line = getline(v:foldstart)
-  let sub = substitute(line, '{{{', '', 'g')
-  return sub . "..."
-endfunction
-" }}}
 " }}}
 
 " Highlight Patches {{{
-highlight! link Folded Bold
+highlight! link Folded Comment
 highlight! clear Conceal
+
 " }}}
+
+" Tidbits {{{
+augroup LuaHighlight
+  autocmd!
+  autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+augroup END
+" }}}
+
+" LSP {{{
+lua <<EOF
+    local nvim_lsp = require'nvim_lsp'
+    require'nvim_lsp'.vimls.setup{}
+    require'nvim_lsp'.pyls.setup{}
+    require'nvim_lsp'.rust_analyzer.setup{}
+    require'nvim_lsp'.yamlls.setup{}
+EOF
+autocmd Filetype vim setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd Filetype rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+" }}}
+
