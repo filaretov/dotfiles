@@ -23,6 +23,7 @@ emacs/.emacs.d/session*
 emacs/.emacs.d/recentf
 emacs/.emacs.d/auctex-auto/
 emacs/.emacs.d/quelpa/
+emacs/.emacs.d/request/
 emacs/.emacs.d/transient/
 emacs/.emacs.d/smex-items
 emacs/.emacs.d/.python-environments/
