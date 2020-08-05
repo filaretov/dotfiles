@@ -736,7 +736,7 @@ Nice and blue.
 
 #+begin_src emacs-lisp
   (progn
-    (load-theme 'nord t)
+    (load-theme 'solarized-light-high-contrast t)
     (set-face-attribute  'org-block-begin-line       nil  :underline nil :inherit  'fixed-pitch :background nil)
     (set-face-attribute  'org-block-end-line         nil  :overline  nil :inherit  'fixed-pitch :background nil)
     (set-face-attribute  'org-block                  nil  :inherit  'fixed-pitch :background nil)
@@ -744,8 +744,8 @@ Nice and blue.
     (set-face-attribute  'org-meta-line              nil  :inherit  'fixed-pitch :italic nil)
     (set-face-attribute  'org-verbatim               nil  :inherit  'fixed-pitch)
     (set-face-attribute  'org-tag                    nil  :inherit  'fixed-pitch :weight 'normal)
-    (set-face-attribute  'org-done                   nil  :weight 'normal)
-    (set-face-attribute  'org-todo                   nil  :weight 'normal)
+    (set-face-attribute  'org-done                   nil  :weight 'normal :inherit 'fixed-pitch)
+    (set-face-attribute  'org-todo                   nil  :weight 'normal :inherit 'fixed-pitch)
     (set-face-attribute  'org-level-1                nil  :weight 'normal)
     (set-face-attribute  'org-level-2                nil  :weight 'normal)
     (set-face-attribute  'org-level-3                nil  :weight 'normal)
@@ -758,7 +758,7 @@ Nice and blue.
 #+begin_src emacs-lisp
   (defun my/switch-to-previous-buffer ()
     "Switch to previously open buffer.
-  Repeated invocations toggle between the two most recently open buffers."
+    Repeated invocations toggle between the two most recently open buffers."
     (interactive)
     (switch-to-buffer (other-buffer (current-buffer) 1)))
 
@@ -799,7 +799,12 @@ Nice and blue.
 	    (message "File '%s' successfully renamed to '%s'"
 		     name (file-name-nondirectory new-name)))))))
 
-  ;; ** Threading macro
+  ;; ** Get org title
+  (defun hgf-get-org-title ()
+    "Get the raw string of the current buffer's #+TITLE property."
+    (substring-no-properties
+     (car (plist-get (org-export-get-environment) :title))))
+
 
   ;; ** Activate current task
   (defun my/activate-current-task ()
@@ -807,10 +812,13 @@ Nice and blue.
     (interactive)
     (progn
       (message "hi")
-      (let ((task (mapconcat 'identity (org-get-outline-path t) " -> ")))
+      (let ((task (mapconcat 'identity (org-get-outline-path t) " → ")))
 	(progn
 	  (message task)
-	  (write-region task nil "~/.current_task")))))
+	  (write-region (concat
+			 (hgf-get-org-title)
+			 " → "
+			 task) nil "~/.current_task")))))
 
   (general-def "C-c h" 'my/activate-current-task)
 
