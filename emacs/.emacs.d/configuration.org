@@ -167,7 +167,7 @@ Some things aren't meant to be. Like variable sized fonts in my org files.
 #+end_src
 
 #+begin_src emacs-lisp
-  (setq
+  (setq-default
    mode-line-format
    '(
      ""
@@ -179,8 +179,7 @@ Some things aren't meant to be. Like variable sized fonts in my org files.
      "  "
      (:eval (when-let (vc vc-mode)
 		    (propertize (substring vc 5)
-				'face 'fixed-pitch)))
-     ))
+				'face 'fixed-pitch)))))
 #+end_src
 
 * Calendar
