@@ -166,6 +166,23 @@ Some things aren't meant to be. Like variable sized fonts in my org files.
     (column-number-mode 1))
 #+end_src
 
+#+begin_src emacs-lisp
+  (setq
+   mode-line-format
+   '(
+     ""
+     "%b"
+     "  "
+     mode-line-modified
+     "  "
+     "%m"
+     "  "
+     (:eval (when-let (vc vc-mode)
+		    (propertize (substring vc 5)
+				'face 'fixed-pitch)))
+     ))
+#+end_src
+
 * Calendar
 I want to view a nice pretty calendar sometimes. Mostly based on org entries, sometimes ical.
 =calfw= seems to do exactly that!
@@ -326,10 +343,14 @@ Org is amazing and I use it all the time. And once again, a large majority of th
 inspired by Harry Schwartz.
 
 #+begin_src emacs-lisp
-  (use-package org)
+  (use-package org
+    :config
+    (general-def 'normal
+      "g t" 'org-todo))
 #+end_src
 
-*** Source blocks
+*** Babel
+
 #+begin_src emacs-lisp
   (add-to-list 'org-structure-template-alist
 	       '("el" . "src emacs-lisp"))
@@ -337,6 +358,22 @@ inspired by Harry Schwartz.
 	org-src-preserve-indentation nil
 	org-src-tab-acts-natively t
 	org-src-window-setup 'current-window)
+#+end_src
+
+Ledger entries too, please
+
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t)
+     (emacs-lisp . t)
+     (gnuplot . t)
+     (haskell . nil)
+     (latex . t)
+     (ledger . t)
+     (octave . t)
+     (python . t)
+     (ruby . t)))
 #+end_src
 
 *** Cosmetics
@@ -377,6 +414,7 @@ All about them tasks.
 	  "~/cloud/journal/tasks.org"
 	  "~/cloud/journal/inbox.org"
 	  "~/cloud/journal/notes.org"
+	  "~/cloud/journal/fraunhofer.org"
 	  ))
   (setq org-archive-location "~/cloud/journal/archive.org::")
   (setq org-capture-templates
@@ -609,6 +647,19 @@ Centering text when writing prose.
     (add-hook 'LaTeX-mode-hook #'outshine-mode 1))
 #+end_src
 
+** Engine-mode
+=hrs= strikes again.
+
+#+begin_src emacs-lisp
+  (use-package engine-mode
+    :config
+    (engine-mode 1)
+    (defengine wikipedia
+      "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+      :keybinding "w"
+      :docstring "Searchin' the wikis."))
+#+end_src
+
 ** Magit
 #+begin_src emacs-lisp
   (use-package magit
@@ -695,8 +746,12 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 #+end_src
 
 * Theme
-I sometimes like to change things up. I mainly swap around between Solarized, Nord and a simple black on white theme.
+I am partial to Nord.
+#+begin_src emacs-lisp
+  (use-package nord-theme)
+#+end_src
 
+For setting transparency. I don't really use it, but it's there if I want to.
 #+begin_src emacs-lisp
   (defun transparency (value)
     "Sets the transparency of the frame window. 0=transparent/100=opaque."
@@ -704,53 +759,48 @@ I sometimes like to change things up. I mainly swap around between Solarized, No
     (set-frame-parameter (selected-frame) 'alpha value))
 #+end_src
 
-** Nord
-Nice and blue.
+** Set theme
 
 #+begin_src emacs-lisp
-  (use-package nord-theme)
-#+end_src
+  (defun hgf-disable-all-themes ()
+    (dolist (theme custom-enabled-themes)
+      (disable-theme theme)))
 
-** Solarized
-
-#+begin_src emacs-lisp
-  (use-package solarized-theme
-    :config
-    (setq solarized-use-variable-pitch t
-	  solarized-height-plus-1 1.0
-	  solarized-height-plus-2 1.0
-	  solarized-height-plus-3 1.0
-	  solarized-height-plus-4 1.0
-	  solarized-height-minus-1 1.0
-	  solarized-use-less-bold t
-	  solarized-high-contrast-mode-line t))
-#+end_src
-
-** Gruvbox
-
-#+begin_src emacs-lisp
-(use-package gruvbox-theme)
-#+end_src
-
-** Fix and go
-
-#+begin_src emacs-lisp
-  (progn
-    (load-theme 'solarized-light-high-contrast t)
-    (set-face-attribute  'org-block-begin-line       nil  :underline nil :inherit  'fixed-pitch :background nil)
-    (set-face-attribute  'org-block-end-line         nil  :overline  nil :inherit  'fixed-pitch :background nil)
-    (set-face-attribute  'org-block                  nil  :inherit  'fixed-pitch :background nil)
-    (set-face-attribute  'org-document-info-keyword  nil  :inherit  'fixed-pitch)
-    (set-face-attribute  'org-meta-line              nil  :inherit  'fixed-pitch :italic nil)
-    (set-face-attribute  'org-verbatim               nil  :inherit  'fixed-pitch)
-    (set-face-attribute  'org-tag                    nil  :inherit  'fixed-pitch :weight 'normal)
-    (set-face-attribute  'org-done                   nil  :weight 'normal :inherit 'fixed-pitch)
-    (set-face-attribute  'org-todo                   nil  :weight 'normal :inherit 'fixed-pitch)
-    (set-face-attribute  'org-level-1                nil  :weight 'normal)
-    (set-face-attribute  'org-level-2                nil  :weight 'normal)
-    (set-face-attribute  'org-level-3                nil  :weight 'normal)
-    (set-face-attribute  'org-level-4                nil  :weight 'normal)
-    (set-face-attribute  'font-lock-comment-face     nil  :inherit  'fixed-pitch))
+  (defun hgf-load-theme (theme)
+    "Disable all loaded themes and load THEME. Also sets certain face attributes I like to use."
+    (interactive
+     (list (intern (completing-read "Load custom theme: "
+				    (mapcar 'symbol-name
+					    (custom-available-themes))))))
+    (unless (custom-theme-name-valid-p theme)
+      (error "Invalid theme name `%s'" theme))
+    (progn
+      (hgf-disable-all-themes)
+      (load-theme theme t)
+      (set-face-attribute  'org-block-begin-line       nil  :underline nil :inherit  'fixed-pitch :background nil)
+      (set-face-attribute  'org-block-end-line         nil  :overline  nil :inherit  'fixed-pitch :background nil)
+      (set-face-attribute  'org-block                  nil  :inherit  'fixed-pitch :background nil :foreground nil)
+      (set-face-attribute  'org-code                   nil  :inherit  'fixed-pitch)
+      (set-face-attribute  'org-document-title         nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-document-info-keyword  nil  :inherit  'fixed-pitch)
+      (set-face-attribute  'org-meta-line              nil  :inherit  'fixed-pitch :italic nil)
+      (set-face-attribute  'org-verbatim               nil  :inherit  'fixed-pitch)
+      (set-face-attribute  'org-tag                    nil  :inherit  'fixed-pitch :weight 'normal)
+      (set-face-attribute  'org-done                   nil  :weight 'normal :inherit 'fixed-pitch)
+      (set-face-attribute  'org-todo                   nil  :weight 'normal :inherit 'fixed-pitch)
+      (set-face-attribute  'org-level-1                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-level-2                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-level-3                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-level-4                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-level-5                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-level-6                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-level-7                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'org-level-8                nil  :weight 'normal :height 1.0)
+      (set-face-attribute  'font-lock-comment-face     nil  :inherit 'fixed-pitch)
+      (set-face-attribute  'mode-line                  nil  :background nil :overline t)
+      (set-face-attribute  'mode-line-inactive         nil  :background nil :overline nil)
+      ))
+  (hgf-load-theme 'nord)
 #+end_src
 
 * Triage
