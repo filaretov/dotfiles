@@ -230,7 +230,8 @@ client.background       $nord0
 bar {
   status_command ~/.local/bin/stowed/i3bar.py
     position bottom
-    mode dock
+    mode hide
+    modifier None
     font pango: Iosevka Medium 9
     tray_output primary
     strip_workspace_numbers yes
