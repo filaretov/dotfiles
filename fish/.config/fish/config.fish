@@ -32,7 +32,7 @@ alias t todo
 
 alias dk "diskonaut"
 
-alias e "emacsclient"
+alias e "emacsclient -n"
 
 alias issues "gh issue list"
 alias issue "gh issue create"
