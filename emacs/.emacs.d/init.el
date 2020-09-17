@@ -1,12 +1,13 @@
 ;; This file has been copied wholesale from Harry Schwartz.
 ;; https://github.com/hrs/dotfiles
+(setq comp-deferred-compilation t)
 
 ;; Configure package.el to include MELPA.
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(package-initialize)	
+(package-initialize)
 
 ;; Ensure that use-package is installed.
 ;;
@@ -17,5 +18,5 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(org-babel-load-file "~/.emacs.d/configuration.org")
 
+(org-babel-load-file "~/.emacs.d/configuration.org")
