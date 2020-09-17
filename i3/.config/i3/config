@@ -113,7 +113,7 @@ set $ws9 "9: 9 "
 set $ws0 "10: 0 "
 
 # ** Assign programs to ws
-assign [class="Emacs"]          $ws2
+#assign [class="Emacs"]          $ws2
 assign [class="Evince"]         $ws8
 assign [class="Firefox"]        $ws0
 assign [class="Nautilus"]       $ws3
@@ -216,6 +216,9 @@ set $nord12  #D08770
 set $nord13  #EBCB8B
 set $nord14  #A3BE8C
 set $nord15  #B48EAD
+set $black   #000000
+set $white   #CCCCCC
+set $red     #BF616A
 
 # class                 border  bground text    indicator child_border
 client.focused          $nord3  $nord3  $nord6  #6272A4   #6272A4
@@ -229,23 +232,23 @@ client.background       $nord0
 # * Bar
 bar {
   status_command ~/.local/bin/stowed/i3bar.py
-    position bottom
-    mode hide
+    position top
+    mode dock
     modifier None
     font pango: Iosevka Medium 9
     tray_output primary
     strip_workspace_numbers yes
     separator_symbol "  "
     colors {
-      background $nord0
-        statusline $nord6
-        separator  $nord3
+      background $black
+        statusline $white
+        separator  $white
 
-        focused_workspace  $nord3 $nord3 $nord6
-        active_workspace   $nord0 $nord0 $nord4
-        inactive_workspace $nord0 $nord0 $nord4
-        urgent_workspace   $nord11 $nord11 $nord4
-        binding_mode       $nord0 $nord0 $nord4
+        focused_workspace  $white $white $black
+        active_workspace   $black $black $nord4
+        inactive_workspace $black $black $nord4
+        urgent_workspace   $red   $red   $nord4
+        binding_mode       $black $nord0 $nord4
     }
 }
 

@@ -7,24 +7,38 @@ set fish_greeting ""
 alias install "sudo apt install"
 alias search "sudo apt search"
 alias remove "sudo apt remove"
+
 alias mnt "udisksctl mount -b"
 alias umnt "udisksctl unmount -b"
+
 alias ca "conda activate"
 alias jl "jupyter lab"
+
+alias por "poetry run"
+alias pos "poetry shell"
+
 alias ls "exa"
 alias ll "exa --git-ignore -l --git --group-directories-first"
 alias la "exa -a"
 alias lla "exa -la --git"
 alias tree "exa --tree"
-alias n "nvr -s"
+
 alias clip "xclip -sel clip"
+
 alias kaj kajero
 alias q quest
 alias k khal
 alias t todo
-alias por "poetry run"
-alias pos "poetry shell"
+
 alias dk "diskonaut"
+
+alias e "emacsclient"
+
+alias issues "gh issue list"
+alias issue "gh issue create"
+alias bug "gh issue create --label bug"
+alias enhancement "gh issue create --label enhancement"
+alias critical "gh issue create --label critical"
 
 # Find local fish file
 set -l lc_file "$fish_path/"(hostname)".fish"
@@ -44,7 +58,7 @@ if type -f starship >/dev/null ^/dev/null
     function __conda_add_prompt; end
 end
 
-source $fish_path/themes/nord.fish
+#source $fish_path/themes/nord.fish
 
 set -x EDITOR "nvim"
 

@@ -39,3 +39,5 @@ GTAGS
 .ipynb_checkpoints/
 
 Session.vim
+
+.python-version

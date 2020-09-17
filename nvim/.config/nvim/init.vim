@@ -242,7 +242,6 @@ let g:rustfmt_autosave = 1
 " }}}
 
 " Triage {{{
-let g:markdown_folding = 1
 
 " }}}
 
