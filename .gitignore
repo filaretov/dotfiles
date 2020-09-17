@@ -44,3 +44,6 @@ vim/.vim/autoload/pathogen.vim
 
 fonts/.local/share/fonts/*/.uuid
 fonts/.local/share/fonts/.uuid
+/emacs/.emacs.d/.org-id-locations
+/emacs/.emacs.d/calc.el
+/emacs/.emacs.d/projects
