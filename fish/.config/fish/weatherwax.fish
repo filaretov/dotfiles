@@ -14,6 +14,8 @@ set -x PATH ~/.luarocks/bin/ $PATH
 set -x PATH ~/.deno/bin/ $PATH
 set -x PATH ~/.racket/bin/ $PATH
 set -x PATH ~/.pyenv/bin/ $PATH
+set -x PATH ~/.ghcup/bin/ $PATH
+set -x PATH ~/.cabal/bin/ $PATH
 
 set -x FZF_DEFAULT_COMMAND "rg --files"
 
