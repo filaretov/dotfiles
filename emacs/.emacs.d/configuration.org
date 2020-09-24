@@ -402,6 +402,13 @@ Org is amazing and I use it all the time. And once again, a large majority of th
 All about them tasks.
 
 #+begin_src emacs-lisp
+  (defun org-capture-inbox ()
+    (interactive)
+    (condition-case nil
+	(call-interactively 'org-store-link)
+      (error nil))
+    (org-capture nil "i"))
+  (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0)))
   (setq org-refile-use-outline-path 'file)
   (setq org-clock-into-drawer nil)
   (setq org-refile-targets `((,(journal-path "projects.org") :maxlevel . 2)
@@ -426,6 +433,7 @@ All about them tasks.
   (general-def
     "C-c c" 'org-capture
     "C-c a" 'org-agenda
+    "C-c i" 'org-capture-inbox
     "C-c t" (lambda () (interactive) (org-capture nil "t")))
 #+end_src
 
@@ -859,6 +867,7 @@ Some additional utilities I mostly use with Projectile:
 	yas-indent-line 'fixed)
   (yas-global-mode 1)
 #+end_src
+
 
 * Helpful
 
