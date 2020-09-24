@@ -29,6 +29,9 @@ auto/
 *.toc
 *.fls
 *.fdb_latexmk
+*.snm
+*.xdv
+*.nav
 
 GPATH
 GRTAGS
