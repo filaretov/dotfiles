@@ -7,7 +7,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
 " Completion
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Plug 'neovim/nvim-lsp'
+Plug 'neovim/nvim-lsp'
 
 " Filetypes
 Plug 'rust-lang/rust.vim'
@@ -259,15 +259,15 @@ augroup END
 " }}}
 
 " LSP {{{
-" lua <<EOF
-"     local nvim_lsp = require'nvim_lsp'
-"     require'nvim_lsp'.vimls.setup{}
-"     require'nvim_lsp'.pyls.setup{}
-"     require'nvim_lsp'.rust_analyzer.setup{}
-"     require'nvim_lsp'.yamlls.setup{}
-" EOF
-" autocmd Filetype vim setlocal omnifunc=v:lua.vim.lsp.omnifunc
-" autocmd Filetype rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
-" autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+lua <<EOF
+    local nvim_lsp = require'nvim_lsp'
+    require'nvim_lsp'.vimls.setup{}
+    require'nvim_lsp'.pyls.setup{}
+    require'nvim_lsp'.rust_analyzer.setup{}
+    require'nvim_lsp'.yamlls.setup{}
+EOF
+autocmd Filetype vim setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd Filetype rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
 " }}}
 
