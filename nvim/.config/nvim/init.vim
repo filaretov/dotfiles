@@ -2,43 +2,16 @@
 " SPDX-License-Identifier: MIT
 " vim: foldmethod=marker foldlevelstart=0:
 
+packadd packer.nvim
+lua require('plugins')
+
 " Plug {{{
 call plug#begin(stdpath('data') . '/plugged')
 
 " Completion
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neovim/nvim-lsp'
-
-" Filetypes
-Plug 'rust-lang/rust.vim'
-Plug 'elixir-editors/vim-elixir'
-Plug 'kballard/vim-fish'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'fatih/vim-go'
-Plug 'ledger/vim-ledger'
-Plug 'cespare/vim-toml'
-Plug 'jceb/vim-orgmode'
-
-" Goodies
-Plug 'sgur/vim-editorconfig'
-Plug 'shougo/neosnippet.vim'
-Plug 'tommcdo/vim-exchange'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rsi'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-unimpaired'
-
 " Themes
 Plug 'cocopon/inspecthi.vim'
-Plug 'arcticicestudio/nord-vim'
 Plug 'sjl/badwolf'
-Plug 'dracula/vim', {'as': 'dracula.vim'}
 call plug#end()
 " }}}
 
@@ -83,10 +56,10 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-set background=dark
-color nord
+color nordic
 command! Weatherwax :e ~/.config/nvim/colors/weatherwax.vim
 command! Vetinari :e ~/.config/nvim/colors/vetinari.vim
+command! Nordic :e ~/.config/nvim/colors/nordic.vim
 
 augroup vimrcEx
   au!
@@ -148,8 +121,13 @@ nnoremap <M-v> <C-w>v
 nnoremap <M-q> <C-w>q
 nnoremap <M-o> <C-w>o
 nnoremap <space>s <C-w>s
+nnoremap <C-w>x :<c-u>bdelete<cr>
+nnoremap <C-w>X :<c-u>bdelete!<cr>
 
 nnoremap <C-q> <C-c>
+nnoremap ge yy:<c-u><c-r>"<cr>
+
+nnoremap <M-x> :<c-u>Commands<cr>
 
 " Last buffer
 nnoremap <leader><tab> :b#<cr>
@@ -162,6 +140,9 @@ nnoremap <leader>fn :<C-u>edit ~/cloud/journal/notes.md<cr>
 nnoremap <leader>fu :<C-u>edit ~/cloud/journal/uni.md<cr>
 nnoremap <leader>fi :<C-u>edit ~/cloud/journal/inbox.md<cr>
 nnoremap <leader>ff :<C-u>edit ~/cloud/journal/fraunhofer.md<cr>
+nnoremap <leader>fck :<C-u>edit ~/.config/kitty/kitty.conf<cr>
+nnoremap <leader>fci :<C-u>edit ~/.config/i3/config<cr>
+nnoremap <leader>fcf :<C-u>edit ~/.config/fish/config.fish<cr>
 " }}}
 
 " OS clipboard {{{
@@ -259,15 +240,41 @@ augroup END
 " }}}
 
 " LSP {{{
-lua <<EOF
-    local nvim_lsp = require'nvim_lsp'
-    require'nvim_lsp'.vimls.setup{}
-    require'nvim_lsp'.pyls.setup{}
-    require'nvim_lsp'.rust_analyzer.setup{}
-    require'nvim_lsp'.yamlls.setup{}
-EOF
-autocmd Filetype vim setlocal omnifunc=v:lua.vim.lsp.omnifunc
-autocmd Filetype rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
-autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+"lua <<EOF
+"    local nvim_lsp = require'nvim_lsp'
+"    require'nvim_lsp'.vimls.setup{}
+"    require'nvim_lsp'.pyls.setup{}
+"    require'nvim_lsp'.rust_analyzer.setup{}
+"    require'nvim_lsp'.yamlls.setup{}
+"EOF
+"autocmd Filetype vim setlocal omnifunc=v:lua.vim.lsp.omnifunc
+"autocmd Filetype rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
+"autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
 " }}}
 
+" FZF Source {{{
+let $FZF_BIBTEX_SOURCES = $HOME."/media/bibliographies/human_robotics.bib"
+
+function! s:bibtex_cite_sink(lines)
+    let r=system("bibtex-cite -prefix=\\\\cite\\{ -postfix=\\}", a:lines)
+    execute ':normal! a' . r
+endfunction
+
+function! s:bibtex_markdown_sink(lines)
+    let r=system("bibtex-markdown ", a:lines)
+    execute ':normal! a' . r
+endfunction
+
+nnoremap <silent> <leader>c :call fzf#run({
+                        \ 'source': 'bibtex-ls',
+                        \ 'sink*': function('<sid>bibtex_cite_sink'),
+                        \ 'up': '40%',
+                        \ 'options': '--ansi --layout=reverse-list --multi --prompt "Cite> "'})<CR>
+
+nnoremap <silent> <leader>m :call fzf#run({
+                        \ 'source': 'bibtex-ls',
+                        \ 'sink*': function('<sid>bibtex_markdown_sink'),
+                        \ 'up': '40%',
+                        \ 'options': '--ansi --layout=reverse-list --multi --prompt "Markdown> "'})<CR>
+
+" }}}

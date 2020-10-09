@@ -10,6 +10,9 @@ from glob import glob
 from time import localtime, strftime
 
 
+def run(cmd):
+    return subprocess.check_output(cmd.split()).decode().strip()
+
 def i3_json(name, text, **args):
     i3_block = {**{"name": name, "full_text": text}, **args}
     return i3_block
@@ -28,6 +31,11 @@ def current_task():
         task_name = ""
     return i3_json("pom", f"{task_name} ", color="#a4be8c")
 
+def audio_volume():
+    volume = run("pulsemixer --get-volume").split()[0]
+    mute = run("pulsemixer --get-mute") == "1"
+    text = " X" if mute else volume
+    return i3_json("volume", f"vol: {text}")
 
 def repo_is_dirty(directory):
     if ".git" in os.listdir(directory):
@@ -60,7 +68,7 @@ def _plugged():
 
 def _battery_level():
     # Some laptops have two batteries (t460s, I'm looking at you)
-    batteries = subprocess.check_output(["acpi", "-b"]).decode().split("\n")[:-1]
+    batteries = run("acpi -b").split("\n")
     left_output = [x.partition("%")[0] for x in batteries]
     battery_level = [int(x.split(" ")[-1]) for x in left_output]
     avg = sum(battery_level) / len(battery_level)
@@ -133,7 +141,7 @@ if __name__ == "__main__":
     # print lines starting with commas afterward
     print_line("[]")
 
-    modules = [current_task, ssid, brightness, xkb_layout, battery, clock]
+    modules = [current_task, audio_volume, ssid, brightness, xkb_layout, battery, clock]
     while True:
         line = [attempt(mod) for mod in modules]
         print_line(prefix + json.dumps(line))

@@ -9,6 +9,7 @@ set -x PATH ~/.cargo/bin $PATH
 set -x PATH ~/.local/bin $PATH
 set -x PATH ~/.local/bin/stowed $PATH
 set -x PATH ~/dev/go/bin $PATH
+set -x PATH ~/go/bin $PATH
 set -x PATH ~/media/packages/julia-1.4.1/bin/ $PATH
 set -x PATH ~/.luarocks/bin/ $PATH
 set -x PATH ~/.deno/bin/ $PATH

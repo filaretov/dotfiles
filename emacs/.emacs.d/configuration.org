@@ -114,7 +114,7 @@ Example:
 
 * Add =resources= to =load-path=
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.hgf-emacs-path/resources/")
+(add-to-list 'load-path (hgf-emacs-path "resources"))
 #+end_src
 
 * Personal information
@@ -191,24 +191,7 @@ Some things aren't meant to be. Like variable sized fonts in my org files.
 
 #+end_src
 
-* Diff-hl
-
-#+begin_src emacs-lisp
-(use-package diff-hl
-  :config (global-diff-hl-mode +1))
-#+end_src
-
-
 * Modeline
-
-#+begin_src emacs-lisp
-(use-package minions
-  :config
-  (setq minions-mode-line-lighter ""
-	minions-mode-line-delimiters '("" . ""))
-  (minions-mode 1)
-  (column-number-mode 1))
-#+end_src
 
 #+begin_src emacs-lisp
 (setq-default
@@ -231,15 +214,6 @@ Some things aren't meant to be. Like variable sized fonts in my org files.
    pyvenv-mode-line-indicator))
 #+end_src
 
-* Calendar
-I want to view a nice pretty calendar sometimes. Mostly based on org entries, sometimes ical.
-=calfw= seems to do exactly that!
-
-#+begin_src emacs-lisp
-(use-package calfw
-  :config
-  (use-package calfw-org))
-#+end_src
 
 * Evil
 Vimmy keys and feel, for us vimfolk.
@@ -252,7 +226,7 @@ Vimmy keys and feel, for us vimfolk.
 	evil-want-abbrev-expand-on-insert-exit nil)
   :config
   (evil-mode 1)
-  (setq evil-emacs-state-cursos 'bar
+  (setq evil-emacs-state-cursor 'bar
 	evil-search-module 'evil-search
 	evil-ex-search-case 'smart)
   (general-def 'normal
@@ -389,11 +363,7 @@ Great guy, that Harry Schwartz. Most of these functions are directly copied from
 Org is amazing and I use it all the time. And once again, a large majority of this section is inspired by Harry Schwartz.
 
 #+begin_src emacs-lisp
-(use-package org
-  :config
-  (general-def 'org-mode 'normal
-    "g t" 'org-todo
-    "z a" 'org-cycle))
+(use-package org)
 #+end_src
 
 ** GTD
@@ -621,7 +591,7 @@ Trackin' them finances.
 (setq-default TeX-auto-save t
 TeX-parse-self t
 TeX-PDF-mode t
-TeX-auto-local "~/.hgf-emacs-path/auctex-auto")
+TeX-auto-local (hgf-emacs-path "auctex-auto"))
 (setq bibtex-dialect 'biblatex)
 #+end_src emacs-lisp
 
@@ -863,7 +833,7 @@ Some additional utilities I mostly use with Projectile:
 
 #+begin_src emacs-lisp
 (use-package yasnippet)
-(setq yas-snippet-dirs '("~/.hgf-emacs-path/snippets")
+(setq yas-snippet-dirs `(,(hgf-emacs-path "snippets"))
       yas-indent-line 'fixed)
 (yas-global-mode 1)
 #+end_src
@@ -953,7 +923,7 @@ use.
 * Custom file
 
 #+begin_src emacs-lisp
-(setq custom-file "~/.hgf-emacs-path/custom.el")
+(setq custom-file (hgf-emacs-path "custom.el"))
 (load custom-file 'noerror)
 #+end_src
 
