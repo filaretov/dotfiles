@@ -2,17 +2,68 @@
 " SPDX-License-Identifier: MIT
 " vim: foldmethod=marker foldlevelstart=0:
 
-packadd packer.nvim
-lua require('plugins')
-
 " Plug {{{
-call plug#begin(stdpath('data') . '/plugged')
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/vim-easy-align'
+    " Filetypes
+    Plug 'rust-lang/rust.vim'
+    Plug 'kballard/vim-fish'
+    Plug 'elixir-editors/vim-elixir'
+    Plug 'vim-pandoc/vim-pandoc-syntax'
+    Plug 'cespare/vim-toml'
+    Plug 'ledger/vim-ledger'
+    Plug 'fatih/vim-go'
 
-" Completion
-" Themes
-Plug 'cocopon/inspecthi.vim'
-Plug 'sjl/badwolf'
+    " UI
+    Plug 'arcticicestudio/nord-vim'
+    Plug 'romainl/flattened'
+    Plug 'dracula/vim', {'as': 'dracula'}
+
+    " Goodies
+    Plug 'sgur/vim-editorconfig'
+    Plug 'shougo/neosnippet.vim'
+    Plug 'tommcdo/vim-exchange'
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
+    Plug 'tpope/vim-abolish'
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-eunuch'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-rsi'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-unimpaired'
+    Plug 'neomake/neomake'
 call plug#end()
+" }}}
+
+" LSC {{{
+" \    'log_level': -1,
+" \    'suppress_stderr': v:true,
+" let g:lsc_server_commands = {
+"  \  'python': {
+"  \    'command': 'pyls'
+"  \  },
+"  \ 'go': {
+"  \   'command': 'gopls'
+"  \ },
+"  \ 'rust': {
+"  \   'command': 'rust-analyzer'
+"  \ }
+"  \}
+" let g:lsc_auto_map = {
+"  \  'GoToDefinition': 'gd',
+"  \  'FindReferences': 'gr',
+"  \  'Rename': 'gR',
+"  \  'ShowHover': 'K',
+"  \  'FindCodeActions': 'ga',
+"  \  'Completion': 'omnifunc'
+"  \}
+" let g:lsc_enable_autocomplete  = v:false
+" let g:lsc_enable_diagnostics   = v:true
+" let g:lsc_reference_highlights = v:false
+" let g:lsc_trace_level          = 'verbose'
+
 " }}}
 
 " Plugin Settings {{{
@@ -56,7 +107,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-color nordic
+color weatherwax
 command! Weatherwax :e ~/.config/nvim/colors/weatherwax.vim
 command! Vetinari :e ~/.config/nvim/colors/vetinari.vim
 command! Nordic :e ~/.config/nvim/colors/nordic.vim
@@ -125,17 +176,18 @@ nnoremap <C-w>x :<c-u>bdelete<cr>
 nnoremap <C-w>X :<c-u>bdelete!<cr>
 
 nnoremap <C-q> <C-c>
-nnoremap ge yy:<c-u><c-r>"<cr>
+nnoremap <silent> ge yy:<c-u><c-r>"<cr>
 
 nnoremap <M-x> :<c-u>Commands<cr>
 
 " Last buffer
-nnoremap <leader><tab> :b#<cr>
+nnoremap <BS> <C-^>
 
 " Quickly opening files {{{
 nnoremap <C-p> :<C-u>FZF<cr>
 nnoremap <leader>fe :<C-u>edit $MYVIMRC<cr>
 nnoremap <leader>fs :<C-u>NeoSnippetEdit -split<cr>
+nnoremap <leader>ff :<c-u>edit ~/.config/nvim/ftplugin/%:e.vim<cr>
 nnoremap <leader>fn :<C-u>edit ~/cloud/journal/notes.md<cr>
 nnoremap <leader>fu :<C-u>edit ~/cloud/journal/uni.md<cr>
 nnoremap <leader>fi :<C-u>edit ~/cloud/journal/inbox.md<cr>
@@ -183,7 +235,7 @@ inoremap <C-k>d <C-R>=strftime("%Y-%m-%d")<cr>
 " }}}
 
 " Terminal mode mappings {{{
-nnoremap <leader>t :<C-u>te<cr>
+nnoremap <leader>t :<C-u>te<cr>i
 tnoremap <ESC> <C-\><C-n>
 " }}}
 
@@ -239,24 +291,11 @@ augroup LuaHighlight
 augroup END
 " }}}
 
-" LSP {{{
-"lua <<EOF
-"    local nvim_lsp = require'nvim_lsp'
-"    require'nvim_lsp'.vimls.setup{}
-"    require'nvim_lsp'.pyls.setup{}
-"    require'nvim_lsp'.rust_analyzer.setup{}
-"    require'nvim_lsp'.yamlls.setup{}
-"EOF
-"autocmd Filetype vim setlocal omnifunc=v:lua.vim.lsp.omnifunc
-"autocmd Filetype rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
-"autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-" }}}
-
 " FZF Source {{{
-let $FZF_BIBTEX_SOURCES = $HOME."/media/bibliographies/human_robotics.bib"
+let $FZF_BIBTEX_SOURCES = $HOME."/media/bibliographies/all.bib"
 
 function! s:bibtex_cite_sink(lines)
-    let r=system("bibtex-cite -prefix=\\\\cite\\{ -postfix=\\}", a:lines)
+    let r=system("bibtex-cite -prefix=\\\\autocite\\{ -postfix=\\}", a:lines)
     execute ':normal! a' . r
 endfunction
 
@@ -265,7 +304,13 @@ function! s:bibtex_markdown_sink(lines)
     execute ':normal! a' . r
 endfunction
 
-nnoremap <silent> <leader>c :call fzf#run({
+nnoremap <silent> z[ :call fzf#run({
+                        \ 'source': 'bibtex-ls',
+                        \ 'sink*': function('<sid>bibtex_cite_sink'),
+                        \ 'up': '40%',
+                        \ 'options': '--ansi --layout=reverse-list --multi --prompt "Cite> "'})<CR>
+
+inoremap <silent> <C-X><C-[> <c-o>:<c-u>call fzf#run({
                         \ 'source': 'bibtex-ls',
                         \ 'sink*': function('<sid>bibtex_cite_sink'),
                         \ 'up': '40%',
@@ -278,3 +323,4 @@ nnoremap <silent> <leader>m :call fzf#run({
                         \ 'options': '--ansi --layout=reverse-list --multi --prompt "Markdown> "'})<CR>
 
 " }}}
+

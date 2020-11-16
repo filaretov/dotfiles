@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Environment
+# key: b
+# --
+
+\begin{$1}
+$0
+\end{$1}

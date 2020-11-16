@@ -26,13 +26,48 @@ snippet fr
 snippet ls
         \lstinline{${1}} ${0}
 
-snippet sec
-        \section{${0}}
+snippet s
+        \section{${1}}
+        %
+        ${0}
 
-snippet item
+snippet ss
+        \subsection{${1}}
+        %
+        ${0}
+
+snippet sss
+        \subsubsection{${1}}
+        %
+        ${0}
+
+snippet ,s
+        \section*{${0}}
+
+snippet ,ss
+        \subsection*{${0}}
+
+snippet ,sss
+        \subsubsection*{${0}}
+
+snippet en
+        \begin{enumerate}
+                \item ${0}
+        \end{enumerate}
+
+snippet it
         \begin{itemize}
                 \item ${0}
         \end{itemize}
 
-snippet bf
+snippet b
         \textbf{${0}}
+
+snippet i
+        \textit{${0}}
+
+snippet gl
+        \gls{${0}}
+
+snippet gp
+        \glspl{${0}}

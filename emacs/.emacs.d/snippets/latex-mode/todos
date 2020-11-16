@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Todos 
+# key: tds
+# --
+
+\begin{todos}
+\item $0
+\end{todos}

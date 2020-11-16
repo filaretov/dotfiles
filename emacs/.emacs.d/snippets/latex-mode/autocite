@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: autocite
+# key: cc
+# --
+
+\autocite{$0}

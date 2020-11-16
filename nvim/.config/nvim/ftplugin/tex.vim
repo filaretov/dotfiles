@@ -8,4 +8,6 @@ setlocal tabstop=2
 setlocal shiftwidth=2
 setlocal softtabstop=2
 
-inoremap <buffer> ,g \gls{}<Left>
+" Depends on surround.vim
+vmap <buffer> xb S}i\textbf<esc>
+vmap <buffer> xi S}i\textit<esc>

@@ -1,40 +1,65 @@
 #+title: Emacs Configuration
 #+author: Hristo Filaretov
-
 * Preamble
-Most of this is based on Harry Schwartz's [[https://github.com/hrs/dotfiles/blob/master/emacs/.hgf-emacs-path/configuration.org][configuration]] and is also inspired by many his talks and blog posts.
+Most of this is based on Harry Schwartz's [[https://github.com/hrs/dotfiles/blob/master/emacs/.hgf-emacs-path/configuration.org][configuration]] and is also inspired by
+many his talks and blog posts.
 
-I assume that =use-package= and =general= are always available and sprinkle their incantations
-generously throughout the configuration.
+I assume that =use-package= and =general= are always available and sprinkle their
+incantations generously throughout the configuration.
 
-I tried using =straight=, but I wound up having some trouble with =org-mode=, and altough I think it was documented somewhere, I'm more than happy with the regular =package=.
+I tried using =straight=, but I wound up having some trouble with =org-mode=, and
+although I think it was documented somewhere, I'm more than happy with the
+regular =package=.
 
-* Packaging
+* =use-package=
 I use =use-package= for packaging my used packages.
 
 #+begin_src emacs-lisp
 (use-package use-package
   :config
-  (global-set-key [remap dabbrev-expand] 'hippie-expand)
   (setq use-package-always-ensure t))
 #+end_src
 
-* Keybindings
-I use =general= for my keybindings. It's generally quite good. The keybindings themselves will be
-found throughout this file.
+* =general=
+I use =general= for my keybindings. It's generally quite good. The keybindings
+themselves will be found throughout this file.
 
 #+begin_src emacs-lisp
-(use-package general)
+(use-package general
+  :config
+  (general-evil-setup)
+
+  (global-set-key [remap dabbrev-expand] 'hippie-expand)
+
+  (general-create-definer hgf-leader-def
+    :keymaps '(normal visual)
+    :prefix "SPC")
+
+
+  (general-create-definer hgf-c-def
+    :prefix "C-c"))
 #+end_src
 
 * Compile
+I mostly use compilation with Latex, surprisingly enough.
 
 #+begin_src emacs-lisp
+(defun hgf--close-compilation-if-successful (buf str)
+  "Close the compilation window if it is successful."
+  (if (null (string-match ".*exited abnormally.*" str))
+      ;;no errors, make the compilation window go away in a few seconds
+      (progn
+	(run-at-time
+	 "1 sec" nil 'kill-buffer
+	 (get-buffer-create "*compilation*"))
+	(message "No Compilation Errors!"))))
+
 (use-package compile
   :ensure nil
   :config
-  (general-def 'normal
-    "C-x c" 'recompile))
+  (general-nmap "C-x c" 'recompile)
+  (add-hook 'compilation-finish-functions
+  'hgf--close-compilation-if-successful))
 #+end_src
 
 * Files
@@ -42,7 +67,7 @@ found throughout this file.
 #+begin_src emacs-lisp
 (use-package files
   :ensure nil
-  :config (general-def 'normal "C-s" 'save-buffer))
+  :config (general-def "C-s" 'save-buffer))
 #+end_src
 
 * Imenu
@@ -51,8 +76,7 @@ found throughout this file.
 (use-package imenu
   :ensure nil
   :config
-  (general-def 'normal
-    "M-i" 'imenu))
+  (general-nmap "M-i" 'imenu))
 #+end_src
 
 * Flycheck
@@ -75,8 +99,8 @@ Building common paths.
 #+end_src
 
 * Macros
-I only have a single macro defined. And it probably exists in the standard library, or a commonly
-used package. And yet here we are.
+I only have a single macro defined. And it probably exists in the standard
+library, or a commonly used package. And yet here we are.
 
 #+begin_src emacs-lisp
 (defmacro ~> (init &rest lst)
@@ -143,19 +167,28 @@ Depending on the operating system, there are a few options.
 	(t ;; t for true operating system
 	 (progn
 	   (set-face-attribute 'default nil
-			       :family "Iosevka Term"
-			       :height 105)
+			       :family "Iosevka"
+			       :height 130)
 	   (set-face-attribute 'fixed-pitch nil
-			       :family "Iosevka Term"
-			       :height 105)
+			       :family "Iosevka"
+			       :height 130)
 	   (set-face-attribute 'variable-pitch nil
 			       :family "Source Serif Pro"
-			       :height 105)))))
+			       :height 130)))))
+
+(defun text-scale-reset ()
+  "Reset the height of the default face."
+  (interactive)
+  (text-scale-set 0))
 
 (use-package faces
   :ensure nil
   :config
-  (hgf--set-font))
+  (hgf--set-font)
+  (general-def 'normal
+    "C-+" 'text-scale-increase
+    "C--" 'text-scale-decrease
+    "C-=" 'text-scale-reset))
 #+end_src
 
 * Face modifications
@@ -188,7 +221,6 @@ Some things aren't meant to be. Like variable sized fonts in my org files.
 		    outline-7
 		    outline-8))
       (set-face-attribute face nil :weight 'semi-bold :height 1.0))))
-
 #+end_src
 
 * Modeline
@@ -229,7 +261,7 @@ Vimmy keys and feel, for us vimfolk.
   (setq evil-emacs-state-cursor 'bar
 	evil-search-module 'evil-search
 	evil-ex-search-case 'smart)
-  (general-def 'normal
+  (general-nmap
     "j" 'evil-next-visual-line
     "k" 'evil-previous-visual-line
     "L" 'evil-end-of-line
@@ -237,11 +269,19 @@ Vimmy keys and feel, for us vimfolk.
     "?" 'swiper
     "C-u" 'evil-scroll-up
     "C-w 1" 'delete-other-windows
-    "C-w x" 'kill-this-buffer)
-  (general-def 'insert
+    "C-w x" 'kill-this-buffer
+    "C-w C-h" 'evil-window-left
+    "C-w C-j" 'evil-window-down
+    "C-w C-k" 'evil-window-up
+    "C-w C-l" 'evil-window-right)
+  (general-vmap
+    "L" 'evil-end-of-line
+    "H" 'evil-first-non-blank-of-visual-line)
+  (general-imap
     "C-e" 'end-of-line
     "C-a" 'beginning-of-line
     "C-k" 'kill-line
+    "C-d" 'delete-char
     "C-y" 'yank))
 (use-package evil-collection
   :after evil
@@ -252,6 +292,11 @@ Vimmy keys and feel, for us vimfolk.
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))
+(use-package evil-commentary
+  :config
+  (evil-commentary-mode 1)
+  (general-nmap evil-commentary-mode-map
+    "M-;" 'evil-commentary-line))
 (use-package evil-exchange
   :config
   (evil-exchange-cx-install))
@@ -265,22 +310,36 @@ Vimmy keys and feel, for us vimfolk.
   (evil-org-agenda-set-keys))
 #+end_src
 
+** C-i != TAB ∧ C-m != RET
+I mean, they used to be, but we aren't limited to real terminals anymore, are
+we?
+
+#+begin_src emacs-lisp
+(general-def input-decode-map [?\C-i] [C-i])
+(general-def input-decode-map [?\C-m] [C-m])
+
+(general-def 'normal "<C-i>" 'evil-jump-forward)
+(general-unbind evil-motion-state-map "TAB")
+#+end_src
+
 * LSP & Completion
 
 #+begin_src emacs-lisp
 (use-package company
-  :config (global-company-mode +1))
+  :config (global-company-mode 1))
 #+end_src
 
 #+begin_src emacs-lisp
-(setq lsp-keymap-prefix "C-c l")
 (use-package lsp-mode
-  :hook ((lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp
+  :commands (lsp lsp-deferred)
+  :init (setq lsp-keymap-prefix "C-c l")
   :config
   (setq gc-cons-threshold 200000000
 	read-process-output-max (* 1024 1024 10)
-	lsp-completion-provider :capf))
+	lsp-completion-provider :capf)
+  (lsp-enable-which-key-integration t)
+
+  (general-imap lsp-mode-map "C-x C-o" 'completion-at-point))
 
 (use-package lsp-ui
   :commands lsp-ui-mode)
@@ -288,37 +347,55 @@ Vimmy keys and feel, for us vimfolk.
 (use-package lsp-ivy
   :commands lsp-ivy-workspace-symbol)
 
+(use-package company-lsp
+  :config
+  (add-to-list 'company-lsp-filter-candidates '(digestif . nil)))
+
+(setq lsp-tex-server 'digestif)
+(setq lsp-clients-digestif-executable "/home/hgf/.luarocks/bin/digestif")
+(setq lsp-clients-texlab-executable "/home/hgf/.local/bin/texlab")
+
 #+end_src
 
 * Wrangle some defaults
-** Pot pourri
 #+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(show-paren-mode 1)
-(scroll-bar-mode 0)
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(blink-cursor-mode 0)
-(fringe-mode '(nil . 0))
-(setq vc-follow-symlinks t
-      sentence-end-double-space nil
-      require-final-newline t
-      confirm-kill-emacs 'y-or-n-p
-      inhibit-startup-screen t
-      inhibit-startup-message t
-      initial-scratch-message nil
-      initial-major-mode 'org-mode
-      ring-bell-function 'ignore
-      mode-line-default-help-echo nil
-      show-paren-delay 0.0
-      mouse-yank-at-point t
-      default-input-method "TeX")
-(fset 'yes-or-no-p 'y-or-n-p)
-(add-hook 'after-save-hook
-	  'executable-make-buffer-file-executable-if-script-p)
+(use-package emacs
+  :ensure nil
+  :config
+  (global-auto-revert-mode 1)
+  (show-paren-mode 1)
+  (scroll-bar-mode 0)
+  (tool-bar-mode 0)
+  (menu-bar-mode 0)
+  (setq tab-bar-new-button-show nil
+	tab-bar-close-button-show nil)
+  (blink-cursor-mode 0)
+  (fringe-mode '(nil . nil))
+  (setq vc-follow-symlinks t
+	sentence-end-double-space nil
+	require-final-newline t
+	confirm-kill-emacs 'y-or-n-p
+	ring-bell-function 'ignore
+	mode-line-default-help-echo nil
+	show-paren-delay 0.0
+	mouse-yank-at-point t
+	default-input-method "TeX")
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (add-hook 'after-save-hook
+	    'executable-make-buffer-file-executable-if-script-p)
 
-(setq-default fill-column 100
-	      cursor-type 'bar)
+  (setq-default 
+		cursor-type 'bar))
+#+end_src
+
+** Startup
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq inhibit-startup-screen t
+	inhibit-startup-message t
+	initial-scratch-message nil
+	initial-major-mode 'org-mode))
 #+end_src
 
 ** Backups
@@ -337,7 +414,8 @@ Vimmy keys and feel, for us vimfolk.
 #+end_src
 
 * Interactive goodies
-Great guy, that Harry Schwartz. Most of these functions are directly copied from his dotfiles.
+Great guy, that Harry Schwartz. Most of these functions are directly copied from
+his dotfiles.
 
 ** Open file as =sudo=
 
@@ -360,10 +438,14 @@ Great guy, that Harry Schwartz. Most of these functions are directly copied from
 #+end_src
 
 * Org
-Org is amazing and I use it all the time. And once again, a large majority of this section is inspired by Harry Schwartz.
+Org is amazing and I use it all the time. And once again, a large majority of
+this section is inspired by Harry Schwartz.
 
 #+begin_src emacs-lisp
-(use-package org)
+(use-package org
+  :config
+  (general-nmap org-mode-map
+    "g t" 'org-todo))
 #+end_src
 
 ** GTD
@@ -377,15 +459,14 @@ All about them tasks.
     (error nil))
   (org-capture nil "i"))
 (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0)))
-(setq org-refile-use-outline-path 'file)
-(setq org-clock-into-drawer nil)
-(setq org-log-done 'time)
+(setq org-refile-use-outline-path 'file
+      org-clock-into-drawer nil
+      org-log-done 'time)
 (setq org-refile-targets `((,(hgf-journal-path "projects.org") :maxlevel . 2)
 			   (,(hgf-journal-path "someday.org") :level . 1)
 			   (,(hgf-journal-path "tickler.org") :level . 1)
 			   (,(hgf-journal-path "inbox.org") :level . 0)
 			   (,(hgf-journal-path "fraunhofer.org") :maxlevel . 3)))
-(setq org-todo-keywords '((sequence "TODO(t)" "WAIT(w)" "|" "DONE(d)" "QUIT(q)")))
 (setq org-agenda-files
       '(
 	"~/cloud/journal/projects.org"
@@ -399,14 +480,14 @@ All about them tasks.
 	 "*  %?\n")
 	("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
 	 "* TODO %?\n")))
-(general-def
-  "C-c c" 'org-capture
-  "C-c a" 'org-agenda
-  "C-c i" 'org-capture-inbox
-  "C-c t" (lambda () (interactive) (org-capture nil "t")))
+(hgf-leader-def
+  "oc" 'org-capture
+  "oa" 'org-agenda
+  "oi" 'org-capture-inbox)
 #+end_src
 
-Alright, this function isn't exactly the cleanest possible thing in the world, but it's useful enough for me (for now).
+Alright, this function isn't exactly the cleanest possible thing in the world,
+but it's useful enough for me (for now).
 
 #+begin_src emacs-lisp
 (defun org-generate-report ()
@@ -417,7 +498,7 @@ Alright, this function isn't exactly the cleanest possible thing in the world, b
 					       (let ((task (org-element-property :title (org-element-property :parent (org-element-property :parent clock))))
 						     (val  (org-element-property :duration clock)))
 						 (format "| %s | %s |" (car task) val)))))))))
-(general-def 'normal "C-c C-x C-r" 'org-generate-report)
+(general-nmap "C-c C-x C-r" 'org-generate-report)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -454,19 +535,32 @@ Ledger entries too, please
 #+end_src
 
 ** Cosmetics
-I prefer my org-files non-indented. I also like to see the leading stars (otherwise there's a weird gap when things aren't indented.
+I prefer my org-files non-indented. I also like to see the leading stars
+(otherwise there's a weird gap when things aren't indented.
 
 #+begin_src emacs-lisp
 (setq org-adapt-indentation nil
-      org-hide-leading-stars nil
+      org-hide-leading-stars t
       org-cycle-separator-lines 0
       org-hide-emphasis-markers t
       org-fontify-done-headline nil)
 #+end_src
 
+I also prefer hiding the begin and end line of source blocks.
+
+#+begin_src emacs-lisp
+(add-hook
+ 'org-mode-hook
+ (lambda ()
+   "Beautify Org Symbols"
+   (push '("#+begin_src" . "λ") prettify-symbols-alist)
+   (push '("#+end_src" . "~") prettify-symbols-alist)
+   (prettify-symbols-mode)))
+#+end_src
+
 ** Editing
-I often start new headings in the middle of editing a paragraph and I've never wanted to carry
-over the text after the point.
+I often start new headings in the middle of editing a paragraph and I've never
+wanted to carry over the text after the point.
 
 #+begin_src emacs-lisp
 (setq org-M-RET-may-split-line nil
@@ -478,8 +572,7 @@ Quickly adding a link with the title from said link. Nifty.
 #+begin_src emacs-lisp
 (use-package org-cliplink
   :config
-  (general-def
-    "C-x C-l" 'org-cliplink))
+  (general-def org-mode-map "C-x C-l" 'org-cliplink))
 #+end_src
 
 ** References and citations
@@ -522,6 +615,29 @@ I use org to write many of my latex files, including longer documents.
 #+end_src
 
 * Major modes
+
+** Vterm
+Vterm is the nicest terminal emulator for Emacs I've found so far. But it needs
+module support, which requires building emacs with =--with-modules=.
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :config
+  (setq vterm-shell "/usr/bin/fish"
+	vterm-kill-buffer-on-exit t
+	vterm-copy-exclude-prompt t)
+  (general-nmap "<f4>" 'vterm))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun hgf-named-term (term-name)
+  "Generate a terminal with buffer name TERM-NAME."
+  (interactive "sTerminal purpose: ")
+  (vterm (concat "term-" term-name)))
+
+(hgf-leader-def "r t" 'hgf-named-term)
+#+end_src
+
 ** Python
 #+begin_src emacs-lisp
 (use-package lsp-pyright
@@ -547,8 +663,8 @@ Emacs IPython Notebooks
 #+end_src
 
 ** Markdown
-I use markdown for all kinds of stuff, mostly readmes, but also a variety of documents in
-conjunction with =pandoc=.
+I use markdown for all kinds of stuff, mostly readmes, but also a variety of
+documents in conjunction with =pandoc=.
 
 #+begin_src emacs-lisp
 (use-package markdown-mode
@@ -598,28 +714,7 @@ TeX-auto-local (hgf-emacs-path "auctex-auto"))
 ** Dired
 
 #+begin_src emacs-lisp
-(general-def 'normal "-" 'dired)
-#+end_src
-
-** Vterm
-Vterm is the nicest terminal emulator for Emacs I've found so far. But it needs module support, which requires building emacs with =--with-modules=.
-
-#+begin_src emacs-lisp
-(use-package vterm
-  :config
-  (setq vterm-shell "/usr/bin/fish"
-	vterm-kill-buffer-on-exit t
-	vterm-copy-exclude-prompt t)
-  (general-def 'normal
-    "<f4>" 'vterm))
-#+end_src
-
-And some nice packages to go with that.
-
-#+begin_src emacs-lisp
-(use-package vterm-toggle
-  :config
-  (general-def "C-c t" 'vterm-toggle-cd))
+(general-nmap "-" 'dired)
 #+end_src
 
 ** Elixir
@@ -642,6 +737,7 @@ And some nice packages to go with that.
 #+end_src
 
 ** Rust
+
 #+begin_src emacs-lisp
 (use-package rust-mode
   :config
@@ -649,6 +745,7 @@ And some nice packages to go with that.
 #+end_src
 
 * Minor modes
+
 ** Which key
 For exploring new keys and remembering the lesser used ones.
 
@@ -658,14 +755,12 @@ For exploring new keys and remembering the lesser used ones.
   (which-key-mode))
 #+end_src
 
-** Olivetti
-Centering text when writing prose.
+** Visual Fill Column
 
 #+begin_src emacs-lisp
-(use-package olivetti
+(use-package visual-fill-column
   :config
-  (setq-default olivetti-body-width 120)
-  (add-hook 'org-mode-hook 'olivetti-mode))
+  (setq-default visual-fill-column-width 90))
 #+end_src
 
 ** Outshine
@@ -697,7 +792,7 @@ Centering text when writing prose.
 #+begin_src emacs-lisp
 (use-package magit
   :config
-  (general-def "C-c d" 'magit-list-repositories))
+  (hgf-c-def "d" 'magit-list-repositories))
 #+end_src
 
 ** Repolist
@@ -817,11 +912,15 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 (use-package projectile
   :config
   (projectile-mode +1)
-  (general-def 'normal
-    "M-p" 'projectile-command-map
-    "C-p" 'projectile-find-file)
+  (hgf-leader-def
+    "p" 'projectile-command-map
+    "ff" 'projectile-find-file)
   (setq projectile-completion-system 'ivy)
-  (setq projectile-project-search-path '("~/dev" "~/dev/fraunhofer")))
+  (setq projectile-project-search-path
+	'("~/dev/uni"
+	  "~/dev/fraunhofer"
+	  "~/dev/ml"
+	  "~/dev/yaks")))
 #+end_src
 
 Some additional utilities I mostly use with Projectile:
@@ -832,9 +931,10 @@ Some additional utilities I mostly use with Projectile:
 * Yasnippet
 
 #+begin_src emacs-lisp
-(use-package yasnippet)
-(setq yas-snippet-dirs `(,(hgf-emacs-path "snippets"))
-      yas-indent-line 'fixed)
+(use-package yasnippet-snippets)
+(use-package yasnippet
+  :config
+  (setq yas-indent-line 'fixed))
 (yas-global-mode 1)
 #+end_src
 
@@ -844,7 +944,10 @@ Some additional utilities I mostly use with Projectile:
 #+begin_src emacs-lisp
 (use-package helpful
   :config
+  (hgf-leader-def
+    "h h" 'helpful-at-point)
   (general-def
+    "C-h h" 'helpful-at-point
     "C-h k" 'helpful-key
     "C-h F" 'helpful-function
     "C-h C" 'helpful-command
@@ -861,19 +964,16 @@ use.
 #+begin_src emacs-lisp
 (use-package hydra
   :config
-  (defhydra hydra-shell (:exit t)
-    "Execute shell command."
-    ("m" (start-process "hydramake" nil "make") "make"))
   (defhydra hydra-window ()
     "Window management"
     ("o" other-window "other")
-    ("h" windmove-left "left")
-    ("j" windmove-down "down")
-    ("k" windmove-up "up")
-    ("l" windmove-right "right")
-    ("s" split-window-below "sp-below")
-    ("v" split-window-right "sp-right")
-    ("d" delete-window "delete")
+    ("h" evil-window-left "left")
+    ("j" evil-window-down "down")
+    ("k" evil-window-up "up")
+    ("l" evil-window-right "right")
+    ("s" evil-window-split "split")
+    ("v" evil-window-vsplit "vsplit")
+    ("q" evil-quit "quit")
     ("f" find-file "file")
     ("b" ivy-switch-buffer "buffer")
     ("m" kill-this-buffer "murder")
@@ -911,13 +1011,10 @@ use.
     ("i" (call-interactively #'package-install) "install")
     ("u" (package-utils-upgrade-all) "upgrade")
     ("d" (call-interactively #'package-delete) "delete"))
-  (general-def
-    "C-c s" 'hydra-shell/body
-    "C-c P" 'hydra-package/body
-    "C-c f" 'hydra-files/body
-    "C-c w" 'hydra-window/body)
-  (general-def 'normal
-    "C-e" 'hydra-files/body))
+  (hgf-leader-def
+    "P" 'hydra-package/body
+    "f" 'hydra-files/body
+    "w" 'hydra-window/body))
 #+end_src
 
 * Custom file
@@ -928,10 +1025,30 @@ use.
 #+end_src
 
 * Theme
+
+#+begin_src emacs-lisp
+(use-package autothemer)
+#+end_src
+
 I am partial to Nord.
 
 #+begin_src emacs-lisp
 (use-package nord-theme)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package solarized-theme
+  :config (setq solarized-scale-org-headlines nil
+		solarized-use-variable-pitch nil
+		solarized-height-plus-1 1
+		solarized-height-plus-2 1
+		solarized-height-plus-3 1
+		solarized-height-plus-4 1
+		solarized-high-contrast-mode-line t
+		solarized-scale-org-headlines nil
+		solarized-scale-outline-headlines nil
+		solarized-use-less-bold t
+		solarized-use-more-italic nil))
 #+end_src
 
 For setting transparency. I don't really use it, but it's there if I want to.
@@ -953,7 +1070,8 @@ For setting transparency. I don't really use it, but it's there if I want to.
 Add some custom themes to the mix and make sure =rainbow-mode= is available.
 
 #+begin_src emacs-lisp
-(add-to-list 'custom-theme-load-path (hgf-emacs-path "themes/"))
+(setq custom-theme-directory (hgf-emacs-path "themes/"))
+;; (add-to-list 'custom-theme-load-path (hgf-emacs-path "themes/"))
 (use-package rainbow-mode)
 #+end_src
 
@@ -973,31 +1091,8 @@ Add some custom themes to the mix and make sure =rainbow-mode= is available.
   (progn
     (hgf-disable-all-themes)
     (load-theme theme t)
-    (set-face-attribute  'org-block-begin-line       nil  :underline nil :inherit  'fixed-pitch :background nil)
-    (set-face-attribute  'org-block-end-line         nil  :overline  nil :inherit  'fixed-pitch :background nil)
-    (set-face-attribute  'org-block                  nil  :inherit  'fixed-pitch :background nil :foreground nil)
-    (set-face-attribute  'org-code                   nil  :inherit  'fixed-pitch)
-    (set-face-attribute  'org-document-title         nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-document-info-keyword  nil  :inherit  'fixed-pitch)
-    (set-face-attribute  'org-meta-line              nil  :inherit  'fixed-pitch :italic nil)
-    (set-face-attribute  'org-verbatim               nil  :inherit  'fixed-pitch)
-    (set-face-attribute  'org-tag                    nil  :inherit  'fixed-pitch :weight 'normal)
-    (set-face-attribute  'org-done                   nil  :weight 'normal :inherit 'fixed-pitch)
-    (set-face-attribute  'org-todo                   nil  :weight 'normal :inherit 'fixed-pitch)
-    (set-face-attribute  'org-level-1                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-level-2                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-level-3                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-level-4                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-level-5                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-level-6                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-level-7                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'org-level-8                nil  :weight 'normal :height 1.0)
-    (set-face-attribute  'font-lock-comment-face     nil  :inherit 'fixed-pitch)
-    (set-face-attribute  'neo-file-link-face         nil  :height 100)
-					;(set-face-attribute  'mode-line                  nil  :background nil :overline nil :underline t)
-					;(set-face-attribute  'mode-line-inactive         nil  :background nil :overline nil :underline t)
     ))
-(hgf-load-theme 'nord)
+(hgf-load-theme 'weatherwax)
 #+end_src
 
 * Triage
@@ -1008,6 +1103,8 @@ Add some custom themes to the mix and make sure =rainbow-mode= is available.
       Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+(general-def 'normal "DEL" 'hgf-switch-to-previous-buffer)
 
 ;; ** Delete file
 (defun visiting-file-p ()
@@ -1077,24 +1174,42 @@ Add some custom themes to the mix and make sure =rainbow-mode= is available.
 		 backend)
 		nil
 		outfile))
-(add-hook 'compilation-finish-functions
-	  (lambda (buf str)
-	    (if (null (string-match ".*exited abnormally.*" str))
-		;;no errors, make the compilation window go away in a few seconds
-		(progn
-		  (run-at-time
-		   "1 sec" nil 'kill-buffer
-		   (get-buffer-create "*compilation*"))
-		  (message "No Compilation Errors!")))))
+
+(defun hgf-mktemp ()
+  "Create a temporary scratch directory."
+  (interactive)
+  (counsel-find-file (s-trim (shell-command-to-string "mktemp -d"))))
+
 #+end_src
 
-* Meta modes
-** Prog mode
-I like =hl-line-mode= but only when programming. It's quite annoying when writing prose.
-
+* Prog mode
 #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'outshine-mode)
 #+end_src
 
 
+
+
+** Spell checking
+#+begin_src emacs-lisp
+#+end_src
+
+* Text mode
+I like auto-filling, 80 columns and spell-checking, thank you very much.
+#+begin_src emacs-lisp
+(use-package text-mode
+  :ensure nil
+  :config
+  (setq-default fill-column 80)
+  (add-hook 'text-mode-hook 'auto-fill-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :ensure nil
+  :config
+  (setq ispell-program-name "aspell"
+	ispell-extra-args '("--sug-mode=ultra"))
+  (add-hook 'text-mode-hook 'flyspell-mode))
+  
+#+end_src

@@ -5,7 +5,7 @@ rofi.modi:                           run,drun,window
 rofi.width:                          16
 rofi.lines:                          3
 rofi.columns:                        1
-rofi.font:                           Iosevka Term 11
+rofi.font:                           Iosevka Medium 11
 rofi.hide-scrollbar:                 true
 
 #include "themes/nord.theme"

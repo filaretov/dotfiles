@@ -18,10 +18,14 @@ alias por "poetry run"
 alias pos "poetry shell"
 
 alias ls "exa"
-alias ll "exa --git-ignore -l --git --group-directories-first"
+alias ll "exa  -l --git --group-directories-first"
 alias la "exa -a"
 alias lla "exa -la --git"
 alias tree "exa --tree"
+
+alias mv "mv -iv"
+alias cp "cp -riv"
+alias mkdir "mkdir -vp"
 
 alias clip "xclip -sel clip"
 
@@ -39,6 +43,8 @@ alias issue "gh issue create"
 alias bug "gh issue create --label bug"
 alias enhancement "gh issue create --label enhancement"
 alias critical "gh issue create --label critical"
+
+alias utar "tar xvf"
 
 # Find local fish file
 set -l lc_file "$fish_path/"(hostname)".fish"
@@ -58,7 +64,7 @@ if type -f starship >/dev/null ^/dev/null
     function __conda_add_prompt; end
 end
 
-#source $fish_path/themes/nord.fish
+source $fish_path/themes/weatherwax.fish
 
 set -x EDITOR "nvim"
 

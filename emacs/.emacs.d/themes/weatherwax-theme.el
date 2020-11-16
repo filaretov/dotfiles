@@ -1,4 +1,4 @@
-;;; weatherwax.el --- A simple theme, mostly suited for headology
+;;; weatherwax.el --- A simple theme, well suited for headology
 
 ;; Copyright (C) 2020-present
 
@@ -10,138 +10,105 @@
 ;;; References:
 
 ;;; Code:
+(require 'autothemer)
 
-(deftheme weatherwax "A theme for headology")
+(autothemer-deftheme
+ weatherwax "A theme for headology."
 
-;;; Color Palette
+ ((((class color) (min-colors #xFFFFFF)))
 
-(defvar weatherwax-default-colors-alist
-  '(("weatherwax-blue"    . "#54b5de")
-    ("weatherwax-cyan"    . "#54dade")
-    ("weatherwax-lime"    . "#80d3a4")
-    ("weatherwax-yellow"  . "#d3cb80")
-    ("weatherwax-red"     . "#de6954")
-    ("weatherwax-orange"  . "#de8a54")
-    ("weatherwax-white"   . "#f0f0f0")
-    ("weatherwax-black"   . "#2e3440")
-    ("weatherwax-grey"    . "#aaaaaa")
-    ("weatherwax-swamp"   . "#91de54"))
+  (weatherwax-purple   "#a37ed3")
+  (weatherwax-orange   "#d3a37e")
+  (weatherwax-lime     "#80d3a4")
+  (weatherwax-yellow   "#d3cd7e")
+  (weatherwax-blue     "#7ea0d3")
+  (weatherwax-cyan     "#7ed3cd")
+  (weatherwax-red      "#de6954")
+  (weatherwax-white    "#f0f0f0")
+  (weatherwax-hl       "#ced2db")
+  (weatherwax-grey     "#aaaaaa")
+  (weatherwax-lblack   "#4B5467")
+  (weatherwax-ablack   "#313844")
+  (weatherwax-black    "#252A33")
+  ;; (weatherwax-black    "#2e3440")
+  )
 
-  "Weatherwax color palette. Each element has the form (NAME . HEX).")
+ ;; --- Base ---
+ ((default          (:foreground weatherwax-white :background weatherwax-black))
+  (error            (:foreground weatherwax-red))
+  (cursor           (:background weatherwax-white :foreground weatherwax-black))
+  (font-lock-comment-face (:foreground weatherwax-grey))
 
-(defvar weatherwax-override-colors-alist
-  '()
-  "Place to override default theme colors.
+  ;; --- UI ---
+  (mode-line            (:foreground weatherwax-black :background weatherwax-lime))
+  (mode-line-inactive   (:background weatherwax-lblack))
+  (vertical-border      (:foreground weatherwax-white))
+  (region               (:background weatherwax-hl))
+  (fringe               (:background weatherwax-black))
+  (tab-bar              (:background weatherwax-black))
+  (tab-bar-tab          (:background weatherwax-lblack :underline t))
+  (tab-bar-tab-inactive (:background weatherwax-black))
 
-You can override a subset of the theme's default colors by
-defining them in this alist before loading the theme.")
+  (minibuffer-prompt    (:foreground weatherwax-lime))
 
-(defvar weatherwax-colors-alist
-  (append weatherwax-default-colors-alist weatherwax-override-colors-alist))
+  ;; --- Base Programming ---
+  (font-lock-string-face   (:foreground weatherwax-lime))
+  (font-lock-keyword-face  (:foreground weatherwax-orange))
+  (font-lock-warning-face  (:foreground weatherwax-red))
+  (font-lock-builtin-face  (:foreground weatherwax-yellow))
+  (font-lock-function-name-face (:foreground weatherwax-yellow))
+  (font-lock-type-face     (:foreground weatherwax-orange))
+  (font-lock-constant-face (:foreground weatherwax-purple))
 
-(defmacro weatherwax-with-color-variables (&rest body)
-  "`let' bind all colors defined in `weatherwax-colors-alist' around BODY.
-Also bind `class' to ((class color) (min-colors 89))."
-  (declare (indent 0))
-  `(let ((class '((class color) (min-colors 89)))
-	 ,@(mapcar (lambda (cons)
-		     (list (intern (car cons)) (cdr cons)))
-		   weatherwax-colors-alist))
-     ,@body))
+  ;; --- Outline ---
+  (outline-1      (:foreground weatherwax-lime :weight 'normal))
+  (outline-2      (:foreground weatherwax-blue :weight 'normal))
+  (outline-3      (:foreground weatherwax-cyan :weight 'normal))
+  (outline-4      (:foreground weatherwax-lime :weight 'normal))
+  (outline-5      (:foreground weatherwax-blue :weight 'normal))
+  (outline-6      (:foreground weatherwax-cyan :weight 'normal))
+  (outline-7      (:foreground weatherwax-lime :weight 'normal))
+  (outline-8      (:foreground weatherwax-blue :weight 'normal))
 
-(weatherwax-with-color-variables
- (custom-theme-set-faces
-  'weatherwax
-   ;; --- Base ---
-   `(default          ((t (:foreground ,weatherwax-white :background ,weatherwax-black))))
+  ;; --- Org ---
+  (org-level-1      (:foreground weatherwax-lime :weight 'normal))
+  (org-level-2      (:foreground weatherwax-blue :weight 'normal))
+  (org-level-3      (:foreground weatherwax-cyan :weight 'normal))
+  (org-level-4      (:foreground weatherwax-lime :weight 'normal))
+  (org-level-5      (:foreground weatherwax-blue :weight 'normal))
+  (org-level-6      (:foreground weatherwax-cyan :weight 'normal))
+  (org-level-7      (:foreground weatherwax-white :weight 'normal))
+  (org-level-8      (:foreground weatherwax-white :weight 'normal))
+  (org-date         (:foreground weatherwax-blue :weight 'normal))
+  (org-done         (:foreground weatherwax-lime :weight 'normal))
+  (org-todo         (:foreground weatherwax-orange :weight 'normal))
+  (org-link         (:foreground weatherwax-cyan :weight 'normal :underline t))
+  (org-block        (:inherit 'fixed-pitch :foreground nil))
+  (org-document-title         (:foreground weatherwax-white :weight 'normal :underline nil))
+  (org-document-info         (:foreground weatherwax-white  :weight 'normal :underline nil))
+  (org-document-info-keyword (:foreground weatherwax-grey :weight 'normal :underline nil))
 
-   `(cursor           ((t (:background ,weatherwax-white :foreground ,weatherwax-black))))
-   `(font-lock-comment-face ((t (:foreground ,weatherwax-grey))))
+  ;; --- Flymake ---
+  (flymake-error    (:underline (:style 'wave :color weatherwax-red)))
 
-   ;; --- UI ---
-   `(mode-line           ((t (:foreground ,weatherwax-black :background ,weatherwax-lime))))
-   `(mode-line-inactive  ((t (:foreground ,weatherwax-grey :underline t :overline t))))
-   `(vertical-border     ((t (:foreground ,weatherwax-white))))
+  ;; --- Yasnippet ---
+  (yas-field-highlight-face (:background weatherwax-lblack))
 
-   ;; --- Base Programming ---
-   `(font-lock-string-face  ((t (:foreground ,weatherwax-lime))))
-   `(font-lock-keyword-face ((t (:foreground ,weatherwax-orange))))
-   `(font-lock-warning-face ((t (:foreground ,weatherwax-red))))
-   `(font-lock-builtin-face ((t (:foreground ,weatherwax-yellow))))
-   `(font-lock-function-name-face ((t (:foreground ,weatherwax-yellow))))
-   `(font-lock-type-face    ((t (:foreground ,weatherwax-orange))))
+  ;; --- VTerm ---
+  (vterm               (:foreground weatherwax-white))
+  (vterm-color-black   (:background weatherwax-black   :foreground weatherwax-black))
+  (vterm-color-red     (:background weatherwax-red     :foreground weatherwax-red))
+  (vterm-color-green   (:background weatherwax-lime    :foreground weatherwax-lime))
+  (vterm-color-yellow  (:background weatherwax-yellow  :foreground weatherwax-yellow))
+  (vterm-color-blue    (:background weatherwax-blue    :foreground weatherwax-blue))
+  (vterm-color-magenta (:background weatherwax-purple  :foreground weatherwax-purple))
+  (vterm-color-cyan    (:background weatherwax-cyan    :foreground weatherwax-cyan))
+  (vterm-color-white   (:background weatherwax-white   :foreground weatherwax-white))
 
-   ;; --- Outline ---
-   `(outline-1      ((t (:foreground ,weatherwax-lime :background ,weatherwax-black :weight normal))))
-   `(outline-2      ((t (:foreground ,weatherwax-blue :background ,weatherwax-black :weight normal))))
-   `(outline-3      ((t (:foreground ,weatherwax-cyan :background ,weatherwax-black :weight normal))))
-   `(outline-4      ((t (:foreground ,weatherwax-lime :background ,weatherwax-black :weight normal))))
-   `(outline-5      ((t (:foreground ,weatherwax-blue :background ,weatherwax-black :weight normal))))
-   `(outline-6      ((t (:foreground ,weatherwax-cyan :background ,weatherwax-black :weight normal))))
-   `(outline-7      ((t (:foreground ,weatherwax-lime :background ,weatherwax-black :weight normal))))
-   `(outline-8      ((t (:foreground ,weatherwax-blue :background ,weatherwax-black :weight normal))))
+  ;; --- NeoTree ---
+  (neo-file-link-face (:foreground weatherwax-white :height 'unspecified))
+  (neo-dir-link-face (:foreground weatherwax-white))
+  ))
 
-   ;; --- Org ---
-   `(org-level-1      ((t (:foreground ,weatherwax-lime :background ,weatherwax-black :weight normal))))
-   `(org-level-2      ((t (:foreground ,weatherwax-blue :background ,weatherwax-black :weight normal))))
-   `(org-level-3      ((t (:foreground ,weatherwax-cyan :background ,weatherwax-black :weight normal))))
-   `(org-level-4      ((t (:foreground ,weatherwax-lime :background ,weatherwax-black :weight normal))))
-   `(org-level-5      ((t (:foreground ,weatherwax-blue :background ,weatherwax-black :weight normal))))
-   `(org-level-6      ((t (:foreground ,weatherwax-cyan :background ,weatherwax-black :weight normal))))
-   `(org-level-7      ((t (:foreground ,weatherwax-white :background ,weatherwax-black :weight normal))))
-   `(org-level-8      ((t (:foreground ,weatherwax-white :background ,weatherwax-black :weight normal))))
-   `(org-date         ((t (:foreground ,weatherwax-blue :background ,weatherwax-black :weight normal))))
-   `(org-done         ((t (:foreground ,weatherwax-lime :background ,weatherwax-black :weight normal))))
-   `(org-todo         ((t (:foreground ,weatherwax-orange :background ,weatherwax-black :weight normal))))
-   `(org-link         ((t (:foreground ,weatherwax-cyan :background ,weatherwax-black :weight normal :underline t))))
-
-   ;; --- Flymake ---
-   `(flymake-error    ((t (:underline (:style wave :color ,weatherwax-red)))))
-   
-   ))
-
-;;; Rainbow support
-(declare-function rainbow-mode 'rainbow-mode)
-(declare-function rainbow-colorize-by-assoc 'rainbow-mode)
-
-(defvar weatherwax-add-font-lock-keywords nil
-  "Whether to add font-lock keywords for weatherwax color names.
-
-In buffers visiting library `weatherwax-theme.el' the weatherwax
-specific keywords are always added, provided that library has
-been loaded (because that is where the code that does it is
-definded).  If you visit this file and only enable the theme,
-then you have to turn `rainbow-mode' off and on again for the
-weatherwax-specific font-lock keywords to be used.
-
-In all other Emacs-Lisp buffers this variable controls whether
-this should be done.  This requires library `rainbow-mode'.")
-
-(defvar weatherwax-colors-font-lock-keywords nil)
-
-(defun weatherwax--rainbow-turn-on ()
-  "Maybe also add font-lock keywords for weatherwax colors."
-  (when (and (derived-mode-p 'emacs-lisp-mode)
-	     (or weatherwax-add-font-lock-keywords
-		 (and (buffer-file-name)
-		      (or
-		       (equal (file-name-nondirectory (buffer-file-name))
-			      "weatherwax-theme.el")
-		       (equal (file-name-nondirectory (buffer-file-name))
-			      "lipwig-theme.el")))))
-    (unless weatherwax-colors-font-lock-keywords
-      (setq weatherwax-colors-font-lock-keywords
-	    `((,(regexp-opt (mapcar 'car weatherwax-default-colors-alist) 'words)
-	       (0 (rainbow-colorize-by-assoc weatherwax-default-colors-alist))))))
-    (font-lock-add-keywords nil weatherwax-colors-font-lock-keywords 'end)))
-
-(defun weatherwax--rainbow-turn-off ()
-  "Also remove font-lock keywords for weatherwax colors."
-  (font-lock-remove-keywords nil weatherwax-colors-font-lock-keywords))
-
-(when (fboundp 'advice-add)
-  (advice-add 'rainbow-turn-on :after  #'weatherwax--rainbow-turn-on)
-  (advice-add 'rainbow-turn-off :after #'weatherwax--rainbow-turn-off))
-
-
+;;; I ATE'NT DEAD
 (provide-theme 'weatherwax)
