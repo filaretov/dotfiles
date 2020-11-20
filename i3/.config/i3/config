@@ -119,11 +119,13 @@ assign  [class="okular"]          $ws8
 assign  [class="Thunar"]          $ws3
 assign  [class="(?i)matplotlib"]  $ws7
 assign  [class="okular"]          $ws8
+assign  [class="(?i)steam"]       $ws4
 # Comms
-assign  [class="(?i)telegram"]    $ws9
-assign  [class="(?i)zoom"]        $ws9
-assign  [class="(?i)slack"]       $ws9
-assign  [class="(?i)discord"]     $ws9
+assign  [class="(?i)telegram"]            $ws9
+assign  [class="(?i)zoom"]                $ws9
+assign  [class="(?i)slack"]               $ws9
+assign  [class="(?i)discord"]             $ws9
+assign  [class="(?i)Microsoft Teams"]     $ws9
 
 # ** Switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -194,12 +196,17 @@ mode "resize" {
 # * Window decorations
 #border pixel 1
 new_window 1pixel
-hide_edge_borders both
+#hide_edge_borders both
+for_window [class=".*"] border pixel 3
+
+gaps inner 8
+smart_borders on
+smart_gaps on
 
 # * Rofi
 # start dmenu (a program launcher)
 bindsym $mod+space exec rofi -show drun
-bindsym Mod1+space exec rofi -show drun
+bindsym $mod+x     exec rofi -show drun
 bindsym $mod+d exec dmenu_run
 
 # Nord theme colors

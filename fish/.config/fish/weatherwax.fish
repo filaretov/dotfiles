@@ -17,6 +17,7 @@ set -x PATH ~/.racket/bin/ $PATH
 set -x PATH ~/.pyenv/bin/ $PATH
 set -x PATH ~/.ghcup/bin/ $PATH
 set -x PATH ~/.cabal/bin/ $PATH
+set -x PATH ~/media/packages/node-v12.18.3-linux-x64/bin/ $PATH
 
 set -x FZF_DEFAULT_COMMAND "rg --files"
 
