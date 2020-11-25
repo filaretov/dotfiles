@@ -1,55 +1,31 @@
 add_newline = false
 
-prompt_order = [
-    "time",
-    "username",
-    "hostname",
-    # "kubernetes",
-    "directory",
-    "git_branch",
-    "git_commit",
-    "git_state",
-    "git_status",
-    "hg_branch",
-    "docker_context",
-    # "package",
-    "dotnet",
-    # "elixir",
-    # "elm",
-    # "erlang",
-    # "golang",
-    # "haskell",
-    # "java",
-    # "julia",
-    # "nodejs",
-    # "ocaml",
-    # "php",
-    # "purescript",
-    # "python",
-    # "ruby",
-    # "rust",
-    # "terraform",
-    # "zig",
-    # "nix_shell",
-    "conda",
-    # "memory_usage",
-    # "aws",
-    "env_var",
-    # "crystal",
-    # "cmd_duration",
-    # "custom",
-    "line_break",
-    "jobs",
-    "battery",
-    "character",
-]
+format = """\
+    $time\
+    $username\
+    $hostname\
+    $directory\
+    $git_branch\
+    $git_commit\
+    $git_state\
+    $git_status\
+    $hg_branch\
+    $docker_context\
+    $dotnet\
+    $conda\
+    $env_var\
+    $line_break\
+    $jobs\
+    $battery\
+    $character\
+"""
 
 [directory]
-prefix = ""
 style = "green"
 
 [character]
-symbol = "λ"
+success_symbol = "[λ](green)"
+error_symbol = "[λ](red)"
 
 [python]
 symbol = ""
@@ -57,6 +33,7 @@ symbol = ""
 [conda]
 symbol = ""
 style = "blue"
+format = "[$environment]"
 
 [line_break]
 disabled = true
