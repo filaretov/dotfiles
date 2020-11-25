@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
 # SPDX-License-Identifier: MIT
 set -gx TERMINAL terminator
-if test -f $HOME/.miniconda3/etc/fish/conf.d/conda.fish
-    source $HOME/.miniconda3/etc/fish/conf.d/conda.fish
+if test -f $HOME/.conda/etc/fish/conf.d/conda.fish
+    source $HOME/.conda/etc/fish/conf.d/conda.fish
 end
 
 set -x PATH ~/.cargo/bin $PATH
@@ -17,6 +17,7 @@ set -x PATH ~/.racket/bin/ $PATH
 set -x PATH ~/.pyenv/bin/ $PATH
 set -x PATH ~/.ghcup/bin/ $PATH
 set -x PATH ~/.cabal/bin/ $PATH
+set -x PATH ~/.poetry/bin/ $PATH
 set -x PATH ~/media/packages/node-v12.18.3-linux-x64/bin/ $PATH
 
 set -x FZF_DEFAULT_COMMAND "rg --files"

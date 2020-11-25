@@ -1,1 +1,1 @@
-eval "$HOME/.miniconda/bin/conda" "shell.fish" "hook" $argv | source
+eval "$HOME/.conda/bin/conda" "shell.fish" "hook" $argv | source

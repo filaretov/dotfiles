@@ -75,3 +75,4 @@ end
 status --is-interactive; and source (pyenv init -|psub)
 alias dp ~/.screenlayout/left_dp.sh
 alias default ~/.screenlayout/default.sh
+
