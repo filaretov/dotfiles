@@ -46,6 +46,9 @@ alias critical "gh issue create --label critical"
 
 alias utar "tar xvf"
 
+alias dp ~/.screenlayout/left_dp.sh
+alias default ~/.screenlayout/default.sh
+
 # Find local fish file
 set -l lc_file "$fish_path/"(hostname)".fish"
 if test -e $lc_file
@@ -64,8 +67,6 @@ if type -f starship >/dev/null ^/dev/null
     function __conda_add_prompt; end
 end
 
-source $fish_path/themes/weatherwax.fish
-
 set -x EDITOR "nvim"
 
 if test -e "$fish_path/z.fish"
@@ -73,6 +74,4 @@ if test -e "$fish_path/z.fish"
 end
 
 status --is-interactive; and source (pyenv init -|psub)
-alias dp ~/.screenlayout/left_dp.sh
-alias default ~/.screenlayout/default.sh
 

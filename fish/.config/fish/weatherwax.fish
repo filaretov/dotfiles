@@ -18,11 +18,15 @@ set -x PATH ~/.pyenv/bin/ $PATH
 set -x PATH ~/.ghcup/bin/ $PATH
 set -x PATH ~/.cabal/bin/ $PATH
 set -x PATH ~/.poetry/bin/ $PATH
-set -x PATH ~/media/packages/node-v12.18.3-linux-x64/bin/ $PATH
+set -x PATH ~/.local/node-v14.15.1-linux-x64/bin/ $PATH
 
 set -x FZF_DEFAULT_COMMAND "rg --files"
 
 alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"
 eval (ssh-agent -c) >/dev/null; and ssh-add-all
+
+if test -e "$fish_path/themes/weatherwax.fish"
+    source "$fish_path/themes/weatherwax.fish"
+end
 
 source "$fish_path/conda.fish"
