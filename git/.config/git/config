@@ -58,3 +58,5 @@
 	token = keeUmxoozdhb5HZgV2AV
 	tls = true
 	format = text
+[pull]
+	rebase = false

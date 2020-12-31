@@ -33,7 +33,6 @@ symbol = ""
 [conda]
 symbol = ""
 style = "blue"
-format = "[$environment]"
 
 [line_break]
 disabled = true
