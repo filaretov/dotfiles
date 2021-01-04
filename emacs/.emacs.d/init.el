@@ -149,7 +149,8 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   :init
   (setq evil-want-integration t
 	evil-want-keybinding nil
-	evil-want-abbrev-expand-on-insert-exit nil)
+	evil-want-abbrev-expand-on-insert-exit nil
+	evil-want-Y-yank-to-eol t)
   :config
   (evil-mode 1)
   (setq evil-emacs-state-cursor 'bar
@@ -436,6 +437,11 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 	(lambda (fpath)
 	  (call-process "zathura" nil 0 nil fpath)))
   (general-def "C-x [" 'ivy-bibtex))
+(use-package company
+  :config
+  (general-imap company-mode-map
+    "C-x C-o" 'company-complete
+    "C-x C-f" 'company-files))
 (use-package hydra
   :defer t)
 (defhydra hydra-org-mode (:exit t)
@@ -503,10 +509,13 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   "f" 'hydra-files/body
   "w" 'hydra-window/body
   "o" 'hydra-org-mode/body)
-(use-package yasnippet-snippets
-  :defer t)
 (use-package yasnippet
   :defer t
+  :commands yas-minor-mode
+  :init
+  (setq yas-indent-line 'fixed)
   :config
-  (yas-global-mode 1)
-  (setq yas-indent-line 'fixed))
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :commands yas-minor-mode)

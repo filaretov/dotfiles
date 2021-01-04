@@ -1,5 +1,4 @@
 #+title: Emacs Configuration
-#+author: Hristo Filaretov
 
 * Preamble
 There are a bunch of people I've shamelessly stolen from. The ideas and pieces
@@ -13,7 +12,7 @@ Here's an incomplete list, in no particular order:
 I assume that =use-package= and =general= are always available and sprinkle their
 incantations generously throughout the configuration.
 
-* Early init
+* Early init file
 :PROPERTIES:
 :header-args: :noweb-ref early-init
 :END:
@@ -146,14 +145,11 @@ Letting Emacs know who I am.
 #+end_src
 
 ** Load path
-Adding some local resources.
-
 #+begin_src emacs-lisp
 (add-to-list 'load-path (hgf-emacs-path "lisp"))
 #+end_src
 
 ** Custom file
-
 #+begin_src emacs-lisp
 (setq custom-file (hgf-emacs-path "custom.el"))
 (load custom-file 'noerror)
@@ -360,7 +356,8 @@ Vimmy keys and feel, for us vimfolk.
   :init
   (setq evil-want-integration t
 	evil-want-keybinding nil
-	evil-want-abbrev-expand-on-insert-exit nil)
+	evil-want-abbrev-expand-on-insert-exit nil
+	evil-want-Y-yank-to-eol t)
   :config
   (evil-mode 1)
   (setq evil-emacs-state-cursor 'bar
@@ -431,13 +428,13 @@ On second thought, I rather liked using C-m as Return.
 #+end_src
 
 * Completion
+:PROPERTIES:
+:header-args: :noweb-ref package-completion
+:END:
 There are a few different kinds of completion. Ivy takes care of most
 Emacs commands and Company deals with completion within a buffer.
 
 ** Ivy
-:PROPERTIES:
-:header-args: :noweb-ref package-ivy
-:END:
 I've been using Ivy for almost as long as I've been using Emacs and
 haven't really tried anything else. Never had a need to do so.
 
@@ -489,7 +486,17 @@ versions.
   (general-def "C-x [" 'ivy-bibtex))
 #+end_src
 
-** TODO Company
+** Company
+The de facto standard text completion framework for Emacs.
+
+#+begin_src emacs-lisp
+(use-package company
+  :config
+  (general-imap company-mode-map
+    "C-x C-o" 'company-complete
+    "C-x C-f" 'company-files))
+#+end_src
+
 * TODO Compile
 I mostly use compilation with Latex, surprisingly enough.
 
@@ -758,7 +765,6 @@ I use org to write many of my latex files, including longer documents.
 #+end_src
 
 * Major modes
-
 ** Vterm
 :PROPERTIES:
 :header-args: :noweb-ref package-vterm
@@ -863,25 +869,6 @@ TeX-auto-local (hgf-emacs-path "auctex-auto"))
 (general-nmap "-" 'dired)
 #+end_src
 
-** Elixir
-
-#+begin_src emacs-lisp
-(use-package elixir-mode)
-(use-package alchemist)
-#+end_src
-
-** Lua
-
-#+begin_src emacs-lisp
-(use-package lua-mode)
-#+end_src
-
-** RISCV
-
-#+begin_src emacs-lisp
-(use-package riscv-mode)
-#+end_src
-
 ** Rust
 
 #+begin_src emacs-lisp
@@ -891,7 +878,6 @@ TeX-auto-local (hgf-emacs-path "auctex-auto"))
 #+end_src
 
 * Minor modes
-
 ** Which key
 For exploring new keys and remembering the lesser used ones.
 
@@ -1006,7 +992,7 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 	("Path" 99 magit-repolist-column-path nil)))
 #+end_src
 
-* Neotree
+* TODO Neotree
 
 #+begin_src emacs-lisp
 (use-package neotree
@@ -1015,7 +1001,7 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
   (setq neo-theme 'arrow))
 #+end_src
 
-* Projectile
+* TODO Projectile
 
 #+begin_src emacs-lisp
 (use-package projectile
@@ -1040,15 +1026,18 @@ Some additional utilities I mostly use with Projectile:
 :END:
 
 #+begin_src emacs-lisp
-(use-package yasnippet-snippets
-  :defer t)
-
 (use-package yasnippet
   :defer t
+  :commands yas-minor-mode
+  :init
+  (setq yas-indent-line 'fixed)
   :config
-  (yas-global-mode 1)
-  (setq yas-indent-line 'fixed))
+  (yas-reload-all))
+
+(use-package yasnippet-snippets
+  :commands yas-minor-mode)
 #+end_src
+
 
 * Helpful
 
@@ -1377,7 +1366,7 @@ I like auto-filling, 80 columns and spell-checking, thank you very much.
 
 <<package-magit>>
 <<package-vterm>>
-<<package-ivy>>
+<<package-completion>>
 <<package-hydra>>
 <<package-yasnippet>>
 #+end_src
