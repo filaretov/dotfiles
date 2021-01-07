@@ -48,3 +48,5 @@ fonts/.local/share/fonts/.uuid
 /emacs/.emacs.d/.org-id-locations
 /emacs/.emacs.d/calc.el
 /emacs/.emacs.d/projects
+/emacs/.emacs.d/eln-cache/
+/emacs/.emacs.d/games
