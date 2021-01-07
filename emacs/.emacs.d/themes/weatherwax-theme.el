@@ -92,6 +92,7 @@
   (org-document-title         (:foreground weatherwax-white :weight 'normal :underline nil))
   (org-document-info         (:foreground weatherwax-white  :weight 'normal :underline nil))
   (org-document-info-keyword (:foreground weatherwax-grey :weight 'normal :underline nil))
+  (org-block (:inherit nil))
 
   ;; --- Flymake ---
   (flymake-error    (:underline (:style 'wave :color weatherwax-red)))

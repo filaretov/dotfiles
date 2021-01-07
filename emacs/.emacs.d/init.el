@@ -246,7 +246,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (general-unbind evil-motion-state-map "TAB")
 
 (use-package ivy
-  :defer t
+  :after counsel
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t
@@ -296,12 +296,9 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 	 (get-buffer-create "*compilation*"))
 	(message "No Compilation Errors!"))))
 
-(use-package compile
-  :ensure nil
-  :config
-  (general-nmap "C-x c" 'recompile)
-  (add-hook 'compilation-finish-functions
-	    'my--close-compilation-if-successful))
+(general-nmap "C-x c" 'recompile)
+(add-hook 'compilation-finish-functions
+	  'my--close-compilation-if-successful)
 
 (defun my-make-scratch-buffer ()
   "Create and switch to a temporary scratch buffer with a random
@@ -318,7 +315,7 @@ name."
   (setq org-use-property-inheritance t)
 (add-to-list 'org-structure-template-alist
 	     '("el" . "src emacs-lisp"))
-(add-to-list 'org-modules 'habits))
+(general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0))))
 
 (defun org-capture-inbox ()
   (interactive)
@@ -326,7 +323,6 @@ name."
       (call-interactively 'org-store-link)
     (error nil))
   (org-capture nil "i"))
-(general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0)))
 (setq org-refile-use-outline-path 'file
       org-clock-into-drawer nil
       org-log-done 'time)
@@ -343,7 +339,6 @@ name."
 	"~/cloud/journal/inbox.org"
 	"~/cloud/journal/projects.org"
 	"~/cloud/journal/calendar.org"
-	"~/cloud/journal/habits.org"
 	"~/cloud/journal/fraunhofer/"
 	))
 
@@ -366,8 +361,6 @@ name."
 		 :tag "ipk")
 	  (:name "MSC Thesis"
 		 :tag "msc")
-	  (:name "Habits"
-		 :tag "habit")
 	  ))
   (org-super-agenda-mode 1))
 
@@ -482,17 +475,14 @@ name."
   (which-key-mode))
 
 (use-package visual-fill-column
+  :defer t
   :config
   (setq-default visual-fill-column-width 90))
 
 (use-package outshine
-  :defer t
+  :hook (prog-mode . outshine-mode)
   :config
-  (setq outshine-startup-folded-p t)
-  (add-hook 'conf-mode-hook #'outshine-mode 1)
-  (add-hook 'prog-mode-hook #'outshine-mode 1)
-  (add-hook 'bibtex-mode-hook #'outshine-mode 1)
-  (add-hook 'LaTeX-mode-hook #'outshine-mode 1))
+  (setq outshine-startup-folded-p t))
 
 (use-package engine-mode
   :defer 2
@@ -592,14 +582,6 @@ name."
 
 (use-package helpful
   :defer t
-  :commands (
-	     helpful-at-point
-	     helpful-key
-	     helpful-function
-	     helpful-command
-	     helpful-variable
-	     helpful-callable
-	     )
   :config
   (my-leader-def
     "h h" 'helpful-at-point)
@@ -613,79 +595,72 @@ name."
 	counsel-describe-variable-function 'helpful-variable))
 
 (use-package hydra
-  :defer t)
-
-(defhydra hydra-org-mode (:exit t)
-  "Org mode"
-  ("c" org-capture "capture")
-  ("i" org-capture-inbox "inbox")
-  ("t" org-todo-list "todos")
-  ("a" org-agenda "agenda"))
-
-(defhydra hydra-window ()
-  "Window management"
-  ("o" other-window "other")
-  ("h" evil-window-left "left")
-  ("j" evil-window-down "down")
-  ("k" evil-window-up "up")
-  ("l" evil-window-right "right")
-  ("s" evil-window-split "split")
-  ("v" evil-window-vsplit "vsplit")
-  ("q" evil-quit "quit")
-  ("f" find-file "file")
-  ("b" ivy-switch-buffer "buffer")
-  ("m" kill-this-buffer "murder")
-  ("1" delete-other-windows "highlander")
-  ("." nil "stop"))
-
-(defhydra hydra-files (:exit t)
-  "Frequent files"
-  ;; Configuration
-  ("c" (hydra-configs/body) "configs")
-  ("e" (find-file (my-emacs-path "configuration.org")) "config")
-  ;; Org
-  ("b" (find-file (my-journal-path "blog.org")) "blog")
-  ("d" (find-file (my-journal-path "diet/diet.ledger")) "diet")
-  ("D" (find-file (my-journal-path "diet/food.ledger")) "food")
-  ("m" (find-file (my-journal-path "calendar.org")) "calendar")
-  ("h" (find-file (my-journal-path "habits.org")) "habits")
-  ("i" (find-file (my-journal-path "inbox.org")) "inbox")
-  ("n" (find-file (my-journal-path "notes.org")) "notes")
-  ("p" (find-file (my-journal-path "projects.org")) "projects")
-  ("w" (find-file (my-journal-path "wiki.org")) "wiki")
-  ;; Work
-  ("f" (hydra-work/body) "fraunhofer")
-  ;; Scratch
-  ("s" (my-make-scratch-buffer) "scratch"))
-
-(defhydra hydra-configs (:exit t)
-  "Configuration files"
-  ("i" (find-file "~/.config/i3/config") "i3")
-  ("g" (find-file "~/.config/git") "git")
-  ("k" (find-file "~/.config/kitty/kitty.conf") "kitty")
-  ("r" (find-file "~/.config/ranger/rc.conf") "ranger")
-  ("R" (find-file "~/.config/rofi/config") "Rofi")
-  ("e" (find-file (my-emacs-path "configuration.org")) "emacs")
-  ("f" (find-file "~/.config/fish/config.fish") "fish"))
-
-(defhydra hydra-work (:exit t)
-  "Work related files"
-  ("n" (find-file (my-journal-path "fraunhofer/notes.org")) "notes")
-  ("t" (find-file (my-journal-path "fraunhofer/working_hours.ledger")) "working hours")
-  ("p" (counsel-find-file (my-journal-path "fraunhofer/projects")) "projects"))
-
-(defhydra hydra-package (:exit t)
-  "Package management"
-  ("r" (package-refresh-contents) "refresh")
-  ("i" (call-interactively #'package-install) "install")
-  ("u" (package-utils-upgrade-all) "upgrade")
-  ("d" (call-interactively #'package-delete) "delete"))
-
-(my-leader-def
-  "P" 'hydra-package/body
-  "f" 'hydra-files/body
-  "w" 'hydra-window/body
-  "o" 'hydra-org-mode/body)
+  :defer t
+  :config
+  (defhydra hydra-org-mode (:exit t)
+    "Org mode"
+    ("c" org-capture "capture")
+    ("i" org-capture-inbox "inbox")
+    ("t" org-todo-list "todos")
+    ("a" org-agenda "agenda"))
+  (defhydra hydra-window ()
+    "Window management"
+    ("o" other-window "other")
+    ("h" evil-window-left "left")
+    ("j" evil-window-down "down")
+    ("k" evil-window-up "up")
+    ("l" evil-window-right "right")
+    ("s" evil-window-split "split")
+    ("v" evil-window-vsplit "vsplit")
+    ("q" evil-quit "quit")
+    ("f" find-file "file")
+    ("b" ivy-switch-buffer "buffer")
+    ("m" kill-this-buffer "murder")
+    ("1" delete-other-windows "highlander")
+    ("." nil "stop"))
+  (defhydra hydra-files (:exit t)
+    "Frequent files"
+    ;; Configuration
+    ("c" (hydra-configs/body) "configs")
+    ("e" (find-file (my-emacs-path "configuration.org")) "config")
+    ;; Org
+    ("b" (find-file (my-journal-path "blog.org")) "blog")
+    ("d" (find-file (my-journal-path "diet/diet.ledger")) "diet")
+    ("D" (find-file (my-journal-path "diet/food.ledger")) "food")
+    ("m" (find-file (my-journal-path "calendar.org")) "calendar")
+    ("i" (find-file (my-journal-path "inbox.org")) "inbox")
+    ("n" (find-file (my-journal-path "notes.org")) "notes")
+    ("p" (find-file (my-journal-path "projects.org")) "projects")
+    ("w" (find-file (my-journal-path "wiki.org")) "wiki")
+    ;; Work
+    ("f" (hydra-work/body) "fraunhofer")
+    ;; Scratch
+    ("s" (my-make-scratch-buffer) "scratch"))
+  (defhydra hydra-configs (:exit t)
+    "Configuration files"
+    ("i" (find-file "~/.config/i3/config") "i3")
+    ("g" (find-file "~/.config/git") "git")
+    ("k" (find-file "~/.config/kitty/kitty.conf") "kitty")
+    ("r" (find-file "~/.config/ranger/rc.conf") "ranger")
+    ("R" (find-file "~/.config/rofi/config") "Rofi")
+    ("e" (find-file (my-emacs-path "configuration.org")) "emacs")
+    ("f" (find-file "~/.config/fish/config.fish") "fish"))
+  (defhydra hydra-work (:exit t)
+    "Work related files"
+    ("n" (find-file (my-journal-path "fraunhofer/notes.org")) "notes")
+    ("t" (find-file (my-journal-path "fraunhofer/working_hours.ledger")) "working hours")
+    ("p" (counsel-find-file (my-journal-path "fraunhofer/projects")) "projects"))
+  (defhydra hydra-package (:exit t)
+    "Package management"
+    ("r" (package-refresh-contents) "refresh")
+    ("i" (call-interactively #'package-install) "install")
+    ("u" (package-utils-upgrade-all) "upgrade")
+    ("d" (call-interactively #'package-delete) "delete"))
+  (my-leader-def
+    "P" 'hydra-package/body
+    "f" 'hydra-files/body
+    "w" 'hydra-window/body
+    "o" 'hydra-org-mode/body))
 
 (use-package autothemer)
 
@@ -807,8 +782,6 @@ name."
 
 (add-hook 'prog-mode-hook 'outshine-mode)
 
-
-
 (use-package text-mode
   :ensure nil
   :config
@@ -816,8 +789,8 @@ name."
   (add-hook 'text-mode-hook 'auto-fill-mode))
 
 (use-package flyspell
+  :hook (text-mode . flyspell-mode)
   :ensure nil
   :config
   (setq ispell-program-name "aspell"
-	ispell-extra-args '("--sug-mode=ultra"))
-  (add-hook 'text-mode-hook 'flyspell-mode))
+	ispell-extra-args '("--sug-mode=ultra")))

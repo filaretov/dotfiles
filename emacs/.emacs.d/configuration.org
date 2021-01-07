@@ -442,7 +442,7 @@ haven't really tried anything else. Never had a need to do so.
 
 #+begin_src emacs-lisp
 (use-package ivy
-  :defer t
+  :after counsel
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t
@@ -502,7 +502,7 @@ The de facto standard text completion framework for Emacs.
     "C-x C-f" 'company-files))
 #+end_src
 
-* TODO Compile
+* Compile
 I mostly use compilation with Latex, surprisingly enough.
 
 #+begin_src emacs-lisp
@@ -516,16 +516,12 @@ I mostly use compilation with Latex, surprisingly enough.
 	 (get-buffer-create "*compilation*"))
 	(message "No Compilation Errors!"))))
 
-(use-package compile
-  :ensure nil
-  :config
-  (general-nmap "C-x c" 'recompile)
-  (add-hook 'compilation-finish-functions
-	    'my--close-compilation-if-successful))
+(general-nmap "C-x c" 'recompile)
+(add-hook 'compilation-finish-functions
+	  'my--close-compilation-if-successful)
 #+end_src
 
 
-* TODO Flycheck
 * Interactive goodies
 Great guy, that Harry Schwartz. Most of these functions are directly copied from
 his dotfiles.
@@ -556,7 +552,6 @@ this section is inspired by Harry Schwartz.
     (setq org-use-property-inheritance t)
   (add-to-list 'org-structure-template-alist
 	       '("el" . "src emacs-lisp"))
-  (add-to-list 'org-modules 'habits)
   (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0))))
 #+end_src
 
@@ -587,7 +582,6 @@ All about them tasks.
 	"~/cloud/journal/inbox.org"
 	"~/cloud/journal/projects.org"
 	"~/cloud/journal/calendar.org"
-	"~/cloud/journal/habits.org"
 	"~/cloud/journal/fraunhofer/"
 	))
 #+end_src
@@ -619,8 +613,6 @@ Also, real nifty agendas.
 		 :tag "ipk")
 	  (:name "MSC Thesis"
 		 :tag "msc")
-	  (:name "Habits"
-		 :tag "habit")
 	  ))
   (org-super-agenda-mode 1))
 #+end_src
@@ -851,6 +843,7 @@ For exploring new keys and remembering the lesser used ones.
 
 #+begin_src emacs-lisp
 (use-package visual-fill-column
+  :defer t
   :config
   (setq-default visual-fill-column-width 90))
 #+end_src
@@ -859,13 +852,9 @@ For exploring new keys and remembering the lesser used ones.
 
 #+begin_src emacs-lisp
 (use-package outshine
-  :defer t
+  :hook (prog-mode . outshine-mode)
   :config
-  (setq outshine-startup-folded-p t)
-  (add-hook 'conf-mode-hook #'outshine-mode 1)
-  (add-hook 'prog-mode-hook #'outshine-mode 1)
-  (add-hook 'bibtex-mode-hook #'outshine-mode 1)
-  (add-hook 'LaTeX-mode-hook #'outshine-mode 1))
+  (setq outshine-startup-folded-p t))
 #+end_src
 
 ** Engine-mode
@@ -942,7 +931,7 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 	("Path" 99 magit-repolist-column-path nil)))
 #+end_src
 
-* TODO Neotree
+* Neotree
 
 #+begin_src emacs-lisp
 (use-package neotree
@@ -1000,14 +989,6 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 #+begin_src emacs-lisp
 (use-package helpful
   :defer t
-  :commands (
-	     helpful-at-point
-	     helpful-key
-	     helpful-function
-	     helpful-command
-	     helpful-variable
-	     helpful-callable
-	     )
   :config
   (my-leader-def
     "h h" 'helpful-at-point)
@@ -1027,101 +1008,73 @@ stuff that I seldom need to use.
 
 #+begin_src emacs-lisp
 (use-package hydra
-  :defer t)
-#+end_src
-
-** Org-mode
-#+begin_src emacs-lisp
-(defhydra hydra-org-mode (:exit t)
-  "Org mode"
-  ("c" org-capture "capture")
-  ("i" org-capture-inbox "inbox")
-  ("t" org-todo-list "todos")
-  ("a" org-agenda "agenda"))
-#+end_src
-
-** Windows
-#+begin_src emacs-lisp
-(defhydra hydra-window ()
-  "Window management"
-  ("o" other-window "other")
-  ("h" evil-window-left "left")
-  ("j" evil-window-down "down")
-  ("k" evil-window-up "up")
-  ("l" evil-window-right "right")
-  ("s" evil-window-split "split")
-  ("v" evil-window-vsplit "vsplit")
-  ("q" evil-quit "quit")
-  ("f" find-file "file")
-  ("b" ivy-switch-buffer "buffer")
-  ("m" kill-this-buffer "murder")
-  ("1" delete-other-windows "highlander")
-  ("." nil "stop"))
-#+end_src
-
-** Files
-#+begin_src emacs-lisp
-(defhydra hydra-files (:exit t)
-  "Frequent files"
-  ;; Configuration
-  ("c" (hydra-configs/body) "configs")
-  ("e" (find-file (my-emacs-path "configuration.org")) "config")
-  ;; Org
-  ("b" (find-file (my-journal-path "blog.org")) "blog")
-  ("d" (find-file (my-journal-path "diet/diet.ledger")) "diet")
-  ("D" (find-file (my-journal-path "diet/food.ledger")) "food")
-  ("m" (find-file (my-journal-path "calendar.org")) "calendar")
-  ("h" (find-file (my-journal-path "habits.org")) "habits")
-  ("i" (find-file (my-journal-path "inbox.org")) "inbox")
-  ("n" (find-file (my-journal-path "notes.org")) "notes")
-  ("p" (find-file (my-journal-path "projects.org")) "projects")
-  ("w" (find-file (my-journal-path "wiki.org")) "wiki")
-  ;; Work
-  ("f" (hydra-work/body) "fraunhofer")
-  ;; Scratch
-  ("s" (my-make-scratch-buffer) "scratch"))
-#+end_src
-
-** Config files
-#+begin_src emacs-lisp
-(defhydra hydra-configs (:exit t)
-  "Configuration files"
-  ("i" (find-file "~/.config/i3/config") "i3")
-  ("g" (find-file "~/.config/git") "git")
-  ("k" (find-file "~/.config/kitty/kitty.conf") "kitty")
-  ("r" (find-file "~/.config/ranger/rc.conf") "ranger")
-  ("R" (find-file "~/.config/rofi/config") "Rofi")
-  ("e" (find-file (my-emacs-path "configuration.org")) "emacs")
-  ("f" (find-file "~/.config/fish/config.fish") "fish"))
-#+end_src
-
-** Work
-#+begin_src emacs-lisp
-(defhydra hydra-work (:exit t)
-  "Work related files"
-  ("n" (find-file (my-journal-path "fraunhofer/notes.org")) "notes")
-  ("t" (find-file (my-journal-path "fraunhofer/working_hours.ledger")) "working hours")
-  ("p" (counsel-find-file (my-journal-path "fraunhofer/projects")) "projects"))
-#+end_src
-
-** Packages
-#+begin_src emacs-lisp
-(defhydra hydra-package (:exit t)
-  "Package management"
-  ("r" (package-refresh-contents) "refresh")
-  ("i" (call-interactively #'package-install) "install")
-  ("u" (package-utils-upgrade-all) "upgrade")
-  ("d" (call-interactively #'package-delete) "delete"))
-#+end_src
-
-** Keybindings
-#+begin_src emacs-lisp
-(my-leader-def
-  "P" 'hydra-package/body
-  "f" 'hydra-files/body
-  "w" 'hydra-window/body
-  "o" 'hydra-org-mode/body)
-#+end_src
+  :defer t
+  :config
+  (defhydra hydra-org-mode (:exit t)
+    "Org mode"
+    ("c" org-capture "capture")
+    ("i" org-capture-inbox "inbox")
+    ("t" org-todo-list "todos")
+    ("a" org-agenda "agenda"))
+  (defhydra hydra-window ()
+    "Window management"
+    ("o" other-window "other")
+    ("h" evil-window-left "left")
+    ("j" evil-window-down "down")
+    ("k" evil-window-up "up")
+    ("l" evil-window-right "right")
+    ("s" evil-window-split "split")
+    ("v" evil-window-vsplit "vsplit")
+    ("q" evil-quit "quit")
+    ("f" find-file "file")
+    ("b" ivy-switch-buffer "buffer")
+    ("m" kill-this-buffer "murder")
+    ("1" delete-other-windows "highlander")
+    ("." nil "stop"))
+  (defhydra hydra-files (:exit t)
+    "Frequent files"
+    ;; Configuration
+    ("c" (hydra-configs/body) "configs")
+    ("e" (find-file (my-emacs-path "configuration.org")) "config")
+    ;; Org
+    ("b" (find-file (my-journal-path "blog.org")) "blog")
+    ("d" (find-file (my-journal-path "diet/diet.ledger")) "diet")
+    ("D" (find-file (my-journal-path "diet/food.ledger")) "food")
+    ("m" (find-file (my-journal-path "calendar.org")) "calendar")
+    ("i" (find-file (my-journal-path "inbox.org")) "inbox")
+    ("n" (find-file (my-journal-path "notes.org")) "notes")
+    ("p" (find-file (my-journal-path "projects.org")) "projects")
+    ("w" (find-file (my-journal-path "wiki.org")) "wiki")
+    ;; Work
+    ("f" (hydra-work/body) "fraunhofer")
+    ;; Scratch
+    ("s" (my-make-scratch-buffer) "scratch"))
+  (defhydra hydra-configs (:exit t)
+    "Configuration files"
+    ("i" (find-file "~/.config/i3/config") "i3")
+    ("g" (find-file "~/.config/git") "git")
+    ("k" (find-file "~/.config/kitty/kitty.conf") "kitty")
+    ("r" (find-file "~/.config/ranger/rc.conf") "ranger")
+    ("R" (find-file "~/.config/rofi/config") "Rofi")
+    ("e" (find-file (my-emacs-path "configuration.org")) "emacs")
+    ("f" (find-file "~/.config/fish/config.fish") "fish"))
+  (defhydra hydra-work (:exit t)
+    "Work related files"
+    ("n" (find-file (my-journal-path "fraunhofer/notes.org")) "notes")
+    ("t" (find-file (my-journal-path "fraunhofer/working_hours.ledger")) "working hours")
+    ("p" (counsel-find-file (my-journal-path "fraunhofer/projects")) "projects"))
+  (defhydra hydra-package (:exit t)
+    "Package management"
+    ("r" (package-refresh-contents) "refresh")
+    ("i" (call-interactively #'package-install) "install")
+    ("u" (package-utils-upgrade-all) "upgrade")
+    ("d" (call-interactively #'package-delete) "delete"))
+  (my-leader-def
+    "P" 'hydra-package/body
+    "f" 'hydra-files/body
+    "w" 'hydra-window/body
+    "o" 'hydra-org-mode/body))
+  #+end_src
 
 
 * Theme
@@ -1265,9 +1218,6 @@ Add some custom themes to the mix and make sure =rainbow-mode= is available.
 (add-hook 'prog-mode-hook 'outshine-mode)
 #+end_src
 
-** Spell checking
-#+begin_src emacs-lisp
-#+end_src
 
 * Text mode
 I like auto-filling, 80 columns and spell-checking, thank you very much.
@@ -1281,11 +1231,11 @@ I like auto-filling, 80 columns and spell-checking, thank you very much.
 
 #+begin_src emacs-lisp
 (use-package flyspell
+  :hook (text-mode . flyspell-mode)
   :ensure nil
   :config
   (setq ispell-program-name "aspell"
-	ispell-extra-args '("--sug-mode=ultra"))
-  (add-hook 'text-mode-hook 'flyspell-mode))
+	ispell-extra-args '("--sug-mode=ultra")))
 
 #+end_src
 
