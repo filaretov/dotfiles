@@ -70,9 +70,55 @@ Example:
 	   init
 	   lst))
 
+(use-package autothemer)
+
+(use-package dracula-theme
+  :init
+  (setq dracula-enlarge-headings nil
+	dracula-height-title-1 1.0
+	dracula-height-title-2 1.0
+	dracula-height-title-3 1.0
+	dracula-height-doc-title 1.0))
+
+(use-package nord-theme
+  :defer t)
+
+(use-package gruvbox-theme
+  :defer t)
+
+(use-package solarized-theme
+  :defer t
+  :config (setq solarized-scale-org-headlines nil
+		solarized-use-variable-pitch nil
+		solarized-height-plus-1 1
+		solarized-height-plus-2 1
+		solarized-height-plus-3 1
+		solarized-height-plus-4 1
+		solarized-high-contrast-mode-line t
+		solarized-scale-org-headlines nil
+		solarized-scale-outline-headlines nil
+		solarized-use-less-bold t
+		solarized-use-more-italic nil))
+
+(defun my-disable-all-themes ()
+  (dolist (theme custom-enabled-themes)
+    (disable-theme theme)))
+
+(defun my-load-theme (theme)
+  "Disable all loaded themes and load THEME. Also sets certain face attributes I like to use."
+  (interactive
+   (list (intern (completing-read "Load custom theme: "
+				  (mapcar 'symbol-name
+					  (custom-available-themes))))))
+  (unless (custom-theme-name-valid-p theme)
+    (error "Invalid theme name `%s'" theme))
+  (progn
+    (my-disable-all-themes)
+    (load-theme theme t)
+    ))
+
 (setq custom-theme-directory (my-emacs-path "themes/"))
-(if (package-installed-p 'autothemer)
-    (load-theme 'weatherwax t))
+(my-load-theme 'weatherwax)
 
 (defvar my-gc-cons-threshold 67108864 ; 64mb
   "The default value to use for `gc-cons-threshold'.
@@ -266,7 +312,8 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (use-package smex))
 
 (use-package ivy-bibtex
-  :commands (ivy-bibtex)
+  :general
+  (tex-mode-map "C-x [" 'ivy-bibtex)
   :config
   (setq ivy-re-builders-alist
 	'((ivy-bibtex . ivy--regex-ignore-order)
@@ -277,14 +324,14 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 	bibtex-completion-pdf-field "file")
   (setq bibtex-completion-pdf-open-function
 	(lambda (fpath)
-	  (call-process "zathura" nil 0 nil fpath)))
-  (general-def "C-x [" 'ivy-bibtex))
+	  (call-process "zathura" nil 0 nil fpath))))
 
 (use-package company
-  :config
-  (general-imap company-mode-map
-    "C-x C-o" 'company-complete
-    "C-x C-f" 'company-files))
+  :general
+  ('insert company-mode-map
+	   "C-x C-o" 'company-complete
+	   "C-x C-f" 'company-files)
+  :config (company-mode))
 
 (defun my--close-compilation-if-successful (buf str)
   "Close the compilation window if it is successful."
@@ -569,6 +616,12 @@ name."
   "Create a list of all git repos."
   (my-find-git-repos-recursive "~/dev"))
 
+(setq display-buffer-alist
+      '((".*" (display-buffer-reuse-window display-buffer-same-window))))
+
+(setq display-buffer-reuse-frames t
+      even-window-sizes nil)
+
 (use-package yasnippet
   :commands yas-minor-mode
   :init
@@ -661,42 +714,6 @@ name."
     "f" 'hydra-files/body
     "w" 'hydra-window/body
     "o" 'hydra-org-mode/body))
-
-(use-package autothemer)
-
-(use-package nord-theme
-  :defer t)
-
-(use-package solarized-theme
-  :defer t
-  :config (setq solarized-scale-org-headlines nil
-		solarized-use-variable-pitch nil
-		solarized-height-plus-1 1
-		solarized-height-plus-2 1
-		solarized-height-plus-3 1
-		solarized-height-plus-4 1
-		solarized-high-contrast-mode-line t
-		solarized-scale-org-headlines nil
-		solarized-scale-outline-headlines nil
-		solarized-use-less-bold t
-		solarized-use-more-italic nil))
-
-(defun my-disable-all-themes ()
-  (dolist (theme custom-enabled-themes)
-    (disable-theme theme)))
-
-(defun my-load-theme (theme)
-  "Disable all loaded themes and load THEME. Also sets certain face attributes I like to use."
-  (interactive
-   (list (intern (completing-read "Load custom theme: "
-				  (mapcar 'symbol-name
-					  (custom-available-themes))))))
-  (unless (custom-theme-name-valid-p theme)
-    (error "Invalid theme name `%s'" theme))
-  (progn
-    (my-disable-all-themes)
-    (load-theme theme t)
-    ))
 
 (defun my-switch-to-previous-buffer ()
   "Switch to previously open buffer.
