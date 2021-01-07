@@ -4,5 +4,3 @@
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
-(set-face-attribute 'default nil :family "Iosevka" :height 110)
-(set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110)

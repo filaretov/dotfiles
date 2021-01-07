@@ -113,6 +113,9 @@
   ;; --- NeoTree ---
   (neo-file-link-face (:foreground weatherwax-white :height 'unspecified))
   (neo-dir-link-face (:foreground weatherwax-white))
+
+  ;; --- Company ---
+  (company-tooltip    (:background weatherwax-lblack :foreground weatherwax-white))
   ))
 
 ;;; I ATE'NT DEAD

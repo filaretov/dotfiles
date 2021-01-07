@@ -12,6 +12,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(set-face-font 'default "Iosevka-11")
+(set-face-font 'fixed-pitch "Iosevka-11")
 (defconst *sys/linux*
   (eq system-type 'gnu/linux))
 
@@ -20,13 +22,19 @@
 
 (defconst *sys/mac*
   (eq system-type 'darwin))
-(defun hgf-emacs-path (filename)
+(defun my-emacs-path (filename)
   "Return the file path of FILENAME relative to the Emacs directory."
   (format "%s%s" user-emacs-directory filename))
 
-(defun hgf-journal-path (filename)
+(defun my-journal-path (filename)
   "Return the file path of FILENAME relative to the Journal directory."
   (format "%s%s" "~/cloud/journal/" filename))
+
+(defun my-find-file-as-sudo ()
+  (interactive)
+  (let ((file-name (buffer-file-name)))
+    (when file-name
+      (find-alternate-file (concat "/sudo::" file-name)))))
 (defmacro pipe (init &rest lst)
   "Pipe INIT through LST.
 
@@ -35,12 +43,12 @@ the end or replace all :arg occurences (starting with INIT).
 
 Example:
 (pipe (number-sequence 1 10)
-      (-filter 'evenp)
+      (-filter 'cl-evenp)
       (mapcar '1+))
 => (3 5 7 9 11)
 
 (pipe (number-sequence 1 10)
-    (-filter 'evenp)
+    (-filter 'cl-evenp)
     (mapcar '1+)
     (-filter (lambda (x) (= 0 (mod x 3))))
     (mapcar '1+)
@@ -52,29 +60,28 @@ Example:
       (1+)
       ((lambda (x y) (+ y x)) :arg 100))
 => 103"
-  (reduce (lambda (acc el)
-	    (if (member :arg el)
-		(-replace :arg acc el)
-	      (append el `(,acc))))
-	  lst
-	  :initial-value init))
-(add-to-list 'load-path (hgf-emacs-path "resources"))
-(setq custom-theme-directory (hgf-emacs-path "themes/"))
+  (-reduce-from (lambda (acc el)
+	     (if (member :arg el)
+		 (-replace :arg acc el)
+	       (append el `(,acc))))
+	   init
+	   lst))
+(setq custom-theme-directory (my-emacs-path "themes/"))
 (if (package-installed-p 'autothemer)
     (load-theme 'weatherwax t))
-(defvar hgf-gc-cons-threshold 67108864 ; 64mb
+(defvar my-gc-cons-threshold 67108864 ; 64mb
   "The default value to use for `gc-cons-threshold'.
 If you experience freezing, decrease this. If you experience stuttering, increase this.")
 
 (add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold hgf-gc-cons-threshold)
-            (setq file-name-handler-alist file-name-handler-alist-original)
-            (makunbound 'file-name-handler-alist-original)))
+	  (lambda ()
+	    (setq gc-cons-threshold my-gc-cons-threshold)
+	    (setq file-name-handler-alist file-name-handler-alist-original)
+	    (makunbound 'file-name-handler-alist-original)))
 (setq user-full-name "Hristo Filaretov"
       user-mail-address "h.filaretov@campus.tu-berlin.de")
-(add-to-list 'load-path (hgf-emacs-path "lisp"))
-(setq custom-file (hgf-emacs-path "custom.el"))
+(add-to-list 'load-path (my-emacs-path "lisp"))
+(setq custom-file (my-emacs-path "custom.el"))
 (load custom-file 'noerror)
 (global-auto-revert-mode 1)
 (show-paren-mode 1)
@@ -82,7 +89,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (setq require-final-newline t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (add-hook 'after-save-hook
-	'executable-make-buffer-file-executable-if-script-p)
+	  'executable-make-buffer-file-executable-if-script-p)
 (setq-default cursor-type 'bar)
 (blink-cursor-mode 0)
 (setq mouse-yank-at-point t)
@@ -91,8 +98,8 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (setq confirm-kill-emacs 'y-or-n-p)
 (setq ring-bell-function 'ignore)
 (setq inhibit-startup-screen t
-    inhibit-startup-message t
-    initial-scratch-message nil)
+      inhibit-startup-message t
+      initial-scratch-message nil)
 (setq backup-inhibited t
       auto-save-default nil
       make-backup-files nil)
@@ -135,11 +142,11 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   :config
   (general-evil-setup)
   (global-set-key [remap dabbrev-expand] 'hippie-expand))
-(general-create-definer hgf-leader-def
+(general-create-definer my-leader-def
   :keymaps '(normal visual)
   :prefix "SPC")
 
-(general-create-definer hgf-c-def
+(general-create-definer my-c-def
   :prefix "C-c")
 (general-def
   "C-s" 'save-buffer
@@ -206,9 +213,11 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (general-unbind evil-motion-state-map "TAB")
 (use-package org
   :config
+  (setq org-use-property-inheritance t)
   (general-nmap org-mode-map
     "g t" 'org-todo))
 (add-to-list 'org-modules 'habits)
+
 (defun org-capture-inbox ()
   (interactive)
   (condition-case nil
@@ -219,8 +228,8 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (setq org-refile-use-outline-path 'file
       org-clock-into-drawer nil
       org-log-done 'time)
-(setq org-refile-targets `((,(hgf-journal-path "projects.org") :maxlevel . 2)
-			   (,(hgf-journal-path "fraunhofer/notes.org") :maxlevel . 2)))
+(setq org-refile-targets `((,(my-journal-path "projects.org") :maxlevel . 2)
+			   (,(my-journal-path "fraunhofer/notes.org") :maxlevel . 2)))
 (setq org-archive-location "~/cloud/journal/archive.org::* %s")
 (setq org-capture-templates
       '(("n" "Note" entry (file "~/cloud/journal/notes.org")
@@ -256,7 +265,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 		 :tag "habit")
 	  ))
   (org-super-agenda-mode 1))
-(general-add-advice 'org-clock-in :after 'hgf-activate-current-task)
+(general-add-advice 'org-clock-in :after 'my-activate-current-task)
 (add-to-list 'org-structure-template-alist
 	     '("el" . "src emacs-lisp"))
 (setq org-src-fontify-natively t
@@ -289,7 +298,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
    (push '("TODO" . "?") prettify-symbols-alist)
    (push '("DONE" . "!") prettify-symbols-alist)
    (prettify-symbols-mode)))
-(defun hgf-org-mode-hook ()
+(defun my-org-mode-hook ()
   "Disable header variable font size."
   (progn
     (dolist (face '(org-level-1
@@ -300,15 +309,14 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 		    org-document-title))
       (set-face-attribute face nil :weight 'normal :height 1.0))))
 
-(add-hook 'org-mode-hook 'hgf-org-mode-hook)
+(add-hook 'org-mode-hook 'my-org-mode-hook)
 (setq org-M-RET-may-split-line nil
       org-outline-path-complete-in-steps nil)
 (use-package org-cliplink
   :config
   (general-def org-mode-map "C-x C-l" 'org-cliplink))
-(setq reftex-default-bibliography '("~/cloud/library.bib"))
-(setq bibtex-completion-bibliography
-      '("~/cloud/library.bib"))
+(setq reftex-default-bibliography '("~/media/bibliographies/all.bib"))
+(setq bibtex-completion-bibliography '("~/media/bibliographies/all.bib"))
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
 	       '("book"
@@ -341,54 +349,44 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (use-package magit
   :defer t
   :config
-  (hgf-c-def "d" 'magit-list-repositories))
-(defun hgf-list-subdirs (dir)
-  "List all subdirs, not recursive, absolute names, DIR shouldn't have a / at the end."
-  (let ((base dir)
-	(result))
-    (dolist (f (directory-files base) result)
-      (let ((name (concat base "/" f)))
-	(when (and (file-directory-p name)
-		   (not (equal f ".."))
-		   (not (equal f ".")))
-	  (add-to-list 'result name))))
-    result))
-
-(defun hgf-contains-git-repo-p (dir)
+  (my-c-def "d" 'magit-list-repositories))
+(defun my-contains-git-repo-p (dir)
   "Check if there's  a .git directory in DIR."
   (let ((dirs (directory-files dir)))
     (member ".git" dirs)))
 
+(defun file-directory-real-p (dir)
+  (and (file-directory-p dir)
+       (not (equal (substring dir -1) "."))))
 
-(defun hgf-filter-git-repos (dirs)
-  "Remove all directories without a .git subdirectory in DIRS."
+(defun my-find-git-repos-recursive (basedir)
+  "Return a list of directories containing a .git directory."
   (let ((result))
-    (dolist (dir dirs result)
-      (when (hgf-contains-git-repo-p dir)
-	(add-to-list 'result dir)))
+  (dolist (f (-filter 'file-directory-real-p (directory-files basedir t)) result)
+    (if (my-contains-git-repo-p f)
+	(add-to-list 'result f)
+     (setq result (append result (my-find-git-repos-recursive f)))))
     result))
 
-(defun hgf-make-magit-repolist (dirs)
+(defun my-make-magit-repolist (dirs)
   "Make a list of the form (dir 0) for the magit-list-repositories function from DIRS."
   (let ((result))
     (dolist (dir dirs result)
       (add-to-list 'result `(,dir 0)))
     result))
 
-(defun hgf-repolist-refresh ()
+(defun my-repolist-refresh ()
   "Hi."
   (setq magit-repository-directories
 	(pipe "~/dev"
-	      (hgf-list-subdirs)
-	      (hgf-filter-git-repos)
-	      (hgf-make-magit-repolist))))
+	      (my-find-git-repos-recursive)
+	      (my-make-magit-repolist))))
 
-(advice-add 'magit-list-repositories :before #'hgf-repolist-refresh)
+(advice-add 'magit-list-repositories :before #'my-repolist-refresh)
 
 (setq magit-repolist-columns
       '(("Name" 12 magit-repolist-column-ident nil)
 	("Branch" 10 magit-repolist-column-branch nil)
-	("Dirty" 6 magit-repolist-column-dirty nil)
 	("B<U" 3 magit-repolist-column-unpulled-from-upstream
 	 ((:right-align t)
 	  (:help-echo "Upstream changes not in branch")))
@@ -403,12 +401,12 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 	vterm-kill-buffer-on-exit t
 	vterm-copy-exclude-prompt t)
   (general-nmap "<f4>" 'vterm))
-(defun hgf-named-term (term-name)
+(defun my-named-term (term-name)
   "Generate a terminal with buffer name TERM-NAME."
   (interactive "sTerminal purpose: ")
   (vterm (concat "term-" term-name)))
 
-(hgf-leader-def "r t" 'hgf-named-term)
+(my-leader-def "r t" 'my-named-term)
 (use-package ivy
   :config
   (ivy-mode 1)
@@ -469,21 +467,21 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   "Frequent files"
   ;; Configuration
   ("c" (hydra-configs/body) "configs")
-  ("e" (find-file (hgf-emacs-path "configuration.org")) "config")
+  ("e" (find-file (my-emacs-path "configuration.org")) "config")
   ;; Org
-  ("b" (find-file (hgf-journal-path "blog.org")) "blog")
-  ("d" (find-file (hgf-journal-path "diet/diet.ledger")) "diet")
-  ("D" (find-file (hgf-journal-path "diet/food.ledger")) "food")
-  ("m" (find-file (hgf-journal-path "calendar.org")) "calendar")
-  ("h" (find-file (hgf-journal-path "habits.org")) "habits")
-  ("i" (find-file (hgf-journal-path "inbox.org")) "inbox")
-  ("n" (find-file (hgf-journal-path "notes.org")) "notes")
-  ("p" (find-file (hgf-journal-path "projects.org")) "projects")
-  ("w" (find-file (hgf-journal-path "wiki.org")) "wiki")
+  ("b" (find-file (my-journal-path "blog.org")) "blog")
+  ("d" (find-file (my-journal-path "diet/diet.ledger")) "diet")
+  ("D" (find-file (my-journal-path "diet/food.ledger")) "food")
+  ("m" (find-file (my-journal-path "calendar.org")) "calendar")
+  ("h" (find-file (my-journal-path "habits.org")) "habits")
+  ("i" (find-file (my-journal-path "inbox.org")) "inbox")
+  ("n" (find-file (my-journal-path "notes.org")) "notes")
+  ("p" (find-file (my-journal-path "projects.org")) "projects")
+  ("w" (find-file (my-journal-path "wiki.org")) "wiki")
   ;; Work
   ("f" (hydra-work/body) "fraunhofer")
   ;; Scratch
-  ("s" (hgf-generate-scratch-buffer) "scratch"))
+  ("s" (my-generate-scratch-buffer) "scratch"))
 (defhydra hydra-configs (:exit t)
   "Configuration files"
   ("i" (find-file "~/.config/i3/config") "i3")
@@ -491,20 +489,20 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   ("k" (find-file "~/.config/kitty/kitty.conf") "kitty")
   ("r" (find-file "~/.config/ranger/rc.conf") "ranger")
   ("R" (find-file "~/.config/rofi/config") "Rofi")
-  ("e" (find-file (hgf-emacs-path "configuration.org")) "emacs")
+  ("e" (find-file (my-emacs-path "configuration.org")) "emacs")
   ("f" (find-file "~/.config/fish/config.fish") "fish"))
 (defhydra hydra-work (:exit t)
   "Work related files"
-  ("n" (find-file (hgf-journal-path "fraunhofer/notes.org")) "notes")
-  ("t" (find-file (hgf-journal-path "fraunhofer/working_hours.ledger")) "working hours")
-  ("p" (counsel-find-file (hgf-journal-path "fraunhofer/projects")) "projects"))
+  ("n" (find-file (my-journal-path "fraunhofer/notes.org")) "notes")
+  ("t" (find-file (my-journal-path "fraunhofer/working_hours.ledger")) "working hours")
+  ("p" (counsel-find-file (my-journal-path "fraunhofer/projects")) "projects"))
 (defhydra hydra-package (:exit t)
   "Package management"
   ("r" (package-refresh-contents) "refresh")
   ("i" (call-interactively #'package-install) "install")
   ("u" (package-utils-upgrade-all) "upgrade")
   ("d" (call-interactively #'package-delete) "delete"))
-(hgf-leader-def
+(my-leader-def
   "P" 'hydra-package/body
   "f" 'hydra-files/body
   "w" 'hydra-window/body
@@ -514,8 +512,34 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   :commands yas-minor-mode
   :init
   (setq yas-indent-line 'fixed)
+  (add-hook 'org-mode-hook 'yas-minor-mode)
   :config
   (yas-reload-all))
 
-(use-package yasnippet-snippets
-  :commands yas-minor-mode)
+(use-package yasnippet-snippets)
+(use-package project
+  :ensure nil
+  :config
+  (general-nmap
+    "C-x p f" 'project-find-file
+    "C-x p p" 'project-select-project))
+(use-package ripgrep)
+(defun project-select-project ()
+  "Select a project from the project list."
+  (interactive)
+  (ivy-read
+   "Project: "
+   (project--build-project-list)
+   :action (lambda (p) (dired p))))
+
+(defun project--build-project-list ()
+  "Create a list of all git repos."
+  (my-find-git-repos-recursive "~/dev"))
+
+(use-package outshine
+  :config
+  (setq outshine-startup-folded-p t)
+  (add-hook 'conf-mode-hook #'outshine-mode 1)
+  (add-hook 'prog-mode-hook #'outshine-mode 1)
+  (add-hook 'bibtex-mode-hook #'outshine-mode 1)
+  (add-hook 'LaTeX-mode-hook #'outshine-mode 1))
