@@ -1,4 +1,5 @@
 #+title: Emacs Configuration
+#+PROPERTY: header-args :tangle init.el :exports code
 
 * Preamble
 There are a bunch of people I've shamelessly stolen from. The ideas and pieces
@@ -13,35 +14,46 @@ I assume that =use-package= and =general= are always available and sprinkle thei
 incantations generously throughout the configuration.
 
 * Early init file
-:PROPERTIES:
-:header-args: :noweb-ref early-init
-:END:
 Some settings to reduce startup time and possibly make Emacs flicker less when
 reading the configuration files.
 
 ** Increase GC cap
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
 (setq gc-cons-threshold 100000000)
 #+end_src
 
 ** Disable filename handlers
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
 (defvar file-name-handler-alist-original file-name-handler-alist)
 (setq file-name-handler-alist nil)
 #+end_src
 
 ** Disable GUI elements
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle early-init.el
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 #+end_src
 
 * Prelude
-:PROPERTIES:
-:header-args: :noweb-ref config-prelude
-:END:
+** Setup package
+#+begin_src emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+;; Ensure that use-package is installed.
+;;
+;; If use-package isn't already installed, it's extremely likely that this is a
+;; fresh installation! So we'll want to update the package repository and
+;; install use-package before loading the literate configuration.
+(when (not (package-installed-p 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+#+end_src
 
 ** Load fonts
 #+begin_src emacs-lisp
@@ -114,9 +126,6 @@ Example:
 #+end_src
 
 * Configure Emacs defaults
-:PROPERTIES:
-:header-args: :noweb-ref config-emacs-defaults
-:END:
 All kinds of Emacs things that just don't sit right with me.
 
 ** Set theme
@@ -284,9 +293,6 @@ I like a less cluttered modeline.
 #+end_src
 
 * Configuring packages - =use-package=
-:PROPERTIES:
-:header-args: :noweb-ref package-use-package
-:END:
 I use =use-package= for packaging packages I use.
 
 ** Add package archives
@@ -317,9 +323,6 @@ If it's a fresh installation, =use-package= might not be installed.
 #+end_src
 
 * Keybindings - =general.el=
-:PROPERTIES:
-:header-args: :noweb-ref package-general
-:END:
 I use =general= for my keybindings. It's generally quite good. The keybindings
 themselves will be found throughout this file.
 
@@ -351,9 +354,6 @@ And finally, set a few keybindings I want to have throughout Emacs.
 #+end_src
 
 * Vim keybindings - =evil=
-:PROPERTIES:
-:header-args: :noweb-ref package-evil
-:END:
 Vimmy keys and feel, for us vimfolk.
 
 #+begin_src emacs-lisp
@@ -433,9 +433,6 @@ On second thought, I rather liked using C-m as Return.
 #+end_src
 
 * Completion
-:PROPERTIES:
-:header-args: :noweb-ref package-completion
-:END:
 There are a few different kinds of completion. Ivy takes care of most
 Emacs commands and Company deals with completion within a buffer.
 
@@ -445,6 +442,7 @@ haven't really tried anything else. Never had a need to do so.
 
 #+begin_src emacs-lisp
 (use-package ivy
+  :defer t
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t
@@ -458,6 +456,7 @@ commands in Ivy windows, if applicable. Very nifty.
 
 #+begin_src emacs-lisp
 (use-package ivy-rich
+  :after ivy
   :config
   (ivy-rich-mode 1))
 #+end_src
@@ -477,6 +476,7 @@ versions.
 
 #+begin_src emacs-lisp
 (use-package ivy-bibtex
+  :commands (ivy-bibtex)
   :config
   (setq ivy-re-builders-alist
 	'((ivy-bibtex . ivy--regex-ignore-order)
@@ -532,39 +532,38 @@ his dotfiles.
 
 ** Open file as =sudo=
 
-#+begin_src emacs-lisp
-#+end_src
-
 ** Generate random scratch buffer
 
 #+begin_src emacs-lisp
-(defun my-generate-scratch-buffer ()
+(defun my-make-scratch-buffer ()
   "Create and switch to a temporary scratch buffer with a random
-       name."
+name."
   (interactive)
   (switch-to-buffer (make-temp-name "scratch-")))
 #+end_src
 
 * Org
-:PROPERTIES:
-:header-args: :noweb-ref package-org
-:END:
 Org is amazing and I use it all the time. And once again, a large majority of
 this section is inspired by Harry Schwartz.
 
 #+begin_src emacs-lisp
-(use-package org
-  :config
-  (setq org-use-property-inheritance t)
-  (general-nmap org-mode-map
-    "g t" 'org-todo))
+  (use-package org
+    :mode ("\\.org\\'" . org-mode)
+    :general
+    ('normal org-mode-map
+     "g t" 'org-todo)
+    :config
+    (setq org-use-property-inheritance t)
+  (add-to-list 'org-structure-template-alist
+	       '("el" . "src emacs-lisp"))
+  (add-to-list 'org-modules 'habits)
+  (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0))))
 #+end_src
 
 ** GTD
 All about them tasks.
 
 #+begin_src emacs-lisp
-(add-to-list 'org-modules 'habits)
 
 (defun org-capture-inbox ()
   (interactive)
@@ -572,7 +571,6 @@ All about them tasks.
       (call-interactively 'org-store-link)
     (error nil))
   (org-capture nil "i"))
-(general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0)))
 (setq org-refile-use-outline-path 'file
       org-clock-into-drawer nil
       org-log-done 'time)
@@ -613,6 +611,7 @@ Also, real nifty agendas.
 
 #+begin_src emacs-lisp
 (use-package org-super-agenda
+  :commands (org-agenda)
   :config
   (setq org-super-agenda-groups
 	'(;; Group conds are ORed
@@ -636,29 +635,11 @@ Also, real nifty agendas.
 ** Babel
 
 #+begin_src emacs-lisp
-(add-to-list 'org-structure-template-alist
-	     '("el" . "src emacs-lisp"))
 (setq org-src-fontify-natively t
       org-src-preserve-indentation nil
       org-src-tab-acts-natively t
       org-edit-src-content-indentation 0
       org-src-window-setup 'current-window)
-#+end_src
-
-Ledger entries too, please
-
-#+begin_src emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((dot . t)
-   (emacs-lisp . t)
-   (gnuplot . t)
-   (haskell . nil)
-   (latex . t)
-   (ledger . t)
-   (octave . t)
-   (python . t)
-   (ruby . t)))
 #+end_src
 
 ** Cosmetics
@@ -765,14 +746,12 @@ I use org to write many of my latex files, including longer documents.
 
 * Major modes
 ** Vterm
-:PROPERTIES:
-:header-args: :noweb-ref package-vterm
-:END:
 Vterm is the nicest terminal emulator for Emacs I've found so far. But it needs
 module support, which requires building emacs with =--with-modules=.
 
 #+begin_src emacs-lisp
 (use-package vterm
+  :commands (vterm)
   :config
   (setq vterm-shell "/usr/bin/fish"
 	vterm-kill-buffer-on-exit t
@@ -790,28 +769,6 @@ module support, which requires building emacs with =--with-modules=.
 #+end_src
 
 ** Python
-#+begin_src emacs-lisp
-(use-package lsp-pyright
-  :hook (python-mode . (lambda ()
-			 (require 'lsp-pyright)
-			 (lsp)))
-  :config
-  (setq flycheck-python-flake8-executable "flake8"))
-(use-package blacken)
-(use-package python-docstring)
-(use-package pytest)
-(use-package pyvenv
-  :config
-  (setenv "WORKON_HOME" "~/.cache/pypoetry/virtualenvs")
-  (setq pyvenv-mode-line-indicator
-	'(pyvenv-virtual-env-name ("[venv:" pyvenv-virtual-env-name "] "))))
-#+end_src
-
-Emacs IPython Notebooks
-
-#+begin_src emacs-lisp
-(use-package ein)
-#+end_src
 
 ** Markdown
 I use markdown for all kinds of stuff, mostly readmes, but also a variety of
@@ -829,6 +786,7 @@ Trackin' them finances.
 
 #+begin_src emacs-lisp
 (use-package ledger-mode
+  :mode ("\\.ledger\\'")
   :config
   (add-to-list 'ledger-reports '("diet" "%(binary) -f %(ledger-file) reg --value Assets --budget --daily"))
   (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
@@ -837,6 +795,7 @@ Trackin' them finances.
 ** TeX
 #+begin_src emacs-lisp
 (use-package tex
+:mode ("\\.tex\\'" . tex-mode)
 :config
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -844,6 +803,7 @@ Trackin' them finances.
 (setq TeX-PDF-mode t))
 
 (use-package auctex-latexmk
+:after tex
 :config
 (auctex-latexmk-setup)
 (setq auctex-latexmk-inherit-TeX-PDF-mode t))
@@ -872,6 +832,7 @@ TeX-auto-local (my-emacs-path "auctex-auto"))
 
 #+begin_src emacs-lisp
 (use-package rust-mode
+  :mode ("\\.rs\\'")
   :config
   (setq lsp-rust-server 'rust-analyzer))
 #+end_src
@@ -895,12 +856,10 @@ For exploring new keys and remembering the lesser used ones.
 #+end_src
 
 ** Outshine
-:PROPERTIES:
-:header-args: :noweb-ref package-outshine
-:END:
 
 #+begin_src emacs-lisp
 (use-package outshine
+  :defer t
   :config
   (setq outshine-startup-folded-p t)
   (add-hook 'conf-mode-hook #'outshine-mode 1)
@@ -914,6 +873,7 @@ For exploring new keys and remembering the lesser used ones.
 
 #+begin_src emacs-lisp
 (use-package engine-mode
+  :defer 2
   :config
   (engine-mode 1)
   (defengine wikipedia
@@ -923,15 +883,13 @@ For exploring new keys and remembering the lesser used ones.
 #+end_src
 
 * Magit
-:PROPERTIES:
-:header-args: :noweb-ref package-magit
-:END:
 
 #+begin_src emacs-lisp
 (use-package magit
-  :defer t
+  :commands (magit-status)
   :config
-  (my-c-def "d" 'magit-list-repositories))
+  (my-c-def "d" 'magit-list-repositories)
+  (advice-add 'magit-list-repositories :before #'my-repolist-refresh))
 #+end_src
 
 ** Repolist
@@ -970,7 +928,6 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 	      (my-find-git-repos-recursive)
 	      (my-make-magit-repolist))))
 
-(advice-add 'magit-list-repositories :before #'my-repolist-refresh)
 
 (setq magit-repolist-columns
       '(("Name" 12 magit-repolist-column-ident nil)
@@ -989,15 +946,13 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 
 #+begin_src emacs-lisp
 (use-package neotree
+  :commands (neotree neotree-toggle neotree-show)
   :config
   (general-def "<f2>" 'neotree-toggle)
   (setq neo-theme 'arrow))
 #+end_src
 
 * Project
-:PROPERTIES:
-:header-args: :noweb-ref package-project
-:END:
 
 #+begin_src emacs-lisp
 (use-package project
@@ -1006,11 +961,6 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
   (general-nmap
     "C-x p f" 'project-find-file
     "C-x p p" 'project-select-project))
-#+end_src
-
-Some additional utilities I mostly use with Projectile:
-#+begin_src emacs-lisp
-(use-package ripgrep)
 #+end_src
 
 ** Helper functions
@@ -1030,13 +980,9 @@ Some additional utilities I mostly use with Projectile:
 #+end_src
 
 * Yasnippet
-:PROPERTIES:
-:header-args: :noweb-ref package-yasnippet
-:END:
 
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :defer t
   :commands yas-minor-mode
   :init
   (setq yas-indent-line 'fixed)
@@ -1044,7 +990,8 @@ Some additional utilities I mostly use with Projectile:
   :config
   (yas-reload-all))
 
-(use-package yasnippet-snippets)
+(use-package yasnippet-snippets
+  :after yasnippet)
 #+end_src
 
 
@@ -1052,6 +999,15 @@ Some additional utilities I mostly use with Projectile:
 
 #+begin_src emacs-lisp
 (use-package helpful
+  :defer t
+  :commands (
+	     helpful-at-point
+	     helpful-key
+	     helpful-function
+	     helpful-command
+	     helpful-variable
+	     helpful-callable
+	     )
   :config
   (my-leader-def
     "h h" 'helpful-at-point)
@@ -1066,9 +1022,6 @@ Some additional utilities I mostly use with Projectile:
 #+end_src
 
 * Hydra
-:PROPERTIES:
-:header-args: :noweb-ref package-hydra
-:END:
 I'm not really using Hydra properly, except for the window management
 stuff that I seldom need to use.
 
@@ -1126,7 +1079,7 @@ stuff that I seldom need to use.
   ;; Work
   ("f" (hydra-work/body) "fraunhofer")
   ;; Scratch
-  ("s" (my-generate-scratch-buffer) "scratch"))
+  ("s" (my-make-scratch-buffer) "scratch"))
 #+end_src
 
 ** Config files
@@ -1177,14 +1130,14 @@ stuff that I seldom need to use.
 (use-package autothemer)
 #+end_src
 
-I am partial to Nord.
-
 #+begin_src emacs-lisp
-(use-package nord-theme)
+(use-package nord-theme
+  :defer t)
 #+end_src
 
 #+begin_src emacs-lisp
 (use-package solarized-theme
+  :defer t
   :config (setq solarized-scale-org-headlines nil
 		solarized-use-variable-pitch nil
 		solarized-height-plus-1 1
@@ -1218,7 +1171,6 @@ Add some custom themes to the mix and make sure =rainbow-mode= is available.
     (my-disable-all-themes)
     (load-theme theme t)
     ))
-(my-load-theme 'weatherwax)
 #+end_src
 
 * Triage
@@ -1301,10 +1253,10 @@ Add some custom themes to the mix and make sure =rainbow-mode= is available.
 		nil
 		outfile))
 
-(defun my-mktemp ()
+(defun my-make-scratch-directory ()
   "Create a temporary scratch directory."
   (interactive)
-  (counsel-find-file (s-trim (shell-command-to-string "mktemp -d"))))
+  (counsel-find-file (make-temp-file "scratch-" t)))
 
 #+end_src
 
@@ -1336,51 +1288,4 @@ I like auto-filling, 80 columns and spell-checking, thank you very much.
   (add-hook 'text-mode-hook 'flyspell-mode))
 
 #+end_src
-
-* Tangled files
-
-** =early-init.el=
-
-#+begin_src emacs-lisp :noweb yes :tangle early-init.el :exports none
-<<early-init>>
-#+end_src
-
-** =init.el=
-
-#+begin_src emacs-lisp :noweb yes :tangle init.el :exports none
-(require 'package)
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-
-;; Ensure that use-package is installed.
-;;
-;; If use-package isn't already installed, it's extremely likely that this is a
-;; fresh installation! So we'll want to update the package repository and
-;; install use-package before loading the literate configuration.
-(when (not (package-installed-p 'use-package))
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-<<config-prelude>>
-<<config-emacs-defaults>>
-<<package-use-package>>
-<<package-general>>
-<<config-identity>>
-<<package-evil>>
-<<package-org>>
-
-<<package-autothemer>>
-<<set-theme>>
-
-<<package-magit>>
-<<package-vterm>>
-<<package-completion>>
-<<package-hydra>>
-<<package-yasnippet>>
-<<package-project>>
-
-<<package-outshine>>
-#+end_src
-
 
