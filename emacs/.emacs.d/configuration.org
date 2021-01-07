@@ -526,9 +526,7 @@ I mostly use compilation with Latex, surprisingly enough.
 Great guy, that Harry Schwartz. Most of these functions are directly copied from
 his dotfiles.
 
-** Open file as =sudo=
-
-** Generate random scratch buffer
+* Generate random scratch buffer
 
 #+begin_src emacs-lisp
 (defun my-make-scratch-buffer ()
@@ -952,8 +950,6 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
     "C-x p p" 'project-select-project))
 #+end_src
 
-** Helper functions
-
 #+begin_src emacs-lisp
 (defun project-select-project ()
   "Select a project from the project list."
@@ -966,6 +962,16 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 (defun project--build-project-list ()
   "Create a list of all git repos."
   (my-find-git-repos-recursive "~/dev"))
+#+end_src
+
+* Window
+
+#+begin_src emacs-lisp
+(setq display-buffer-alist
+      '((".*" (display-buffer-reuse-window display-buffer-same-window))))
+
+(setq display-buffer-reuse-frames t
+      even-window-sizes nil)
 #+end_src
 
 * Yasnippet
