@@ -246,6 +246,9 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     "L" 'evil-end-of-line
     "H" 'evil-first-non-blank-of-visual-line
     "?" 'swiper
+    "g E" 'eval-buffer
+    "g e" 'eval-last-sexp
+    "g C-e" 'eval-defun
     "C-u" 'evil-scroll-up
     "C-w 1" 'delete-other-windows
     "C-w x" 'kill-this-buffer
@@ -485,12 +488,11 @@ name."
   (ox-extras-activate '(ignore-headlines)))
 
 (use-package vterm
-  :commands (vterm)
+  :general ("<f4>" 'vterm)
   :config
   (setq vterm-shell "/usr/bin/fish"
 	vterm-kill-buffer-on-exit t
-	vterm-copy-exclude-prompt t)
-  (general-nmap "<f4>" 'vterm))
+	vterm-copy-exclude-prompt t))
 
 (defun my-named-term (term-name)
   "Generate a terminal with buffer name TERM-NAME."
@@ -509,6 +511,34 @@ name."
   :config
   (add-to-list 'ledger-reports '("diet" "%(binary) -f %(ledger-file) reg --value Assets --budget --daily"))
   (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
+
+(use-package tex
+  :ensure nil
+  :mode ("\\.tex\\'" . tex-mode)
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-master nil)
+  (setq TeX-PDF-mode t))
+
+(use-package auctex-latexmk
+  :after tex
+  :config
+  (auctex-latexmk-setup)
+  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+
+(defun my-bibtex-hook ()
+  "My bibtex hook."
+  (progn
+    (setq comment-start "%")))
+
+(add-hook 'bibtex-mode-hook 'my-bibtex-hook)
+
+(setq-default TeX-auto-save t
+	      TeX-parse-self t
+	      TeX-PDF-mode t
+	      TeX-auto-local (my-emacs-path "auctex-auto"))
+(setq bibtex-dialect 'biblatex)
 
 (general-nmap "-" 'dired)
 
@@ -541,7 +571,7 @@ name."
     :docstring "Searchin' the wikis."))
 
 (use-package magit
-  :commands (magit-status)
+  :commands (magit-status magit-list-repositories)
   :config
   (my-c-def "d" 'magit-list-repositories)
   (advice-add 'magit-list-repositories :before #'my-repolist-refresh))

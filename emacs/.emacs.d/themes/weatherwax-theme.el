@@ -33,13 +33,13 @@
   ;; (weatherwax-black    "#2e3440")
   )
 
- ;; --- Base ---
+;;;; Base
  ((default          (:foreground weatherwax-white :background weatherwax-black))
   (error            (:foreground weatherwax-red))
   (cursor           (:background weatherwax-white :foreground weatherwax-black))
   (font-lock-comment-face (:foreground weatherwax-grey))
 
-  ;; --- UI ---
+;;;; UI
   (mode-line            (:foreground weatherwax-black :background weatherwax-lime))
   (mode-line-inactive   (:background weatherwax-lblack))
   (mode-line-highlight   (:background weatherwax-ablack :foreground weatherwax-white))
@@ -57,7 +57,7 @@
 
   (minibuffer-prompt    (:foreground weatherwax-lime))
 
-  ;; --- Base Programming ---
+;;;; Base
   (font-lock-string-face   (:foreground weatherwax-lime))
   (font-lock-keyword-face  (:foreground weatherwax-orange))
   (font-lock-warning-face  (:foreground weatherwax-red))
@@ -66,7 +66,7 @@
   (font-lock-type-face     (:foreground weatherwax-orange))
   (font-lock-constant-face (:foreground weatherwax-purple))
 
-  ;; --- Outline ---
+;;;; Outline
   (outline-1      (:foreground weatherwax-lime :weight 'normal))
   (outline-2      (:foreground weatherwax-blue :weight 'normal))
   (outline-3      (:foreground weatherwax-cyan :weight 'normal))
@@ -76,7 +76,7 @@
   (outline-7      (:foreground weatherwax-lime :weight 'normal))
   (outline-8      (:foreground weatherwax-blue :weight 'normal))
 
-  ;; --- Org ---
+;;;; Org
   (org-level-1      (:foreground weatherwax-lime :weight 'normal))
   (org-level-2      (:foreground weatherwax-blue :weight 'normal))
   (org-level-3      (:foreground weatherwax-cyan :weight 'normal))
@@ -94,13 +94,13 @@
   (org-document-info-keyword (:foreground weatherwax-grey :weight 'normal :underline nil))
   (org-block (:inherit nil))
 
-  ;; --- Flymake ---
+;;;; Flymake
   (flymake-error    (:underline (:style 'wave :color weatherwax-red)))
 
-  ;; --- Yasnippet ---
+;;;; Yasnippet
   (yas-field-highlight-face (:background weatherwax-lblack))
 
-  ;; --- VTerm ---
+;;;; VTerm
   (vterm               (:foreground weatherwax-white))
   (vterm-color-black   (:background weatherwax-black   :foreground weatherwax-black))
   (vterm-color-red     (:background weatherwax-red     :foreground weatherwax-red))
@@ -111,12 +111,20 @@
   (vterm-color-cyan    (:background weatherwax-cyan    :foreground weatherwax-cyan))
   (vterm-color-white   (:background weatherwax-white   :foreground weatherwax-white))
 
-  ;; --- NeoTree ---
+;;;; NeoTree
   (neo-file-link-face (:foreground weatherwax-white :height 'unspecified))
   (neo-dir-link-face (:foreground weatherwax-white))
 
-  ;; --- Company ---
+;;;; Company
   (company-tooltip    (:background weatherwax-lblack :foreground weatherwax-white))
+
+;;;; Latex
+  (font-latex-sectioning-1-face (:height 1.0))
+  (font-latex-sectioning-2-face (:height 1.0))
+  (font-latex-sectioning-3-face (:height 1.0))
+  (font-latex-sectioning-4-face (:height 1.0))
+  (font-latex-sectioning-5-face (:height 1.0))
+  (font-latex-sectioning-6-face (:height 1.0))
   ))
 
 ;;; I ATE'NT DEAD
