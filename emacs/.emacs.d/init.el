@@ -290,6 +290,9 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
+(use-package avy
+  :general ('normal "s" 'avy-goto-char-timer))
+
 (general-def input-decode-map [?\C-i] [C-i])
 (general-def 'normal "<C-i>" 'evil-jump-forward)
 (general-unbind evil-motion-state-map "TAB")
@@ -316,7 +319,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 
 (use-package ivy-bibtex
   :general
-  (tex-mode-map "C-x [" 'ivy-bibtex)
+  (LaTeX-mode-map "C-x [" 'ivy-bibtex)
   :config
   (setq ivy-re-builders-alist
 	'((ivy-bibtex . ivy--regex-ignore-order)
@@ -513,6 +516,11 @@ name."
   (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
 
 (use-package tex
+  :general
+  (LaTeX-mode-map
+   "C-M-g" 'my-pdf-view-first-page-other-window
+   "C-M-n" 'my-pdf-view-next-page-other-window
+   "C-M-p" 'my-pdf-view-previous-page-other-window)
   :ensure nil
   :mode ("\\.tex\\'" . tex-mode)
   :config
@@ -744,6 +752,25 @@ name."
     "f" 'hydra-files/body
     "w" 'hydra-window/body
     "o" 'hydra-org-mode/body))
+
+(defun my-pdf-view-next-page-other-window ()
+  (interactive)
+  (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
+    (pdf-view-next-page)))
+
+(defun my-pdf-view-previous-page-other-window ()
+  (interactive)
+  (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
+    (pdf-view-previous-page)))
+
+(defun my-pdf-view-first-page-other-window ()
+  (interactive)
+  (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
+    (pdf-view-first-page)))
+
+(use-package pdf-tools
+  :config
+  (pdf-loader-install))
 
 (defun my-switch-to-previous-buffer ()
   "Switch to previously open buffer.

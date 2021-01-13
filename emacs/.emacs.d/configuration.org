@@ -484,6 +484,15 @@ And just a few more packages.
   (evil-org-agenda-set-keys))
 #+end_src
 
+** Avy
+Avy is not Vimmy in any way, but I really enjoy the package and it helps me move
+around.
+
+#+begin_src emacs-lisp
+(use-package avy
+  :general ('normal "s" 'avy-goto-char-timer))
+#+end_src
+
 ** C-i != TAB ∧ C-m != RET
 I mean, they used to be, but we aren't limited to archaic input methods anymore,
 are we?
@@ -541,7 +550,7 @@ versions.
 #+begin_src emacs-lisp
 (use-package ivy-bibtex
   :general
-  (tex-mode-map "C-x [" 'ivy-bibtex)
+  (LaTeX-mode-map "C-x [" 'ivy-bibtex)
   :config
   (setq ivy-re-builders-alist
 	'((ivy-bibtex . ivy--regex-ignore-order)
@@ -847,8 +856,14 @@ Trackin' them finances.
 #+end_src
 
 ** TeX
+
 #+begin_src emacs-lisp
 (use-package tex
+  :general
+  (LaTeX-mode-map
+   "C-M-g" 'my-pdf-view-first-page-other-window
+   "C-M-n" 'my-pdf-view-next-page-other-window
+   "C-M-p" 'my-pdf-view-previous-page-other-window)
   :ensure nil
   :mode ("\\.tex\\'" . tex-mode)
   :config
@@ -1147,6 +1162,30 @@ stuff that I seldom need to use.
     "o" 'hydra-org-mode/body))
   #+end_src
 
+* PDF Tools
+
+#+begin_src emacs-lisp
+(defun my-pdf-view-next-page-other-window ()
+  (interactive)
+  (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
+    (pdf-view-next-page)))
+
+(defun my-pdf-view-previous-page-other-window ()
+  (interactive)
+  (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
+    (pdf-view-previous-page)))
+
+(defun my-pdf-view-first-page-other-window ()
+  (interactive)
+  (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
+    (pdf-view-first-page)))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :config
+  (pdf-loader-install))
+#+end_src
 
 * Triage
 

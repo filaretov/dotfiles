@@ -10,6 +10,7 @@
 ;;; References:
 
 ;;; Code:
+;;;; Colors
 (require 'autothemer)
 
 (autothemer-deftheme
@@ -29,7 +30,7 @@
   (weatherwax-grey     "#aaaaaa")
   (weatherwax-lblack   "#4B5467")
   (weatherwax-ablack   "#313844")
-  (weatherwax-black    "#252A33")
+  (weatherwax-black    "#151A23")
   ;; (weatherwax-black    "#2e3440")
   )
 
@@ -111,6 +112,9 @@
   (vterm-color-cyan    (:background weatherwax-cyan    :foreground weatherwax-cyan))
   (vterm-color-white   (:background weatherwax-white   :foreground weatherwax-white))
 
+;;;; Eshell
+  (eshell-prompt (:foreground weatherwax-lime))
+
 ;;;; NeoTree
   (neo-file-link-face (:foreground weatherwax-white :height 'unspecified))
   (neo-dir-link-face (:foreground weatherwax-white))
@@ -125,6 +129,8 @@
   (font-latex-sectioning-4-face (:height 1.0))
   (font-latex-sectioning-5-face (:height 1.0))
   (font-latex-sectioning-6-face (:height 1.0))
+
+  (font-latex-slide-title-face (:height 1.0))
   ))
 
 ;;; I ATE'NT DEAD
