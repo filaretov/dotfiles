@@ -72,34 +72,6 @@ Example:
 
 (use-package autothemer)
 
-(use-package dracula-theme
-  :init
-  (setq dracula-enlarge-headings nil
-	dracula-height-title-1 1.0
-	dracula-height-title-2 1.0
-	dracula-height-title-3 1.0
-	dracula-height-doc-title 1.0))
-
-(use-package nord-theme
-  :defer t)
-
-(use-package gruvbox-theme
-  :defer t)
-
-(use-package solarized-theme
-  :defer t
-  :config (setq solarized-scale-org-headlines nil
-		solarized-use-variable-pitch nil
-		solarized-height-plus-1 1
-		solarized-height-plus-2 1
-		solarized-height-plus-3 1
-		solarized-height-plus-4 1
-		solarized-high-contrast-mode-line t
-		solarized-scale-org-headlines nil
-		solarized-scale-outline-headlines nil
-		solarized-use-less-bold t
-		solarized-use-more-italic nil))
-
 (defun my-disable-all-themes ()
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
@@ -146,7 +118,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 
 (setq require-final-newline t)
 
-(fset 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (add-hook 'after-save-hook
 	  'executable-make-buffer-file-executable-if-script-p)
@@ -769,8 +741,7 @@ name."
     (pdf-view-first-page)))
 
 (use-package pdf-tools
-  :config
-  (pdf-loader-install))
+  :defer 5)
 
 (defun my-switch-to-previous-buffer ()
   "Switch to previously open buffer.

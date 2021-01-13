@@ -135,44 +135,6 @@ All kinds of Emacs things that just don't sit right with me.
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package dracula-theme
-  :init
-  (setq dracula-enlarge-headings nil
-	dracula-height-title-1 1.0
-	dracula-height-title-2 1.0
-	dracula-height-title-3 1.0
-	dracula-height-doc-title 1.0))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package nord-theme
-  :defer t)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package gruvbox-theme
-  :defer t)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package solarized-theme
-  :defer t
-  :config (setq solarized-scale-org-headlines nil
-		solarized-use-variable-pitch nil
-		solarized-height-plus-1 1
-		solarized-height-plus-2 1
-		solarized-height-plus-3 1
-		solarized-height-plus-4 1
-		solarized-high-contrast-mode-line t
-		solarized-scale-org-headlines nil
-		solarized-scale-outline-headlines nil
-		solarized-use-less-bold t
-		solarized-use-more-italic nil))
-#+end_src
-
-Add some custom themes to the mix and make sure =rainbow-mode= is available.
-
-#+begin_src emacs-lisp
 
 (defun my-disable-all-themes ()
   (dolist (theme custom-enabled-themes)
@@ -256,7 +218,7 @@ like Emacs to revert the buffer to the state on disk.
 
 ** Quick y/n prompts
 #+begin_src emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
 ** Make scripts executable
@@ -1163,6 +1125,7 @@ stuff that I seldom need to use.
   #+end_src
 
 * PDF Tools
+Editing PDFs has never been easier.
 
 #+begin_src emacs-lisp
 (defun my-pdf-view-next-page-other-window ()
@@ -1183,8 +1146,7 @@ stuff that I seldom need to use.
 
 #+begin_src emacs-lisp
 (use-package pdf-tools
-  :config
-  (pdf-loader-install))
+  :defer 5)
 #+end_src
 
 * Triage
