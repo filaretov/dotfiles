@@ -75,15 +75,15 @@ reading the configuration files.
 
 ** Functions
 #+begin_src emacs-lisp
-(defun my-emacs-path (filename)
+(defun hgf/emacs-path (filename)
   "Return the file path of FILENAME relative to the Emacs directory."
   (format "%s%s" user-emacs-directory filename))
 
-(defun my-journal-path (filename)
+(defun hgf/journal-path (filename)
   "Return the file path of FILENAME relative to the Journal directory."
   (format "%s%s" "~/cloud/journal/" filename))
 
-(defun my-find-file-as-sudo ()
+(defun hgf/find-file-as-sudo ()
   (interactive)
   (let ((file-name (buffer-file-name)))
     (when file-name
@@ -135,12 +135,16 @@ All kinds of Emacs things that just don't sit right with me.
 #+end_src
 
 #+begin_src emacs-lisp
+(defun hgf/edit-weatherwax ()
+  "Edit the Weatherwax theme."
+  (interactive)
+  (find-file (hgf/emacs-path "themes/weatherwax-theme.el")))
 
-(defun my-disable-all-themes ()
+(defun hgf/disable-all-themes ()
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
 
-(defun my-load-theme (theme)
+(defun hgf/load-theme (theme)
   "Disable all loaded themes and load THEME. Also sets certain face attributes I like to use."
   (interactive
    (list (intern (completing-read "Load custom theme: "
@@ -149,26 +153,26 @@ All kinds of Emacs things that just don't sit right with me.
   (unless (custom-theme-name-valid-p theme)
     (error "Invalid theme name `%s'" theme))
   (progn
-    (my-disable-all-themes)
+    (hgf/disable-all-themes)
     (load-theme theme t)
     ))
 #+end_src
 
 #+begin_src emacs-lisp
-(setq custom-theme-directory (my-emacs-path "themes/"))
-(my-load-theme 'weatherwax)
+(setq custom-theme-directory (hgf/emacs-path "themes/"))
+(hgf/load-theme 'weatherwax)
 #+end_src
 ** Garbage collection
 Thanks, Norman Walsh!
 
 #+begin_src emacs-lisp
-(defvar my-gc-cons-threshold 67108864 ; 64mb
+(defvar hgf/gc-cons-threshold 67108864 ; 64mb
   "The default value to use for `gc-cons-threshold'.
 If you experience freezing, decrease this. If you experience stuttering, increase this.")
 
 (add-hook 'emacs-startup-hook
 	  (lambda ()
-	    (setq gc-cons-threshold my-gc-cons-threshold)
+	    (setq gc-cons-threshold hgf/gc-cons-threshold)
 	    (setq file-name-handler-alist file-name-handler-alist-original)
 	    (makunbound 'file-name-handler-alist-original)))
 #+end_src
@@ -183,12 +187,12 @@ Letting Emacs know who I am.
 
 ** Load path
 #+begin_src emacs-lisp
-(add-to-list 'load-path (my-emacs-path "lisp"))
+(add-to-list 'load-path (hgf/emacs-path "lisp"))
 #+end_src
 
 ** Custom file
 #+begin_src emacs-lisp
-(setq custom-file (my-emacs-path "custom.el"))
+(setq custom-file (hgf/emacs-path "custom.el"))
 (load custom-file 'noerror)
 #+end_src
 
@@ -292,7 +296,7 @@ For the occasional annoying typo.
 I like a less cluttered modeline.
 
 #+begin_src emacs-lisp
-(defun my-modeline-modified ()
+(defun hgf/modeline-modified ()
   "Return buffer status: read-only (-), modified (·) or read-write ( )."
   (let ((read-only buffer-read-only)
 	(modified  (and buffer-file-name (buffer-modified-p))))
@@ -305,7 +309,7 @@ I like a less cluttered modeline.
  mode-line-format
  '(
    ""
-   (:eval (my-modeline-modified))
+   (:eval (hgf/modeline-modified))
    ;; Buffer name
    "%b"
    "  "
@@ -360,20 +364,21 @@ I like using space as a leader key. C-c followed by a single letter is also used
 often enough to warrant a definer.
 
 #+begin_src emacs-lisp
-(general-create-definer my-leader-def
-  :keymaps '(normal visual)
-  :prefix "SPC")
-
-(general-create-definer my-c-def
+(general-create-definer hgf/leader-def
   :prefix "C-c")
 #+end_src
 
 And finally, set a few keybindings I want to have throughout Emacs.
 
 #+begin_src emacs-lisp
-(general-def
-  "C-s" 'save-buffer
-  "M-i" 'imenu)
+(general-def "M-i" 'imenu)
+#+end_src
+
+And now for something completely different
+
+#+begin_src emacs-lisp
+(general-def "M-n" 'scroll-up-command)
+(general-def "M-p" 'scroll-down-command)
 #+end_src
 
 * Vim keybindings - =evil=
@@ -452,7 +457,9 @@ around.
 
 #+begin_src emacs-lisp
 (use-package avy
-  :general ('normal "s" 'avy-goto-char-timer))
+  :general
+  ('normal "s" 'avy-goto-char-timer)
+  ('emacs "<C-i>" 'avy-goto-char-timer))
 #+end_src
 
 ** C-i != TAB ∧ C-m != RET
@@ -504,7 +511,8 @@ versions.
   :config
   (counsel-mode 1)
   (use-package flx)
-  (use-package smex))
+  (use-package smex)
+  (general-def "C-s" 'swiper))
 #+end_src
 
 *** ivy-bibtex
@@ -539,10 +547,10 @@ The de facto standard text completion framework for Emacs.
 #+end_src
 
 * Compile
-I mostly use compilation with Latex, surprisingly enough.
+I mostly use compilation with latex, surprisingly enough.
 
 #+begin_src emacs-lisp
-(defun my--close-compilation-if-successful (buf str)
+(defun hgf/-close-compilation-if-successful (buf str)
   "Close the compilation window if it is successful."
   (if (null (string-match ".*exited abnormally.*" str))
       ;;no errors, make the compilation window go away in a few seconds
@@ -552,24 +560,9 @@ I mostly use compilation with Latex, surprisingly enough.
 	 (get-buffer-create "*compilation*"))
 	(message "No Compilation Errors!"))))
 
-(general-nmap "C-x c" 'recompile)
+(general-def "C-x c" 'recompile)
 (add-hook 'compilation-finish-functions
-	  'my--close-compilation-if-successful)
-#+end_src
-
-
-* Interactive goodies
-Great guy, that Harry Schwartz. Most of these functions are directly copied from
-his dotfiles.
-
-* Generate random scratch buffer
-
-#+begin_src emacs-lisp
-(defun my-make-scratch-buffer ()
-  "Create and switch to a temporary scratch buffer with a random
-name."
-  (interactive)
-  (switch-to-buffer (make-temp-name "scratch-")))
+	  'hgf/-close-compilation-if-successful)
 #+end_src
 
 * Org
@@ -577,34 +570,35 @@ Org is amazing and I use it all the time. And once again, a large majority of
 this section is inspired by Harry Schwartz.
 
 #+begin_src emacs-lisp
-  (use-package org
-    :mode ("\\.org\\'" . org-mode)
-    :general
-    ('normal org-mode-map
-     "g t" 'org-todo)
-    :config
-    (setq org-use-property-inheritance t)
+(use-package org
+  :mode ("\\.org\\'" . org-mode)
+  :general
+  ('normal org-mode-map
+	   "g t" 'org-todo)
+  :config
+  (setq org-use-property-inheritance t)
   (add-to-list 'org-structure-template-alist
 	       '("el" . "src emacs-lisp"))
-  (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0))))
-#+end_src
+  (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0)))
+  (defun org-capture-inbox ()
+    (interactive)
+    (condition-case nil
+	(call-interactively 'org-store-link)
+      (error nil))
+    (org-capture nil "i")))
+  #+end_src
 
 ** GTD
 All about them tasks.
 
 #+begin_src emacs-lisp
 
-(defun org-capture-inbox ()
-  (interactive)
-  (condition-case nil
-      (call-interactively 'org-store-link)
-    (error nil))
-  (org-capture nil "i"))
+
 (setq org-refile-use-outline-path 'file
       org-clock-into-drawer nil
       org-log-done 'time)
-(setq org-refile-targets `((,(my-journal-path "projects.org") :maxlevel . 2)
-			   (,(my-journal-path "fraunhofer/notes.org") :maxlevel . 2)))
+(setq org-refile-targets `((,(hgf/journal-path "projects.org") :maxlevel . 2)
+			   (,(hgf/journal-path "fraunhofer/notes.org") :maxlevel . 2)))
 (setq org-archive-location "~/cloud/journal/archive.org::* %s")
 (setq org-capture-templates
       '(("n" "Note" entry (file "~/cloud/journal/notes.org")
@@ -632,7 +626,7 @@ but it's useful enough for me (for now).
 					       (let ((task (org-element-property :title (org-element-property :parent (org-element-property :parent clock))))
 						     (val  (org-element-property :duration clock)))
 						 (format "| %s | %s |" (car task) val)))))))))
-(general-nmap "C-c C-x C-r" 'org-generate-report)
+(general-def "C-c C-x C-r" 'org-generate-report)
 #+end_src
 
 Also, real nifty agendas.
@@ -654,7 +648,7 @@ Also, real nifty agendas.
 
 
 #+begin_src emacs-lisp
-(general-add-advice 'org-clock-in :after 'my-activate-current-task)
+(general-add-advice 'org-clock-in :after 'hgf/activate-current-task)
 #+end_src
 
 
@@ -677,7 +671,8 @@ I prefer my org-files non-indented. I also like to see the leading stars
       org-hide-leading-stars t
       org-cycle-separator-lines 0
       org-hide-emphasis-markers t
-      org-fontify-done-headline nil)
+      org-fontify-done-headline nil
+      org-startup-folded t)
 #+end_src
 
 I also prefer hiding the begin and end line of source blocks. I also
@@ -701,7 +696,7 @@ all-caps in normal text. Should I?
 Some things aren't meant to be. Like variable sized fonts in my org files.
 
 #+begin_src emacs-lisp
-(defun my-org-mode-hook ()
+(defun hgf/org-mode-hook ()
   "Disable header variable font size."
   (progn
     (dolist (face '(org-level-1
@@ -712,7 +707,7 @@ Some things aren't meant to be. Like variable sized fonts in my org files.
 		    org-document-title))
       (set-face-attribute face nil :weight 'normal :height 1.0))))
 
-(add-hook 'org-mode-hook 'my-org-mode-hook)
+(add-hook 'org-mode-hook 'hgf/org-mode-hook)
 #+end_src
 
 ** Editing
@@ -728,6 +723,7 @@ Quickly adding a link with the title from said link. Nifty.
 
 #+begin_src emacs-lisp
 (use-package org-cliplink
+  :after org
   :config
   (general-def org-mode-map "C-x C-l" 'org-cliplink))
 #+end_src
@@ -771,7 +767,7 @@ I use org to write many of my latex files, including longer documents.
 #+end_src
 
 * Major modes
-** TODO Vterm
+** Vterm
 Vterm is the nicest terminal emulator for Emacs I've found so far. But it needs
 module support, which requires building emacs with =--with-modules=.
 
@@ -785,15 +781,24 @@ module support, which requires building emacs with =--with-modules=.
 #+end_src
 
 #+begin_src emacs-lisp
-(defun my-named-term (term-name)
+(defun hgf/named-term (term-name)
   "Generate a terminal with buffer name TERM-NAME."
   (interactive "sTerminal purpose: ")
   (vterm (concat "term-" term-name)))
 
-(my-leader-def "r t" 'my-named-term)
+(hgf/leader-def "t" 'hgf/named-term)
 #+end_src
 
 ** Python
+I use Python /a lot/.
+
+#+begin_src emacs-lisp
+(use-package python
+  :ensure nil
+  :config
+  (setq python-indent-guess-indent-offset-verbose nil))
+#+end_src
+
 
 ** Markdown
 I use markdown for all kinds of stuff, mostly readmes, but also a variety of
@@ -822,17 +827,18 @@ Trackin' them finances.
 #+begin_src emacs-lisp
 (use-package tex
   :general
-  (LaTeX-mode-map
-   "C-M-g" 'my-pdf-view-first-page-other-window
-   "C-M-n" 'my-pdf-view-next-page-other-window
-   "C-M-p" 'my-pdf-view-previous-page-other-window)
-  :ensure nil
+  (latex-mode-map
+   "C-M-g" 'hgf/pdf-view-first-page-other-window
+   "C-M-n" 'hgf/pdf-view-next-page-other-window
+   "C-M-p" 'hgf/pdf-view-previous-page-other-window)
+  :ensure auctex
   :mode ("\\.tex\\'" . tex-mode)
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-master nil)
-  (setq TeX-PDF-mode t))
+  (setq TeX-PDF-mode t)
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 (use-package auctex-latexmk
   :after tex
@@ -840,24 +846,18 @@ Trackin' them finances.
   (auctex-latexmk-setup)
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
-(defun my-bibtex-hook ()
+(defun hgf/bibtex-hook ()
   "My bibtex hook."
   (progn
     (setq comment-start "%")))
 
-(add-hook 'bibtex-mode-hook 'my-bibtex-hook)
+(add-hook 'bibtex-mode-hook 'hgf/bibtex-hook)
 
 (setq-default TeX-auto-save t
 	      TeX-parse-self t
 	      TeX-PDF-mode t
-	      TeX-auto-local (my-emacs-path "auctex-auto"))
+	      TeX-auto-local (hgf/emacs-path "auctex-auto"))
 (setq bibtex-dialect 'biblatex)
-#+end_src
-
-** Dired
-
-#+begin_src emacs-lisp
-(general-nmap "-" 'dired)
 #+end_src
 
 ** Rust
@@ -917,15 +917,14 @@ For exploring new keys and remembering the lesser used ones.
 (use-package magit
   :commands (magit-status magit-list-repositories)
   :config
-  (my-c-def "d" 'magit-list-repositories)
-  (advice-add 'magit-list-repositories :before #'my-repolist-refresh))
+  (advice-add 'magit-list-repositories :before #'hgf/repolist-refresh))
 #+end_src
 
 ** Repolist
 I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 
 #+begin_src emacs-lisp
-(defun my-contains-git-repo-p (dir)
+(defun hgf/contains-git-repo-p (dir)
   "Check if there's  a .git directory in DIR."
   (let ((dirs (directory-files dir)))
     (member ".git" dirs)))
@@ -934,28 +933,28 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
   (and (file-directory-p dir)
        (not (equal (substring dir -1) "."))))
 
-(defun my-find-git-repos-recursive (basedir)
+(defun hgf/find-git-repos-recursive (basedir)
   "Return a list of directories containing a .git directory."
   (let ((result))
   (dolist (f (-filter 'file-directory-real-p (directory-files basedir t)) result)
-    (if (my-contains-git-repo-p f)
+    (if (hgf/contains-git-repo-p f)
 	(add-to-list 'result f)
-     (setq result (append result (my-find-git-repos-recursive f)))))
+     (setq result (append result (hgf/find-git-repos-recursive f)))))
     result))
 
-(defun my-make-magit-repolist (dirs)
+(defun hgf/make-magit-repolist (dirs)
   "Make a list of the form (dir 0) for the magit-list-repositories function from DIRS."
   (let ((result))
     (dolist (dir dirs result)
       (add-to-list 'result `(,dir 0)))
     result))
 
-(defun my-repolist-refresh ()
+(defun hgf/repolist-refresh ()
   "Hi."
   (setq magit-repository-directories
 	(pipe "~/dev"
-	      (my-find-git-repos-recursive)
-	      (my-make-magit-repolist))))
+	      (hgf/find-git-repos-recursive)
+	      (hgf/make-magit-repolist))))
 
 
 (setq magit-repolist-columns
@@ -971,9 +970,15 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 	("Path" 99 magit-repolist-column-path nil)))
 #+end_src
 
-* Neotree
+* Treemacs
 
 #+begin_src emacs-lisp
+(use-package treemacs
+  :general ("C-c T" 'treemacs)
+  :config
+  (setq treemacs-no-png-images t
+	treemacs-width 24))
+
 (use-package neotree
   :commands (neotree neotree-toggle neotree-show)
   :config
@@ -987,7 +992,7 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 (use-package project
   :ensure nil
   :config
-  (general-nmap
+  (general-def
     "C-x p f" 'project-find-file
     "C-x p p" 'project-select-project))
 #+end_src
@@ -1003,7 +1008,7 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 
 (defun project--build-project-list ()
   "Create a list of all git repos."
-  (my-find-git-repos-recursive "~/dev"))
+  (hgf/find-git-repos-recursive "~/dev"))
 #+end_src
 
 * Window
@@ -1038,7 +1043,7 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 (use-package helpful
   :defer t
   :config
-  (my-leader-def
+  (hgf/leader-def
     "h h" 'helpful-at-point)
   (general-def
     "C-h h" 'helpful-at-point
@@ -1083,20 +1088,20 @@ stuff that I seldom need to use.
     "Frequent files"
     ;; Configuration
     ("c" (hydra-configs/body) "configs")
-    ("e" (find-file (my-emacs-path "configuration.org")) "config")
+    ("e" (find-file (hgf/emacs-path "configuration.org")) "config")
     ;; Org
-    ("b" (find-file (my-journal-path "blog.org")) "blog")
-    ("d" (find-file (my-journal-path "diet/diet.ledger")) "diet")
-    ("D" (find-file (my-journal-path "diet/food.ledger")) "food")
-    ("m" (find-file (my-journal-path "calendar.org")) "calendar")
-    ("i" (find-file (my-journal-path "inbox.org")) "inbox")
-    ("n" (find-file (my-journal-path "notes.org")) "notes")
-    ("p" (find-file (my-journal-path "projects.org")) "projects")
-    ("w" (find-file (my-journal-path "wiki.org")) "wiki")
+    ("b" (find-file (hgf/journal-path "blog.org")) "blog")
+    ("d" (find-file (hgf/journal-path "diet/diet.ledger")) "diet")
+    ("D" (find-file (hgf/journal-path "diet/food.ledger")) "food")
+    ("m" (find-file (hgf/journal-path "calendar.org")) "calendar")
+    ("i" (find-file (hgf/journal-path "inbox.org")) "inbox")
+    ("n" (find-file (hgf/journal-path "notes.org")) "notes")
+    ("p" (find-file (hgf/journal-path "projects.org")) "projects")
+    ("w" (find-file (hgf/journal-path "wiki.org")) "wiki")
     ;; Work
     ("f" (hydra-work/body) "fraunhofer")
     ;; Scratch
-    ("s" (my-make-scratch-buffer) "scratch"))
+    ("s" (hgf/make-scratch-buffer) "scratch"))
   (defhydra hydra-configs (:exit t)
     "Configuration files"
     ("i" (find-file "~/.config/i3/config") "i3")
@@ -1104,20 +1109,20 @@ stuff that I seldom need to use.
     ("k" (find-file "~/.config/kitty/kitty.conf") "kitty")
     ("r" (find-file "~/.config/ranger/rc.conf") "ranger")
     ("R" (find-file "~/.config/rofi/config") "Rofi")
-    ("e" (find-file (my-emacs-path "configuration.org")) "emacs")
+    ("e" (find-file (hgf/emacs-path "configuration.org")) "emacs")
     ("f" (find-file "~/.config/fish/config.fish") "fish"))
   (defhydra hydra-work (:exit t)
     "Work related files"
-    ("n" (find-file (my-journal-path "fraunhofer/notes.org")) "notes")
-    ("t" (find-file (my-journal-path "fraunhofer/working_hours.ledger")) "working hours")
-    ("p" (counsel-find-file (my-journal-path "fraunhofer/projects")) "projects"))
+    ("n" (find-file (hgf/journal-path "fraunhofer/notes.org")) "notes")
+    ("t" (find-file (hgf/journal-path "fraunhofer/working_hours.ledger")) "working hours")
+    ("p" (counsel-find-file (hgf/journal-path "fraunhofer/projects")) "projects"))
   (defhydra hydra-package (:exit t)
     "Package management"
     ("r" (package-refresh-contents) "refresh")
     ("i" (call-interactively #'package-install) "install")
     ("u" (package-utils-upgrade-all) "upgrade")
     ("d" (call-interactively #'package-delete) "delete"))
-  (my-leader-def
+  (hgf/leader-def
     "P" 'hydra-package/body
     "f" 'hydra-files/body
     "w" 'hydra-window/body
@@ -1128,17 +1133,17 @@ stuff that I seldom need to use.
 Editing PDFs has never been easier.
 
 #+begin_src emacs-lisp
-(defun my-pdf-view-next-page-other-window ()
+(defun hgf/pdf-view-next-page-other-window ()
   (interactive)
   (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
     (pdf-view-next-page)))
 
-(defun my-pdf-view-previous-page-other-window ()
+(defun hgf/pdf-view-previous-page-other-window ()
   (interactive)
   (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
     (pdf-view-previous-page)))
 
-(defun my-pdf-view-first-page-other-window ()
+(defun hgf/pdf-view-first-page-other-window ()
   (interactive)
   (with-selected-window (get-buffer-window (find-buffer-visiting (concat (cdr (project-current)) "build/main.pdf")))
     (pdf-view-first-page)))
@@ -1146,27 +1151,26 @@ Editing PDFs has never been easier.
 
 #+begin_src emacs-lisp
 (use-package pdf-tools
-  :defer 5)
+  :defer 2
+  :config
+  (add-to-list 'global-auto-revert-ignore-modes 'pdf-view-mode))
 #+end_src
 
 * Triage
 
 #+begin_src emacs-lisp
-(defun my-switch-to-previous-buffer ()
+(defun hgf/switch-to-previous-buffer ()
   "Switch to previously open buffer.
       Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
-(general-def 'normal "DEL" 'my-switch-to-previous-buffer)
-
-;; ** Delete file
 (defun visiting-file-p ()
   "Check whether current buffer is visiting an existing file."
   (let ((filename (buffer-file-name)))
     (and filename (file-exists-p filename))))
 
-(defun my-delete-this-file ()
+(defun hgf/delete-this-file ()
   "Remove file connected to current buffer and kill buffer."
   (interactive)
   (let ((filename (buffer-file-name))
@@ -1179,8 +1183,7 @@ Editing PDFs has never been easier.
 	(kill-buffer buffer)
 	(message "File %s successfully removed" filename)))))
 
-;; ** Rename file
-(defun my-rename-this-file ()
+(defun hgf/rename-this-file ()
   "Rename current buffer and associated file."
   (interactive)
   (let ((name (buffer-name))
@@ -1197,28 +1200,10 @@ Editing PDFs has never been easier.
 	  (message "File '%s' successfully renamed to '%s'"
 		   name (file-name-nondirectory new-name)))))))
 
-;; ** Get org title
-(defun my-get-org-title ()
+(defun hgf/get-org-title ()
   "Get the raw string of the current buffer's #+TITLE property."
   (substring-no-properties
    (car (plist-get (org-export-get-environment) :title))))
-
-
-;; ** Activate current task
-(defun my-activate-current-task ()
-  "Activate task under cursor."
-  (interactive)
-  (progn
-    (message "hi")
-    (let ((task (mapconcat 'identity (org-get-outline-path t) " → ")))
-      (progn
-	(message task)
-	(write-region (concat
-		       (my-get-org-title)
-		       " → "
-		       task) nil "~/.current_task")))))
-
-(general-def "C-c h" 'my-activate-current-task)
 
 (defun org-export-file-to-file (infile outfile backend)
   (write-region (org-export-string-as
@@ -1229,11 +1214,16 @@ Editing PDFs has never been easier.
 		nil
 		outfile))
 
-(defun my-make-scratch-directory ()
+(defun hgf/make-scratch-directory ()
   "Create a temporary scratch directory."
   (interactive)
   (counsel-find-file (make-temp-file "scratch-" t)))
 
+(defun hgf/make-scratch-buffer ()
+  "Create and switch to a temporary scratch buffer with a random
+name."
+  (interactive)
+  (switch-to-buffer (make-temp-name "scratch-")))
 #+end_src
 
 * Prog mode
