@@ -160,7 +160,7 @@ All kinds of Emacs things that just don't sit right with me.
 
 #+begin_src emacs-lisp
 (setq custom-theme-directory (hgf/emacs-path "themes/"))
-(hgf/load-theme 'weatherwax)
+(hgf/load-theme 'gruvbox-dark-medium)
 #+end_src
 ** Garbage collection
 Thanks, Norman Walsh!
