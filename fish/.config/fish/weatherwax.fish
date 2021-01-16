@@ -25,8 +25,6 @@ set -x FZF_DEFAULT_COMMAND "rg --files"
 alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"
 eval (ssh-agent -c) >/dev/null; and ssh-add-all
 
-if test -e "$fish_path/themes/weatherwax.fish"
-    source "$fish_path/themes/weatherwax.fish"
-end
-
 source "$fish_path/conda.fish"
+
+theme_gruvbox dark medium
