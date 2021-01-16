@@ -18,6 +18,7 @@ Plug 'junegunn/vim-easy-align'
     Plug 'arcticicestudio/nord-vim'
     Plug 'romainl/flattened'
     Plug 'dracula/vim', {'as': 'dracula'}
+    Plug 'morhetz/gruvbox'
 
     " Goodies
     Plug 'sgur/vim-editorconfig'
@@ -107,7 +108,7 @@ let g:tex_flavor='latex'
 
 " Colourscheme
 set termguicolors
-color weatherwax
+color gruvbox
 command! Weatherwax :e ~/.config/nvim/colors/weatherwax.vim
 command! Vetinari :e ~/.config/nvim/colors/vetinari.vim
 command! Nordic :e ~/.config/nvim/colors/nordic.vim

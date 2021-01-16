@@ -16,6 +16,7 @@ let  s:yellow  =  "#D3CB80"
 let  s:grey    =  "#888888"
 let  s:orange  =  "#DE8A54"
 
+
 let s:bold = "bold,"
 let s:italic = "italic,"
 let s:none = "NONE"
