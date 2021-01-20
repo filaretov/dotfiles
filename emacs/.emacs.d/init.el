@@ -70,8 +70,6 @@ Example:
 	   init
 	   lst))
 
-(use-package autothemer)
-
 (defun hgf/edit-weatherwax ()
   "Edit the Weatherwax theme."
   (interactive)
@@ -95,7 +93,6 @@ Example:
     ))
 
 (setq custom-theme-directory (hgf/emacs-path "themes/"))
-(hgf/load-theme 'weatherwax)
 
 (defvar hgf/gc-cons-threshold 67108864 ; 64mb
   "The default value to use for `gc-cons-threshold'.
@@ -202,6 +199,9 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 
 (general-def "M-n" 'scroll-up-command)
 (general-def "M-p" 'scroll-down-command)
+
+(use-package gruvbox-theme)
+(hgf/load-theme 'gruvbox-dark-medium)
 
 (use-package evil
   :init
@@ -396,6 +396,14 @@ If you experience freezing, decrease this. If you experience stuttering, increas
       org-edit-src-content-indentation 0
       org-src-window-setup 'current-window)
 
+(use-package ob-ipython)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (emacs-lisp . t)
+   (ipython . t)))
+
 (setq org-adapt-indentation nil
       org-hide-leading-stars t
       org-cycle-separator-lines 0
@@ -409,8 +417,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
    "Beautify Org Symbols"
    (push '("#+begin_src" . "λ") prettify-symbols-alist)
    (push '("#+end_src" . "~") prettify-symbols-alist)
-   (push '("TODO" . "?") prettify-symbols-alist)
-   (push '("DONE" . "!") prettify-symbols-alist)
    (prettify-symbols-mode)))
 
 (defun hgf/org-mode-hook ()
@@ -494,14 +500,13 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
 
 (use-package tex
-  :general
-  (latex-mode-map
-   "C-M-g" 'hgf/pdf-view-first-page-other-window
-   "C-M-n" 'hgf/pdf-view-next-page-other-window
-   "C-M-p" 'hgf/pdf-view-previous-page-other-window)
   :ensure auctex
   :mode ("\\.tex\\'" . tex-mode)
   :config
+  (general-def latex-mode-map
+   "C-M-g" 'hgf/pdf-view-first-page-other-window
+   "C-M-n" 'hgf/pdf-view-next-page-other-window
+   "C-M-p" 'hgf/pdf-view-previous-page-other-window)
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-master nil)
@@ -648,6 +653,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (setq yas-indent-line 'fixed)
   (add-hook 'org-mode-hook 'yas-minor-mode)
   :config
+  (setq yas-snippet-dirs (hgf/emacs-path "snippets"))
   (yas-reload-all))
 
 (use-package yasnippet-snippets

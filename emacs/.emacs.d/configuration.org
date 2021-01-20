@@ -129,10 +129,6 @@ Example:
 All kinds of Emacs things that just don't sit right with me.
 
 ** Theme
-  
-#+begin_src emacs-lisp
-(use-package autothemer)
-#+end_src
 
 #+begin_src emacs-lisp
 (defun hgf/edit-weatherwax ()
@@ -160,7 +156,6 @@ All kinds of Emacs things that just don't sit right with me.
 
 #+begin_src emacs-lisp
 (setq custom-theme-directory (hgf/emacs-path "themes/"))
-(hgf/load-theme 'gruvbox-dark-medium)
 #+end_src
 ** Garbage collection
 Thanks, Norman Walsh!
@@ -379,6 +374,12 @@ And now for something completely different
 #+begin_src emacs-lisp
 (general-def "M-n" 'scroll-up-command)
 (general-def "M-p" 'scroll-down-command)
+#+end_src
+
+* Theme
+#+begin_src emacs-lisp
+(use-package gruvbox-theme)
+(hgf/load-theme 'gruvbox-dark-medium)
 #+end_src
 
 * Vim keybindings - =evil=
@@ -653,6 +654,7 @@ Also, real nifty agendas.
 
 
 ** Babel
+Some settings for the code blocks.
 
 #+begin_src emacs-lisp
 (setq org-src-fontify-natively t
@@ -660,6 +662,20 @@ Also, real nifty agendas.
       org-src-tab-acts-natively t
       org-edit-src-content-indentation 0
       org-src-window-setup 'current-window)
+#+end_src
+
+And defining some languages.
+
+#+begin_src emacs-lisp
+(use-package ob-ipython)
+#+end_src
+
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (emacs-lisp . t)
+   (ipython . t)))
 #+end_src
 
 ** Cosmetics
@@ -687,8 +703,6 @@ all-caps in normal text. Should I?
    "Beautify Org Symbols"
    (push '("#+begin_src" . "λ") prettify-symbols-alist)
    (push '("#+end_src" . "~") prettify-symbols-alist)
-   (push '("TODO" . "?") prettify-symbols-alist)
-   (push '("DONE" . "!") prettify-symbols-alist)
    (prettify-symbols-mode)))
 #+end_src
 
@@ -826,14 +840,13 @@ Trackin' them finances.
 
 #+begin_src emacs-lisp
 (use-package tex
-  :general
-  (latex-mode-map
-   "C-M-g" 'hgf/pdf-view-first-page-other-window
-   "C-M-n" 'hgf/pdf-view-next-page-other-window
-   "C-M-p" 'hgf/pdf-view-previous-page-other-window)
   :ensure auctex
   :mode ("\\.tex\\'" . tex-mode)
   :config
+  (general-def latex-mode-map
+   "C-M-g" 'hgf/pdf-view-first-page-other-window
+   "C-M-n" 'hgf/pdf-view-next-page-other-window
+   "C-M-p" 'hgf/pdf-view-previous-page-other-window)
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-master nil)
@@ -1030,6 +1043,7 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
   (setq yas-indent-line 'fixed)
   (add-hook 'org-mode-hook 'yas-minor-mode)
   :config
+  (setq yas-snippet-dirs (hgf/emacs-path "snippets"))
   (yas-reload-all))
 
 (use-package yasnippet-snippets
