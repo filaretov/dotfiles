@@ -51,6 +51,8 @@ alias default ~/.screenlayout/default.sh
 
 alias g git
 
+alias chx "chmod +x"
+
 # Find local fish file
 set -l lc_file "$fish_path/"(hostname)".fish"
 if test -e $lc_file
