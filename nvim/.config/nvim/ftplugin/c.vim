@@ -6,6 +6,9 @@ nnoremap <localleader># /endif<cr>V%<ESC>'<dd'>dd
 " }}}
 "
 
+set expandtab
+set shiftwidth=4
+
 " Settings ---{{{
 augroup filetype_c
 	autocmd!

@@ -38,35 +38,6 @@ Plug 'junegunn/vim-easy-align'
 call plug#end()
 " }}}
 
-" LSC {{{
-" \    'log_level': -1,
-" \    'suppress_stderr': v:true,
-" let g:lsc_server_commands = {
-"  \  'python': {
-"  \    'command': 'pyls'
-"  \  },
-"  \ 'go': {
-"  \   'command': 'gopls'
-"  \ },
-"  \ 'rust': {
-"  \   'command': 'rust-analyzer'
-"  \ }
-"  \}
-" let g:lsc_auto_map = {
-"  \  'GoToDefinition': 'gd',
-"  \  'FindReferences': 'gr',
-"  \  'Rename': 'gR',
-"  \  'ShowHover': 'K',
-"  \  'FindCodeActions': 'ga',
-"  \  'Completion': 'omnifunc'
-"  \}
-" let g:lsc_enable_autocomplete  = v:false
-" let g:lsc_enable_diagnostics   = v:true
-" let g:lsc_reference_highlights = v:false
-" let g:lsc_trace_level          = 'verbose'
-
-" }}}
-
 " Plugin Settings {{{
 
 " pandoc {{{
@@ -80,6 +51,7 @@ let g:neosnippet#disable_runtime_snippets = {
       \   '_': 1,
       \ }
 " }}}
+
 
 " }}}
 
