@@ -21,6 +21,7 @@ set -x PATH ~/.poetry/bin/ $PATH
 set -x PATH ~/.local/node-v14.15.1-linux-x64/bin/ $PATH
 set -x PATH ~/.local/neovim/bin $PATH
 set -x PATH ~/.local/racket/bin $PATH
+set -x PATH /usr/lib/dart/bin $PATH
 
 set -x PATH ~/.local/bin/stowed $PATH
 set -x FZF_DEFAULT_COMMAND "rg --files"

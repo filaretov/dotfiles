@@ -4,7 +4,7 @@
 
 " Plug {{{
 call plug#begin('~/.vim/plugged')
-Plug 'junegunn/vim-easy-align'
+    Plug 'junegunn/vim-easy-align'
     " Filetypes
     Plug 'rust-lang/rust.vim'
     Plug 'kballard/vim-fish'
@@ -34,7 +34,6 @@ Plug 'junegunn/vim-easy-align'
     Plug 'tpope/vim-rsi'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-unimpaired'
-    Plug 'neomake/neomake'
 call plug#end()
 " }}}
 
