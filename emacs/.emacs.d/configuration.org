@@ -83,6 +83,10 @@ reading the configuration files.
   "Return the file path of FILENAME relative to the Journal directory."
   (format "%s%s" "~/cloud/journal/" filename))
 
+(defun hgf/org-path (filename)
+  "Return the file path of FILENAME relative to the Org directory."
+  (format "%s%s" "~/cloud/org/" filename))
+
 (defun hgf/find-file-as-sudo ()
   (interactive)
   (let ((file-name (buffer-file-name)))
@@ -118,11 +122,11 @@ Example:
       ((lambda (x y) (+ y x)) :arg 100))
 => 103"
   (-reduce-from (lambda (acc el)
-	     (if (member :arg el)
-		 (-replace :arg acc el)
-	       (append el `(,acc))))
-	   init
-	   lst))
+		  (if (member :arg el)
+		      (-replace :arg acc el)
+		    (append el `(,acc))))
+		init
+		lst))
 #+end_src
 
 * Configure Emacs defaults
@@ -157,6 +161,7 @@ All kinds of Emacs things that just don't sit right with me.
 #+begin_src emacs-lisp
 (setq custom-theme-directory (hgf/emacs-path "themes/"))
 #+end_src
+
 ** Garbage collection
 Thanks, Norman Walsh!
 
@@ -566,53 +571,119 @@ I mostly use compilation with latex, surprisingly enough.
 	  'hgf/-close-compilation-if-successful)
 #+end_src
 
-* Org
-Org is amazing and I use it all the time. And once again, a large majority of
-this section is inspired by Harry Schwartz.
+* org-mode
+org-mode is amazing and I use it all the time. And once again, a large majority of
+this section is inspired by Harry Schwartz, John Wiegley and others.
 
 #+begin_src emacs-lisp
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :general
-  ('normal org-mode-map
-	   "g t" 'org-todo)
   :config
   (setq org-use-property-inheritance t)
   (add-to-list 'org-structure-template-alist
 	       '("el" . "src emacs-lisp"))
-  (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0)))
+  (general-add-advice 'org-capture :after '(lambda () (evil-append 0)))
+  (general-def 'normal org-mode-map
+    "g t" 'org-todo
+    "g e" 'org-set-effort)
+
   (defun org-capture-inbox ()
     (interactive)
     (condition-case nil
 	(call-interactively 'org-store-link)
       (error nil))
-    (org-capture nil "i")))
-  #+end_src
+    (org-capture nil "i"))
+  (setq org-todo-keywords
+	'((sequence "TODO" "|" "DONE")
+	  (type "PROJECT" "WAITING" "|" "SOMEDAY" "CANCELLED")))
+  (setq org-log-done-with-time nil
+	org-log-done 'time)
+  (defun org-agenda-today ()
+    (interactive)
+    (org-agenda-list nil nil 7))
+
+  (require 'org-agenda)
+  (setq org-agenda-files '("~/cloud/org/")
+	org-default-notes-files "~/cloud/org/notes.org"
+	org-agenda-window-setup 'current-window
+	org-agenda-time-grid nil)
+  (setq org-priority-faces
+	'((?A . (:weight 'normal))
+	  (?B . (:weight 'normal))
+	  (?C . (:weight 'normal))))
+  (setq org-capture-templates
+	'(("n" "Note" entry (file "~/cloud/org/notes.org")
+	   "* %u %?")
+	  ("i" "Inbox" entry (file "~/cloud/org/inbox.org")
+	   "* TODO %?\n%u")))
+  (setq org-agenda-skip-deadline-if-done t
+	org-agenda-skip-scheduled-if-done t
+	org-agenda-skip-timestamp-if-done t
+	org-agenda-start-on-weekday nil
+	org-reverse-note-order t
+	org-fast-tag-selection-single-key t)
+
+  (require 'cl-lib)
+
+  (defun hgf/visit-inbox ()
+    (interactive)
+    (find-file (hgf/org-path "inbox.org")))
+
+  (defun hgf/org-agenda-calculate-efforts (limit)
+    "Sum the efforts of scheduled entries up to LIMIT in the agenda buffer."
+    (let (total)
+      (save-excursion
+	(while (< (point) limit)
+	  (when (member (org-get-at-bol 'type) '("scheduled" "past-scheduled"))
+	    (push (org-entry-get (org-get-at-bol 'org-hd-marker) "Effort") total))
+	  (forward-line)))
+      (org-duration-from-minutes
+       (cl-reduce #'+
+		  (mapcar #'org-duration-to-minutes
+			  (cl-remove-if-not 'identity total))))))
+
+  (defun hgf/org-agenda-insert-efforts ()
+    "Insert the efforts for each day inside the agenda buffer."
+    (save-excursion
+      (let (pos)
+	(while (setq pos (text-property-any
+			  (point) (point-max) 'org-agenda-date-header t))
+	  (goto-char pos)
+	  (end-of-line)
+	  (insert-and-inherit (concat " ("
+				      (hgf/org-agenda-calculate-efforts
+				       (next-single-property-change (point) 'day))
+				      ")"))
+	  (forward-line)))))
+
+  (add-hook 'org-agenda-finalize-hook 'hgf/org-agenda-insert-efforts)
+
+  (setf (alist-get 'agenda org-agenda-prefix-format)
+	"%-6e %-10c %?t ")
+	;; "%-8e %-16:(hgf/title-case-filename (buffer-name)) %?t ")
+  
+  (setf (alist-get 'todo org-agenda-prefix-format)
+	"%-8e %-16:(hgf/title-case-filename (buffer-name)) %?t ")
+
+  (general-def
+    "<f1>" 'org-capture-inbox
+    "<f2>" 'hgf/visit-inbox
+    "<f3>" 'org-agenda-today)
+  (general-def 'motion org-agenda-mode-map
+    "d" 'org-agenda-day-view
+    "w" 'org-agenda-week-view
+    "e" 'org-agenda-set-effort))
+
+#+end_src
 
 ** GTD
 All about them tasks.
 
 #+begin_src emacs-lisp
-
-
 (setq org-refile-use-outline-path 'file
-      org-clock-into-drawer nil
-      org-log-done 'time)
-(setq org-refile-targets `((,(hgf/journal-path "projects.org") :maxlevel . 2)
-			   (,(hgf/journal-path "fraunhofer/notes.org") :maxlevel . 2)))
-(setq org-archive-location "~/cloud/journal/archive.org::* %s")
-(setq org-capture-templates
-      '(("n" "Note" entry (file "~/cloud/journal/notes.org")
-	 "*  %?\n")
-	("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
-	 "* TODO %?\n")))
-(setq org-agenda-files
-      '(
-	"~/cloud/journal/inbox.org"
-	"~/cloud/journal/projects.org"
-	"~/cloud/journal/calendar.org"
-	"~/cloud/journal/fraunhofer/"
-	))
+      org-clock-into-drawer nil)
+(setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
+(setq org-archive-location (hgf/org-path "archive.org::* %s"))
 #+end_src
 
 Alright, this function isn't exactly the cleanest possible thing in the world,
@@ -628,28 +699,6 @@ but it's useful enough for me (for now).
 						     (val  (org-element-property :duration clock)))
 						 (format "| %s | %s |" (car task) val)))))))))
 (general-def "C-c C-x C-r" 'org-generate-report)
-#+end_src
-
-Also, real nifty agendas.
-
-#+begin_src emacs-lisp
-(use-package org-super-agenda
-  :commands (org-agenda)
-  :config
-  (setq org-super-agenda-groups
-	'(;; Group conds are ORed
-	  (:name "Fraunhofer"
-		 :tag "ipk")
-	  (:name "MSC Thesis"
-		 :tag "msc")
-	  ))
-  (org-super-agenda-mode 1))
-#+end_src
-
-
-
-#+begin_src emacs-lisp
-(general-add-advice 'org-clock-in :after 'hgf/activate-current-task)
 #+end_src
 
 
@@ -703,6 +752,8 @@ all-caps in normal text. Should I?
    "Beautify Org Symbols"
    (push '("#+begin_src" . "λ") prettify-symbols-alist)
    (push '("#+end_src" . "~") prettify-symbols-alist)
+   (push '(":PROPERTIES:" . "π") prettify-symbols-alist)
+   (push '(":END:" . "~") prettify-symbols-alist)
    (prettify-symbols-mode)))
 #+end_src
 
@@ -780,27 +831,36 @@ I use org to write many of my latex files, including longer documents.
   (ox-extras-activate '(ignore-headlines)))
 #+end_src
 
-* Major modes
-** Vterm
-Vterm is the nicest terminal emulator for Emacs I've found so far. But it needs
-module support, which requires building emacs with =--with-modules=.
+* Programming
+
+** Flycheck
 
 #+begin_src emacs-lisp
-(use-package vterm
-  :general ("<f4>" 'vterm)
-  :config
-  (setq vterm-shell "/usr/bin/fish"
-	vterm-kill-buffer-on-exit t
-	vterm-copy-exclude-prompt t))
+(use-package flycheck)
 #+end_src
 
-#+begin_src emacs-lisp
-(defun hgf/named-term (term-name)
-  "Generate a terminal with buffer name TERM-NAME."
-  (interactive "sTerminal purpose: ")
-  (vterm (concat "term-" term-name)))
+** LSP Mode
 
-(hgf/leader-def "t" 'hgf/named-term)
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook
+  (rust-mode . lsp)
+  :commands lsp
+  :custom
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all t)
+  (lsp-idle-delay 0.6)
+  :config
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable nil))
 #+end_src
 
 ** Python
@@ -814,28 +874,23 @@ I use Python /a lot/.
 #+end_src
 
 
-** Markdown
-I use markdown for all kinds of stuff, mostly readmes, but also a variety of
-documents in conjunction with =pandoc=.
+** Rust
+Rust configuration is largely stolen from [[https://robert.kra.hn/posts/2021-02-07_rust-with-emacs][Robert Krahn]]
 
 #+begin_src emacs-lisp
-(use-package markdown-mode
-  :mode (("README\\.md\\'" . markdown-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode)))
-#+end_src
-
-** Ledger
-Trackin' them finances.
-
-#+begin_src emacs-lisp
-(use-package ledger-mode
-  :mode ("\\.ledger\\'")
+(use-package rustic
+  :mode ("\\.rs\\'" . rustic-mode)
+  :general (rustic-mode-map
+	    "M-j" 'lsp-ui-imenu)
   :config
-  (add-to-list 'ledger-reports '("diet" "%(binary) -f %(ledger-file) reg --value Assets --budget --daily"))
-  (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
+  (setq rustic-format-on-save t)
+  (add-hook 'rustic-mode-hook 'hgf/rustic-mode-hook))
+
+(defun hgf/rustic-mode-hook ()
+  (setq-local buffer-save-without-query t))
 #+end_src
 
+* Writing
 ** TeX
 
 #+begin_src emacs-lisp
@@ -843,10 +898,10 @@ Trackin' them finances.
   :ensure auctex
   :mode ("\\.tex\\'" . tex-mode)
   :config
-  (general-def latex-mode-map
-   "C-M-g" 'hgf/pdf-view-first-page-other-window
-   "C-M-n" 'hgf/pdf-view-next-page-other-window
-   "C-M-p" 'hgf/pdf-view-previous-page-other-window)
+  (general-def tex-mode-map
+    "C-M-g" 'hgf/pdf-view-first-page-other-window
+    "C-M-n" 'hgf/pdf-view-next-page-other-window
+    "C-M-p" 'hgf/pdf-view-previous-page-other-window)
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-master nil)
@@ -873,13 +928,50 @@ Trackin' them finances.
 (setq bibtex-dialect 'biblatex)
 #+end_src
 
-** Rust
+** Markdown
+I use markdown for all kinds of stuff, mostly readmes, but also a variety of
+documents in conjunction with =pandoc=.
 
 #+begin_src emacs-lisp
-(use-package rust-mode
-  :mode ("\\.rs\\'")
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . markdown-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode)))
+#+end_src
+
+** Ledger
+Trackin' them finances.
+
+#+begin_src emacs-lisp
+(use-package ledger-mode
+  :mode ("\\.ledger\\'")
   :config
-  (setq lsp-rust-server 'rust-analyzer))
+  (add-to-list 'ledger-reports '("diet" "%(binary) -f %(ledger-file) reg --value Assets --budget --daily"))
+  (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
+#+end_src
+
+
+* Utilities
+** Vterm
+Vterm is the nicest terminal emulator for Emacs I've found so far. But it needs
+module support, which requires building emacs with =--with-modules=.
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :general ("<f4>" 'vterm)
+  :config
+  (setq vterm-shell "/usr/bin/fish"
+	vterm-kill-buffer-on-exit t
+	vterm-copy-exclude-prompt t))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun hgf/named-term (term-name)
+  "Generate a terminal with buffer name TERM-NAME."
+  (interactive "sTerminal purpose: ")
+  (vterm (concat "term-" term-name)))
+
+(hgf/leader-def "t" 'hgf/named-term)
 #+end_src
 
 * Minor modes
@@ -949,10 +1041,10 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
 (defun hgf/find-git-repos-recursive (basedir)
   "Return a list of directories containing a .git directory."
   (let ((result))
-  (dolist (f (-filter 'file-directory-real-p (directory-files basedir t)) result)
-    (if (hgf/contains-git-repo-p f)
-	(add-to-list 'result f)
-     (setq result (append result (hgf/find-git-repos-recursive f)))))
+    (dolist (f (-filter 'file-directory-real-p (directory-files basedir t)) result)
+      (if (hgf/contains-git-repo-p f)
+	  (add-to-list 'result f)
+	(setq result (append result (hgf/find-git-repos-recursive f)))))
     result))
 
 (defun hgf/make-magit-repolist (dirs)
@@ -992,11 +1084,20 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
   (setq treemacs-no-png-images t
 	treemacs-width 24))
 
-(use-package neotree
-  :commands (neotree neotree-toggle neotree-show)
-  :config
-  (general-def "<f2>" 'neotree-toggle)
-  (setq neo-theme 'arrow))
+(defun hgf/title-case-filename (filename)
+  (thread-last filename
+    (file-name-sans-extension)
+    (s-replace "_" " ")
+    (upcase-initials)))
+
+(defun hgf/treemacs-file-name-org-title (filename)
+  (pcase (file-name-extension filename)
+    ("org" (hgf/title-case-filename filename))
+    (otherwise filename)))
+
+(setq treemacs-file-name-transformer 'hgf/treemacs-file-name-org-title)
+
+
 #+end_src
 
 * Project
@@ -1043,7 +1144,6 @@ I like Magit's repolist feature, but I prefer to build the repolist dynamically.
   (setq yas-indent-line 'fixed)
   (add-hook 'org-mode-hook 'yas-minor-mode)
   :config
-  (setq yas-snippet-dirs (hgf/emacs-path "snippets"))
   (yas-reload-all))
 
 (use-package yasnippet-snippets
@@ -1104,6 +1204,7 @@ stuff that I seldom need to use.
     ("c" (hydra-configs/body) "configs")
     ("e" (find-file (hgf/emacs-path "configuration.org")) "config")
     ;; Org
+    ("o" (find-file (counsel-find-file (hgf/org-path ""))) "org")
     ("b" (find-file (hgf/journal-path "blog.org")) "blog")
     ("d" (find-file (hgf/journal-path "diet/diet.ledger")) "diet")
     ("D" (find-file (hgf/journal-path "diet/food.ledger")) "food")
@@ -1141,7 +1242,7 @@ stuff that I seldom need to use.
     "f" 'hydra-files/body
     "w" 'hydra-window/body
     "o" 'hydra-org-mode/body))
-  #+end_src
+#+end_src
 
 * PDF Tools
 Editing PDFs has never been easier.
@@ -1219,7 +1320,7 @@ Editing PDFs has never been easier.
   (substring-no-properties
    (car (plist-get (org-export-get-environment) :title))))
 
-(defun org-export-file-to-file (infile outfile backend)
+(defun hgf/org-export-file-to-file (infile outfile backend)
   (write-region (org-export-string-as
 		 (with-temp-buffer
 		   (insert-file-contents infile)
@@ -1238,11 +1339,6 @@ Editing PDFs has never been easier.
 name."
   (interactive)
   (switch-to-buffer (make-temp-name "scratch-")))
-#+end_src
-
-* Prog mode
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook 'outshine-mode)
 #+end_src
 
 
@@ -1265,6 +1361,3 @@ I like auto-filling, 80 columns and spell-checking, thank you very much.
 	ispell-extra-args '("--sug-mode=ultra")))
 
 #+end_src
-
-
-

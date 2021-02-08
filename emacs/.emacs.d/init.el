@@ -32,6 +32,10 @@
   "Return the file path of FILENAME relative to the Journal directory."
   (format "%s%s" "~/cloud/journal/" filename))
 
+(defun hgf/org-path (filename)
+  "Return the file path of FILENAME relative to the Org directory."
+  (format "%s%s" "~/cloud/org/" filename))
+
 (defun hgf/find-file-as-sudo ()
   (interactive)
   (let ((file-name (buffer-file-name)))
@@ -64,11 +68,11 @@ Example:
       ((lambda (x y) (+ y x)) :arg 100))
 => 103"
   (-reduce-from (lambda (acc el)
-	     (if (member :arg el)
-		 (-replace :arg acc el)
-	       (append el `(,acc))))
-	   init
-	   lst))
+		  (if (member :arg el)
+		      (-replace :arg acc el)
+		    (append el `(,acc))))
+		init
+		lst))
 
 (defun hgf/edit-weatherwax ()
   "Edit the Weatherwax theme."
@@ -332,39 +336,106 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 
 (use-package org
   :mode ("\\.org\\'" . org-mode)
-  :general
-  ('normal org-mode-map
-	   "g t" 'org-todo)
   :config
   (setq org-use-property-inheritance t)
   (add-to-list 'org-structure-template-alist
 	       '("el" . "src emacs-lisp"))
-  (general-add-advice 'org-capture-inbox :after '(lambda () (evil-append 0)))
+  (general-add-advice 'org-capture :after '(lambda () (evil-append 0)))
+  (general-def 'normal org-mode-map
+    "g t" 'org-todo
+    "g e" 'org-set-effort)
+
   (defun org-capture-inbox ()
     (interactive)
     (condition-case nil
 	(call-interactively 'org-store-link)
       (error nil))
-    (org-capture nil "i")))
+    (org-capture nil "i"))
+  (setq org-todo-keywords
+	'((sequence "TODO" "|" "DONE")
+	  (type "PROJECT" "WAITING" "|" "SOMEDAY" "CANCELLED")))
+  (setq org-log-done-with-time nil
+	org-log-done 'time)
+  (defun org-agenda-today ()
+    (interactive)
+    (org-agenda-list nil nil 7))
+
+  (require 'org-agenda)
+  (setq org-agenda-files '("~/cloud/org/")
+	org-default-notes-files "~/cloud/org/notes.org"
+	org-agenda-window-setup 'current-window
+	org-agenda-time-grid nil)
+  (setq org-priority-faces
+	'((?A . (:weight 'normal))
+	  (?B . (:weight 'normal))
+	  (?C . (:weight 'normal))))
+  (setq org-capture-templates
+	'(("n" "Note" entry (file "~/cloud/org/notes.org")
+	   "* %u %?")
+	  ("i" "Inbox" entry (file "~/cloud/org/inbox.org")
+	   "* TODO %?\n%u")))
+  (setq org-agenda-skip-deadline-if-done t
+	org-agenda-skip-scheduled-if-done t
+	org-agenda-skip-timestamp-if-done t
+	org-agenda-start-on-weekday nil
+	org-reverse-note-order t
+	org-fast-tag-selection-single-key t)
+
+  (require 'cl-lib)
+
+  (defun hgf/visit-inbox ()
+    (interactive)
+    (find-file (hgf/org-path "inbox.org")))
+
+  (defun hgf/org-agenda-calculate-efforts (limit)
+    "Sum the efforts of scheduled entries up to LIMIT in the agenda buffer."
+    (let (total)
+      (save-excursion
+	(while (< (point) limit)
+	  (when (member (org-get-at-bol 'type) '("scheduled" "past-scheduled"))
+	    (push (org-entry-get (org-get-at-bol 'org-hd-marker) "Effort") total))
+	  (forward-line)))
+      (org-duration-from-minutes
+       (cl-reduce #'+
+		  (mapcar #'org-duration-to-minutes
+			  (cl-remove-if-not 'identity total))))))
+
+  (defun hgf/org-agenda-insert-efforts ()
+    "Insert the efforts for each day inside the agenda buffer."
+    (save-excursion
+      (let (pos)
+	(while (setq pos (text-property-any
+			  (point) (point-max) 'org-agenda-date-header t))
+	  (goto-char pos)
+	  (end-of-line)
+	  (insert-and-inherit (concat " ("
+				      (hgf/org-agenda-calculate-efforts
+				       (next-single-property-change (point) 'day))
+				      ")"))
+	  (forward-line)))))
+
+  (add-hook 'org-agenda-finalize-hook 'hgf/org-agenda-insert-efforts)
+
+  (setf (alist-get 'agenda org-agenda-prefix-format)
+	"%-6e %-10c %?t ")
+	;; "%-8e %-16:(hgf/title-case-filename (buffer-name)) %?t ")
+  
+  (setf (alist-get 'todo org-agenda-prefix-format)
+	"%-8e %-16:(hgf/title-case-filename (buffer-name)) %?t ")
+
+  (general-def
+    "<f1>" 'org-capture-inbox
+    "<f2>" 'hgf/visit-inbox
+    "<f3>" 'org-agenda-today)
+  (general-def 'motion org-agenda-mode-map
+    "d" 'org-agenda-day-view
+    "w" 'org-agenda-week-view
+    "e" 'org-agenda-set-effort))
 
 (setq org-refile-use-outline-path 'file
-      org-clock-into-drawer nil
-      org-log-done 'time)
-(setq org-refile-targets `((,(hgf/journal-path "projects.org") :maxlevel . 2)
-			   (,(hgf/journal-path "fraunhofer/notes.org") :maxlevel . 2)))
-(setq org-archive-location "~/cloud/journal/archive.org::* %s")
-(setq org-capture-templates
-      '(("n" "Note" entry (file "~/cloud/journal/notes.org")
-	 "*  %?\n")
-	("i" "Inbox" entry (file "~/cloud/journal/inbox.org")
-	 "* TODO %?\n")))
-(setq org-agenda-files
-      '(
-	"~/cloud/journal/inbox.org"
-	"~/cloud/journal/projects.org"
-	"~/cloud/journal/calendar.org"
-	"~/cloud/journal/fraunhofer/"
-	))
+      org-clock-into-drawer nil)
+(setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
+(setq org-archive-location (hgf/org-path "archive.org::* %s"))
 
 (defun org-generate-report ()
   (interactive)
@@ -375,20 +446,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 						     (val  (org-element-property :duration clock)))
 						 (format "| %s | %s |" (car task) val)))))))))
 (general-def "C-c C-x C-r" 'org-generate-report)
-
-(use-package org-super-agenda
-  :commands (org-agenda)
-  :config
-  (setq org-super-agenda-groups
-	'(;; Group conds are ORed
-	  (:name "Fraunhofer"
-		 :tag "ipk")
-	  (:name "MSC Thesis"
-		 :tag "msc")
-	  ))
-  (org-super-agenda-mode 1))
-
-(general-add-advice 'org-clock-in :after 'hgf/activate-current-task)
 
 (setq org-src-fontify-natively t
       org-src-preserve-indentation nil
@@ -417,6 +474,8 @@ If you experience freezing, decrease this. If you experience stuttering, increas
    "Beautify Org Symbols"
    (push '("#+begin_src" . "λ") prettify-symbols-alist)
    (push '("#+end_src" . "~") prettify-symbols-alist)
+   (push '(":PROPERTIES:" . "π") prettify-symbols-alist)
+   (push '(":END:" . "~") prettify-symbols-alist)
    (prettify-symbols-mode)))
 
 (defun hgf/org-mode-hook ()
@@ -469,44 +528,52 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   :config
   (ox-extras-activate '(ignore-headlines)))
 
-(use-package vterm
-  :general ("<f4>" 'vterm)
+(use-package flycheck)
+
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook
+  (rust-mode . lsp)
+  :commands lsp
+  :custom
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all t)
+  (lsp-idle-delay 0.6)
   :config
-  (setq vterm-shell "/usr/bin/fish"
-	vterm-kill-buffer-on-exit t
-	vterm-copy-exclude-prompt t))
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
-(defun hgf/named-term (term-name)
-  "Generate a terminal with buffer name TERM-NAME."
-  (interactive "sTerminal purpose: ")
-  (vterm (concat "term-" term-name)))
-
-(hgf/leader-def "t" 'hgf/named-term)
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable nil))
 
 (use-package python
   :ensure nil
   :config
   (setq python-indent-guess-indent-offset-verbose nil))
 
-(use-package markdown-mode
-  :mode (("README\\.md\\'" . markdown-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode)))
-
-(use-package ledger-mode
-  :mode ("\\.ledger\\'")
+(use-package rustic
+  :mode ("\\.rs\\'" . rustic-mode)
+  :general (rustic-mode-map
+	    "M-j" 'lsp-ui-imenu)
   :config
-  (add-to-list 'ledger-reports '("diet" "%(binary) -f %(ledger-file) reg --value Assets --budget --daily"))
-  (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
+  (setq rustic-format-on-save t)
+  (add-hook 'rustic-mode-hook 'hgf/rustic-mode-hook))
+
+(defun hgf/rustic-mode-hook ()
+  (setq-local buffer-save-without-query t))
 
 (use-package tex
   :ensure auctex
   :mode ("\\.tex\\'" . tex-mode)
   :config
-  (general-def latex-mode-map
-   "C-M-g" 'hgf/pdf-view-first-page-other-window
-   "C-M-n" 'hgf/pdf-view-next-page-other-window
-   "C-M-p" 'hgf/pdf-view-previous-page-other-window)
+  (general-def tex-mode-map
+    "C-M-g" 'hgf/pdf-view-first-page-other-window
+    "C-M-n" 'hgf/pdf-view-next-page-other-window
+    "C-M-p" 'hgf/pdf-view-previous-page-other-window)
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-master nil)
@@ -532,10 +599,30 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 	      TeX-auto-local (hgf/emacs-path "auctex-auto"))
 (setq bibtex-dialect 'biblatex)
 
-(use-package rust-mode
-  :mode ("\\.rs\\'")
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . markdown-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode)))
+
+(use-package ledger-mode
+  :mode ("\\.ledger\\'")
   :config
-  (setq lsp-rust-server 'rust-analyzer))
+  (add-to-list 'ledger-reports '("diet" "%(binary) -f %(ledger-file) reg --value Assets --budget --daily"))
+  (add-to-list 'ledger-reports '("work" "%(binary) -f %(ledger-file) bal --add-budget")))
+
+(use-package vterm
+  :general ("<f4>" 'vterm)
+  :config
+  (setq vterm-shell "/usr/bin/fish"
+	vterm-kill-buffer-on-exit t
+	vterm-copy-exclude-prompt t))
+
+(defun hgf/named-term (term-name)
+  "Generate a terminal with buffer name TERM-NAME."
+  (interactive "sTerminal purpose: ")
+  (vterm (concat "term-" term-name)))
+
+(hgf/leader-def "t" 'hgf/named-term)
 
 (use-package which-key
   :config
@@ -577,10 +664,10 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (defun hgf/find-git-repos-recursive (basedir)
   "Return a list of directories containing a .git directory."
   (let ((result))
-  (dolist (f (-filter 'file-directory-real-p (directory-files basedir t)) result)
-    (if (hgf/contains-git-repo-p f)
-	(add-to-list 'result f)
-     (setq result (append result (hgf/find-git-repos-recursive f)))))
+    (dolist (f (-filter 'file-directory-real-p (directory-files basedir t)) result)
+      (if (hgf/contains-git-repo-p f)
+	  (add-to-list 'result f)
+	(setq result (append result (hgf/find-git-repos-recursive f)))))
     result))
 
 (defun hgf/make-magit-repolist (dirs)
@@ -616,11 +703,18 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (setq treemacs-no-png-images t
 	treemacs-width 24))
 
-(use-package neotree
-  :commands (neotree neotree-toggle neotree-show)
-  :config
-  (general-def "<f2>" 'neotree-toggle)
-  (setq neo-theme 'arrow))
+(defun hgf/title-case-filename (filename)
+  (thread-last filename
+    (file-name-sans-extension)
+    (s-replace "_" " ")
+    (upcase-initials)))
+
+(defun hgf/treemacs-file-name-org-title (filename)
+  (pcase (file-name-extension filename)
+    ("org" (hgf/title-case-filename filename))
+    (otherwise filename)))
+
+(setq treemacs-file-name-transformer 'hgf/treemacs-file-name-org-title)
 
 (use-package project
   :ensure nil
@@ -653,7 +747,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (setq yas-indent-line 'fixed)
   (add-hook 'org-mode-hook 'yas-minor-mode)
   :config
-  (setq yas-snippet-dirs (hgf/emacs-path "snippets"))
   (yas-reload-all))
 
 (use-package yasnippet-snippets
@@ -703,6 +796,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     ("c" (hydra-configs/body) "configs")
     ("e" (find-file (hgf/emacs-path "configuration.org")) "config")
     ;; Org
+    ("o" (find-file (counsel-find-file (hgf/org-path ""))) "org")
     ("b" (find-file (hgf/journal-path "blog.org")) "blog")
     ("d" (find-file (hgf/journal-path "diet/diet.ledger")) "diet")
     ("D" (find-file (hgf/journal-path "diet/food.ledger")) "food")
@@ -807,7 +901,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (substring-no-properties
    (car (plist-get (org-export-get-environment) :title))))
 
-(defun org-export-file-to-file (infile outfile backend)
+(defun hgf/org-export-file-to-file (infile outfile backend)
   (write-region (org-export-string-as
 		 (with-temp-buffer
 		   (insert-file-contents infile)
@@ -826,8 +920,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 name."
   (interactive)
   (switch-to-buffer (make-temp-name "scratch-")))
-
-(add-hook 'prog-mode-hook 'outshine-mode)
 
 (use-package text-mode
   :ensure nil
