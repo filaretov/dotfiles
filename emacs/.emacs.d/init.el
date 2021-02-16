@@ -116,7 +116,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (setq custom-file (hgf/emacs-path "custom.el"))
 (load custom-file 'noerror)
 
-(global-auto-revert-mode 1)
+(global-auto-revert-mode +1)
 
 (show-paren-mode 1)
 
@@ -204,17 +204,23 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (general-def "M-n" 'scroll-up-command)
 (general-def "M-p" 'scroll-down-command)
 
+(use-package s)
+(use-package dash)
+
 (use-package gruvbox-theme)
 (hgf/load-theme 'gruvbox-dark-medium)
 
+(use-package undo-tree)
 (use-package evil
   :init
   (setq evil-want-integration t
 	evil-want-keybinding nil
 	evil-want-abbrev-expand-on-insert-exit nil
-	evil-want-Y-yank-to-eol t)
+	evil-want-Y-yank-to-eol t
+	evil-undo-system 'undo-tree)
   :config
   (evil-mode 1)
+  (global-undo-tree-mode +1)
   (setq evil-emacs-state-cursor 'bar
 	evil-search-module 'evil-search
 	evil-ex-search-case 'smart)
@@ -223,7 +229,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     "k" 'evil-previous-visual-line
     "L" 'evil-end-of-line
     "H" 'evil-first-non-blank-of-visual-line
-    "?" 'swiper
     "g E" 'eval-buffer
     "g e" 'eval-last-sexp
     "g C-e" 'eval-defun
@@ -277,48 +282,11 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (general-def 'normal "<C-i>" 'evil-jump-forward)
 (general-unbind evil-motion-state-map "TAB")
 
-(use-package ivy
-  :after counsel
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t
-	ivy-initial-inputs-alist nil
-	count-format "(%d/%d) "))
-
-(use-package ivy-rich
-  :after ivy
-  :config
-  (ivy-rich-mode 1))
-
-(use-package counsel
-  :config
-  (counsel-mode 1)
-  (use-package flx)
-  (use-package smex)
-  (general-def "C-s" 'swiper))
-
-(use-package ivy-bibtex
-  :general
-  (LaTeX-mode-map "C-x [" 'ivy-bibtex)
-  :config
-  (setq ivy-re-builders-alist
-	'((ivy-bibtex . ivy--regex-ignore-order)
-	  (t . ivy--regex-plus)))
-  (setq ivy-bibtex-default-action 'ivy-bibtex-insert-citation)
-  (setq bibtex-completion-cite-default-command "autocite"
-	bibtex-completion-cite-prompt-for-optional-arguments nil
-	bibtex-completion-pdf-field "file")
-  (setq bibtex-completion-pdf-open-function
-	(lambda (fpath)
-	  (call-process "zathura" nil 0 nil fpath))))
-
-(use-package company
-  :general
-  ('insert company-mode-map
-	   "C-x C-o" 'company-complete
-	   "C-x C-f" 'company-files)
-  :config (company-mode))
+(use-package selectrum
+  :init
+  (selectrum-mode +1)
+  :custom 
+  (completion-styles '(flex substring partial-completion)))
 
 (defun hgf/-close-compilation-if-successful (buf str)
   "Close the compilation window if it is successful."
@@ -337,9 +305,43 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :config
-  (setq org-use-property-inheritance t)
-  (add-to-list 'org-structure-template-alist
-	       '("el" . "src emacs-lisp"))
+  (setq org-use-property-inheritance t
+	org-startup-folded t
+	org-adapt-indentation nil
+	org-hide-leading-stars t
+	org-cycle-separator-lines 0
+	org-hide-emphasis-markers t
+	org-fontify-done-headline nil
+	org-M-RET-may-split-line nil
+	org-outline-path-complete-in-steps nil
+	org-refile-use-outline-path 'file
+	org-refile-targets '((org-agenda-files . (:maxlevel . 2)))
+	org-archive-location (hgf/org-path "archive.org::* %s")
+	org-todo-keywords '((sequence "TODO" "WAITING" "|" "DONE" "SOMEDAY"))
+	org-log-done-with-time nil
+	org-log-done 'note
+	;; Does this variable even exist?
+	;; org-clock-into-drawer nil
+	;; Agenda
+	org-default-notes-files "~/cloud/org/notes.org"
+	org-agenda-files '("~/cloud/org/")
+	org-agenda-window-setup 'current-window
+	org-agenda-time-grid nil
+	org-agenda-skip-deadline-if-done t
+	org-agenda-skip-scheduled-if-done t
+	org-agenda-skip-timestamp-if-done t
+	org-agenda-start-on-weekday nil
+	org-reverse-note-order t
+	org-fast-tag-selection-single-key t
+	;; Babel
+	org-src-fontify-natively t
+	org-src-preserve-indentation nil
+	org-src-tab-acts-natively t
+	org-edit-src-content-indentation 0
+	org-src-window-setup 'current-window
+	)
+  
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (general-add-advice 'org-capture :after '(lambda () (evil-append 0)))
   (general-def 'normal org-mode-map
     "g t" 'org-todo
@@ -351,20 +353,11 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 	(call-interactively 'org-store-link)
       (error nil))
     (org-capture nil "i"))
-  (setq org-todo-keywords
-	'((sequence "TODO" "|" "DONE")
-	  (type "PROJECT" "WAITING" "|" "SOMEDAY" "CANCELLED")))
-  (setq org-log-done-with-time nil
-	org-log-done 'time)
+  
   (defun org-agenda-today ()
     (interactive)
     (org-agenda-list nil nil 7))
 
-  (require 'org-agenda)
-  (setq org-agenda-files '("~/cloud/org/")
-	org-default-notes-files "~/cloud/org/notes.org"
-	org-agenda-window-setup 'current-window
-	org-agenda-time-grid nil)
   (setq org-priority-faces
 	'((?A . (:weight 'normal))
 	  (?B . (:weight 'normal))
@@ -374,54 +367,17 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 	   "* %u %?")
 	  ("i" "Inbox" entry (file "~/cloud/org/inbox.org")
 	   "* TODO %?\n%u")))
-  (setq org-agenda-skip-deadline-if-done t
-	org-agenda-skip-scheduled-if-done t
-	org-agenda-skip-timestamp-if-done t
-	org-agenda-start-on-weekday nil
-	org-reverse-note-order t
-	org-fast-tag-selection-single-key t)
-
-  (require 'cl-lib)
 
   (defun hgf/visit-inbox ()
     (interactive)
     (find-file (hgf/org-path "inbox.org")))
 
-  (defun hgf/org-agenda-calculate-efforts (limit)
-    "Sum the efforts of scheduled entries up to LIMIT in the agenda buffer."
-    (let (total)
-      (save-excursion
-	(while (< (point) limit)
-	  (when (member (org-get-at-bol 'type) '("scheduled" "past-scheduled"))
-	    (push (org-entry-get (org-get-at-bol 'org-hd-marker) "Effort") total))
-	  (forward-line)))
-      (org-duration-from-minutes
-       (cl-reduce #'+
-		  (mapcar #'org-duration-to-minutes
-			  (cl-remove-if-not 'identity total))))))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (emacs-lisp . t)
+     (ipython . t)))
 
-  (defun hgf/org-agenda-insert-efforts ()
-    "Insert the efforts for each day inside the agenda buffer."
-    (save-excursion
-      (let (pos)
-	(while (setq pos (text-property-any
-			  (point) (point-max) 'org-agenda-date-header t))
-	  (goto-char pos)
-	  (end-of-line)
-	  (insert-and-inherit (concat " ("
-				      (hgf/org-agenda-calculate-efforts
-				       (next-single-property-change (point) 'day))
-				      ")"))
-	  (forward-line)))))
-
-  (add-hook 'org-agenda-finalize-hook 'hgf/org-agenda-insert-efforts)
-
-  (setf (alist-get 'agenda org-agenda-prefix-format)
-	"%-6e %-10c %?t ")
-	;; "%-8e %-16:(hgf/title-case-filename (buffer-name)) %?t ")
-  
-  (setf (alist-get 'todo org-agenda-prefix-format)
-	"%-8e %-16:(hgf/title-case-filename (buffer-name)) %?t ")
 
   (general-def
     "<f1>" 'org-capture-inbox
@@ -432,51 +388,60 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     "w" 'org-agenda-week-view
     "e" 'org-agenda-set-effort))
 
-(setq org-refile-use-outline-path 'file
-      org-clock-into-drawer nil)
-(setq org-refile-targets '((org-agenda-files . (:maxlevel . 2))))
-(setq org-archive-location (hgf/org-path "archive.org::* %s"))
 
-(defun org-generate-report ()
-  (interactive)
-  (let ((header "|Task|Duration|"))
-    (insert (s-join "\n" (nconc `(,header) (org-element-map (org-element-parse-buffer) 'clock
-					     (lambda (clock)
-					       (let ((task (org-element-property :title (org-element-property :parent (org-element-property :parent clock))))
-						     (val  (org-element-property :duration clock)))
-						 (format "| %s | %s |" (car task) val)))))))))
-(general-def "C-c C-x C-r" 'org-generate-report)
+(with-eval-after-load 'org-agenda
+  (setf (alist-get 'agenda org-agenda-prefix-format)
+	"%-6e %-10c %?t ")
+  (setf (alist-get 'todo org-agenda-prefix-format)
+	"%-8e %-16:(hgf/title-case-filename (buffer-name)) %?t "))
 
-(setq org-src-fontify-natively t
-      org-src-preserve-indentation nil
-      org-src-tab-acts-natively t
-      org-edit-src-content-indentation 0
-      org-src-window-setup 'current-window)
+(defun hgf/ts-make-from-iso8601 (line)
+  "Return a ts struct from an iso8601 string.
 
-(use-package ob-ipython)
+The ts library doesn't contain this by default, but there's an open PR:
+https://github.com/alphapapa/ts.el/pull/15"
+  (thread-last line
+    (org-read-date nil nil)
+    (parse-iso8601-time-string)
+    (float-time)
+    (make-ts :unix)))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (emacs-lisp . t)
-   (ipython . t)))
 
-(setq org-adapt-indentation nil
-      org-hide-leading-stars t
-      org-cycle-separator-lines 0
-      org-hide-emphasis-markers t
-      org-fontify-done-headline nil
-      org-startup-folded t)
+(defun hgf/ts-days-diff (then &optional now)
+  "Return the difference in days between THEN and NOW.
 
-(add-hook
- 'org-mode-hook
- (lambda ()
-   "Beautify Org Symbols"
-   (push '("#+begin_src" . "λ") prettify-symbols-alist)
-   (push '("#+end_src" . "~") prettify-symbols-alist)
-   (push '(":PROPERTIES:" . "π") prettify-symbols-alist)
-   (push '(":END:" . "~") prettify-symbols-alist)
-   (prettify-symbols-mode)))
+I was having trouble using ts-diff and ts-human-difference, for whatever reason.
+This function works well enough."
+  (let* ((now (or now (ts-now)))
+	 (then-doy (ts-doy then))
+	 (then-year (ts-year then))
+	 (now-doy (ts-doy now))
+	 (now-year (ts-year now)))
+    (- then-doy now-doy (* -365 (- then-year now-year)))))
+
+(defun hgf/org-agenda-insert-efforts ()
+  "Insert the efforts for each day inside the agenda buffer."
+  (save-excursion
+    (let (pos date diff line)
+      (while (setq pos (text-property-any
+			(point) (point-max) 'org-agenda-date-header t))
+	(goto-char pos)
+	;; Line formats can be:
+	;; Tuesday 16 February 2021
+	;; Tuesday 16 February 2021 W07
+	;; Parsing works best if we only keep the day, month and year
+	;; hence the thread below
+	(setq diff (->> (thing-at-point 'line t)
+			(s-split-words)
+			(cdr)
+			(-take 3)
+			(s-join " ")
+			(hgf/ts-make-from-iso8601)
+			(hgf/ts-days-diff)))
+	(end-of-line)
+	(insert-and-inherit (concat " (" (hgf/org-ql-effort-on diff)  ")"))
+	(forward-line)))))
+(add-hook 'org-agenda-finalize-hook 'hgf/org-agenda-insert-efforts)
 
 (defun hgf/org-mode-hook ()
   "Disable header variable font size."
@@ -491,16 +456,10 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 
 (add-hook 'org-mode-hook 'hgf/org-mode-hook)
 
-(setq org-M-RET-may-split-line nil
-      org-outline-path-complete-in-steps nil)
-
 (use-package org-cliplink
   :after org
   :config
   (general-def org-mode-map "C-x C-l" 'org-cliplink))
-
-(setq reftex-default-bibliography '("~/media/bibliographies/all.bib"))
-(setq bibtex-completion-bibliography '("~/media/bibliographies/all.bib"))
 
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
@@ -528,44 +487,45 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   :config
   (ox-extras-activate '(ignore-headlines)))
 
-(use-package flycheck)
-
-(use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :hook
-  (rust-mode . lsp)
-  :commands lsp
-  :custom
-  (lsp-rust-analyzer-cargo-watch-command "clippy")
-  (lsp-eldoc-render-all t)
-  (lsp-idle-delay 0.6)
+(use-package org-ql
   :config
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-(use-package lsp-ui
-  :commands lsp-ui-mode
-  :custom
-  (lsp-ui-peek-always-show t)
-  (lsp-ui-sideline-show-hover t)
-  (lsp-ui-doc-enable nil))
-
-(use-package python
-  :ensure nil
+  (general-unbind org-ql-view-map "C-x C-s"))
+(use-package org-super-agenda
   :config
-  (setq python-indent-guess-indent-offset-verbose nil))
+  (setq org-super-agenda-header-map nil))
+(use-package ts)
 
-(use-package rustic
-  :mode ("\\.rs\\'" . rustic-mode)
-  :general (rustic-mode-map
-	    "M-j" 'lsp-ui-imenu)
-  :config
-  (setq rustic-format-on-save t)
-  (add-hook 'rustic-mode-hook 'hgf/rustic-mode-hook))
+(defun hgf/org-ql-effort-on (&optional date type)
+  "Return the amount of estimated effort on a date.
 
-(defun hgf/rustic-mode-hook ()
-  (setq-local buffer-save-without-query t))
+If DATE is nil, 'today' is used.
+TYPE may be 'scheduled' or 'closed'. If nil, it is set to 'total'."
+  (let ((date (or date 'today))
+	(type (or type 'scheduled)))
+    (thread-last (org-ql-query
+		   :from (org-agenda-files)
+		   :where `(and (,type :on ,date) (property "EFFORT"))
+		   :select '(org-entry-get (org-get-at-bol) "EFFORT"))
+      (-map #'org-duration-to-minutes)
+      (-reduce #'+)
+      (org-duration-from-minutes))))
 
+(defun hgf/org-super-group-append-efforts-to-item (it)
+  (let* ((name (plist-get it :name))
+	 (date (cadr (text-properties-at 0 name))))
+    (plist-put it :name 
+	       (s-concat name " [" (hgf/org-ql-effort-on date) "]"))))
+
+(defun hgf/org-super-weekly-agenda ()
+  (interactive)
+  (org-ql-search
+    (org-agenda-files)
+    '(scheduled :from today :to 7)
+    :sort '(date priority todo)
+    :super-groups '((:auto-ts t :transformer hgf/org-super-group-append-efforts-to-item))))
+
+(require 'reftex-parse)
+(require 'bibtex)
 (use-package tex
   :ensure auctex
   :mode ("\\.tex\\'" . tex-mode)
@@ -585,6 +545,21 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   :config
   (auctex-latexmk-setup)
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+
+(with-eval-after-load 'bibtex
+(defun hgf/bibtex-complete ()
+  (interactive)
+  (let ((bib-files (reftex-locate-bibliography-files "."))
+	entries)
+    (dolist (file bib-files)
+      (message "Completing: %s" file)
+      (with-temp-buffer
+	(insert-file-contents file)
+	(bibtex-mode)
+	(setq entries (-concat (bibtex-parse-keys nil t) entries))))
+    (insert (completing-read "cite: " (-map #'car entries))))))
+      
+(general-def "C-c [" 'hgf/bibtex-complete)
 
 (defun hgf/bibtex-hook ()
   "My bibtex hook."
@@ -723,14 +698,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     "C-x p f" 'project-find-file
     "C-x p p" 'project-select-project))
 
-(defun project-select-project ()
-  "Select a project from the project list."
-  (interactive)
-  (ivy-read
-   "Project: "
-   (project--build-project-list)
-   :action (lambda (p) (dired p))))
-
 (defun project--build-project-list ()
   "Create a list of all git repos."
   (hgf/find-git-repos-recursive "~/dev"))
@@ -762,9 +729,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     "C-h k" 'helpful-key
     "C-h F" 'helpful-function
     "C-h C" 'helpful-command
-    "C-c C-d" 'helpful-at-point)
-  (setq counsel-describe-function-function 'helpful-callable
-	counsel-describe-variable-function 'helpful-variable))
+    "C-c C-d" 'helpful-at-point))
 
 (use-package hydra
   :defer t
@@ -786,7 +751,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     ("v" evil-window-vsplit "vsplit")
     ("q" evil-quit "quit")
     ("f" find-file "file")
-    ("b" ivy-switch-buffer "buffer")
     ("m" kill-this-buffer "murder")
     ("1" delete-other-windows "highlander")
     ("." nil "stop"))
@@ -796,7 +760,6 @@ If you experience freezing, decrease this. If you experience stuttering, increas
     ("c" (hydra-configs/body) "configs")
     ("e" (find-file (hgf/emacs-path "configuration.org")) "config")
     ;; Org
-    ("o" (find-file (counsel-find-file (hgf/org-path ""))) "org")
     ("b" (find-file (hgf/journal-path "blog.org")) "blog")
     ("d" (find-file (hgf/journal-path "diet/diet.ledger")) "diet")
     ("D" (find-file (hgf/journal-path "diet/food.ledger")) "food")
@@ -821,8 +784,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   (defhydra hydra-work (:exit t)
     "Work related files"
     ("n" (find-file (hgf/journal-path "fraunhofer/notes.org")) "notes")
-    ("t" (find-file (hgf/journal-path "fraunhofer/working_hours.ledger")) "working hours")
-    ("p" (counsel-find-file (hgf/journal-path "fraunhofer/projects")) "projects"))
+    ("t" (find-file (hgf/journal-path "fraunhofer/working_hours.ledger")) "working hours"))
   (defhydra hydra-package (:exit t)
     "Package management"
     ("r" (package-refresh-contents) "refresh")
@@ -913,7 +875,7 @@ If you experience freezing, decrease this. If you experience stuttering, increas
 (defun hgf/make-scratch-directory ()
   "Create a temporary scratch directory."
   (interactive)
-  (counsel-find-file (make-temp-file "scratch-" t)))
+  (find-file (make-temp-file "scratch-" t)))
 
 (defun hgf/make-scratch-buffer ()
   "Create and switch to a temporary scratch buffer with a random
