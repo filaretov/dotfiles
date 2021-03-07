@@ -4,28 +4,23 @@
 
 " Plug {{{
 call plug#begin('~/.vim/plugged')
-    Plug 'junegunn/vim-easy-align'
+
     " Filetypes
     Plug 'rust-lang/rust.vim'
     Plug 'kballard/vim-fish'
-    Plug 'elixir-editors/vim-elixir'
     Plug 'vim-pandoc/vim-pandoc-syntax'
     Plug 'cespare/vim-toml'
-    Plug 'ledger/vim-ledger'
-    Plug 'fatih/vim-go'
 
     " UI
-    Plug 'arcticicestudio/nord-vim'
-    Plug 'romainl/flattened'
-    Plug 'dracula/vim', {'as': 'dracula'}
     Plug 'morhetz/gruvbox'
 
     " Goodies
+    Plug 'junegunn/vim-easy-align'
     Plug 'sgur/vim-editorconfig'
     Plug 'shougo/neosnippet.vim'
-    Plug 'tommcdo/vim-exchange'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
+    Plug 'tommcdo/vim-exchange'
     Plug 'tpope/vim-abolish'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
