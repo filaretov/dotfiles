@@ -12,7 +12,3 @@ syn region markdownEqn matchgroup=markdownEqnDelimiter start="^\s*\$\$.*$" end="
 hi def link markdownEqnDelimiter Comment
 " }}}
 
-" Mappings {{{
-inoremap <M-CR> <cr># 
-inoremap <silent> <Tab> <c-o>:s/^#/##<cr><c-o>$<c-o>:nohl<cr>
-" }}}

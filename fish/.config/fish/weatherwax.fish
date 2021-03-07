@@ -10,7 +10,6 @@ set -x PATH ~/.local/bin $PATH
 set -x PATH ~/.local/bin/stowed $PATH
 set -x PATH ~/dev/go/bin $PATH
 set -x PATH ~/go/bin $PATH
-set -x PATH ~/media/packages/julia-1.4.1/bin/ $PATH
 set -x PATH ~/.luarocks/bin/ $PATH
 set -x PATH ~/.deno/bin/ $PATH
 set -x PATH ~/.racket/bin/ $PATH
@@ -21,6 +20,7 @@ set -x PATH ~/.poetry/bin/ $PATH
 set -x PATH ~/.local/node-v14.15.1-linux-x64/bin/ $PATH
 set -x PATH ~/.local/neovim/bin $PATH
 set -x PATH ~/.local/racket/bin $PATH
+set -x PATH ~/.local/julia-1.5.3/bin $PATH
 set -x PATH /usr/lib/dart/bin $PATH
 
 set -x PATH ~/.local/bin/stowed $PATH
@@ -30,5 +30,9 @@ alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"
 eval (ssh-agent -c) >/dev/null; and ssh-add-all
 
 source "$fish_path/conda.fish"
+
+if type -q shellmark
+    shellmark --out fish plug | source
+end
 
 theme_gruvbox dark medium
