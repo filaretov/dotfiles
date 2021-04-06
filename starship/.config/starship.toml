@@ -17,6 +17,7 @@ format = """\
     $line_break\
     $jobs\
     $battery\
+    $cmd_duration\
     $character\
 """
 
@@ -24,8 +25,10 @@ format = """\
 style = "green"
 
 [character]
-success_symbol = "[λ](green)"
-error_symbol = "[λ](red)"
+#success_symbol = "[λ](green)"
+#error_symbol = "[λ](red)"
+success_symbol = "[;](green)"
+error_symbol = "[;](red)"
 
 [python]
 symbol = ""

@@ -10,9 +10,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'kballard/vim-fish'
     Plug 'vim-pandoc/vim-pandoc-syntax'
     Plug 'cespare/vim-toml'
+    Plug 'ledger/vim-ledger'
 
     " UI
     Plug 'morhetz/gruvbox'
+
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
     " Goodies
     Plug 'junegunn/vim-easy-align'
@@ -32,11 +35,10 @@ call plug#begin('~/.vim/plugged')
 call plug#end()
 " }}}
 
-" Plugin Settings {{{
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
 
-" pandoc {{{
-let g:pandoc#syntax#conceal#use = 0
-" }}}
+" Plugin Settings {{{
 
 " Neosnippet {{{
 let g:neosnippet#disable_select_mode_mappings = 1
@@ -62,7 +64,7 @@ set scrolloff=4
 set textwidth=90
 set wildignorecase
 set list
-set shell=/usr/bin/fish
+" set shell=/usr/bin/fish
 set nobackup
 set nowritebackup
 set shortmess+=c
@@ -123,22 +125,16 @@ nnoremap k gk
 nnoremap H ^
 " Strong right
 nnoremap L $
-
 nnoremap Y y$
 " Saving
 nnoremap <leader>w :w<cr>
 nnoremap <C-s> :<C-u>w<cr>
 
-" Quickly moving through windows
-nnoremap <M-h> <C-w>h
-nnoremap <M-j> <C-w>j
-nnoremap <M-k> <C-w>k
-nnoremap <M-l> <C-w>l
-nnoremap <M-s> <C-w>s
-nnoremap <M-v> <C-w>v
-nnoremap <M-q> <C-w>q
-nnoremap <M-o> <C-w>o
-nnoremap <space>s <C-w>s
+" Controlling windows
+nnoremap s <C-w>
+nnoremap sd <C-w>q
+
+" Quickly closing buffers
 nnoremap <C-w>x :<c-u>bdelete<cr>
 nnoremap <C-w>X :<c-u>bdelete!<cr>
 
@@ -233,17 +229,12 @@ augroup END
 " Helper functions {{{
 command! Source source $MYVIMRC
 
-command! Time edit ~/cloud/t.timedot
-
 " }}}
 
 " Rust {{{
 let g:rustfmt_autosave = 1
 " }}}
 
-" Triage {{{
-
-" }}}
 
 " Highlight Patches {{{
 highlight! link Folded Comment
@@ -290,4 +281,5 @@ nnoremap <silent> <leader>m :call fzf#run({
                         \ 'options': '--ansi --layout=reverse-list --multi --prompt "Markdown> "'})<CR>
 
 " }}}
+
 
