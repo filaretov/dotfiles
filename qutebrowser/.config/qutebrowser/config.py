@@ -25,8 +25,6 @@ c.completion.shrink = True
 
 # Statusbar {{{
 
-c.statusbar.hide = False
-
 # }}}
 
 # Colors {{{

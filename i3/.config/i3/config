@@ -199,10 +199,6 @@ new_window 1pixel
 #hide_edge_borders both
 for_window [class=".*"] border pixel 3
 
-gaps inner 8
-smart_borders on
-smart_gaps on
-
 # * Rofi
 # start dmenu (a program launcher)
 bindsym $mod+space exec rofi -show drun

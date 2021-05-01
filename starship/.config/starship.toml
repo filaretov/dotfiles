@@ -22,13 +22,11 @@ format = """\
 """
 
 [directory]
-style = "green"
+style = "blue"
 
 [character]
-#success_symbol = "[λ](green)"
-#error_symbol = "[λ](red)"
-success_symbol = "[;](green)"
-error_symbol = "[;](red)"
+success_symbol = "[;](blue)"
+error_symbol = "[;](green)"
 
 [python]
 symbol = ""

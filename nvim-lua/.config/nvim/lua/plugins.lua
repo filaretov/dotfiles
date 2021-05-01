@@ -1,28 +1,75 @@
-local v = require('v')
+local install_path = vim.fn.stdpath('data') .. '/site/pack/packerstart/packer.nvim'
 
-local packer = require('packer')
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+    vim.api.nvim_command('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+end
 
-packer.init()
-packer.reset()
+vim.api.nvim_exec([[
+augroup Packer
+  autocmd!
+  autocmd BufWritePost plugins.lua luafile %
+  autocmd BufWritePost plugins.lua PackerCompile
+augroup end
+]], false)
 
-local use = packer.use
+return require('packer').startup(function()
 
-use {'wbthomason/packer.nvim', opt = true}
+use {'wbthomason/packer.nvim'}
+
+-- colorscheme
 use {'morhetz/gruvbox'}
+use {'~/dev/yaks/weatherwax-theme'}
+use {'~/dev/yaks/hecate-theme'}
+use {'folke/lsp-colors.nvim'}
+use {'rktjmp/lush.nvim'}
+use {'folke/tokyonight.nvim'}
+
+-- tpope stuff
 use {'tpope/vim-surround'}
 use {'tpope/vim-eunuch'}
 use {'tpope/vim-rsi'}
 use {'tpope/vim-fugitive'}
+
+-- syntax highlighting and objects
 use {'nvim-treesitter/nvim-treesitter', config = [[require('config.treesitter')]]}
+use {'nvim-treesitter/playground'}
+
+-- LSP
 use {'neovim/nvim-lspconfig', config = [[require('config.lsp')]]}
 
+use {
+  "folke/lsp-trouble.nvim",
+  requires = "kyazdani42/nvim-web-devicons",
+  config = function()
+    require("trouble").setup()
+  end
+}
+
+use {'nvim-lua/completion-nvim'}
+
+use {'hrsh7th/nvim-compe', config = [[require('config.compe')]]}
+
+use {'norcalli/snippets.nvim', config = [[require('config.snippets')]]}
+
+-- UI improvements
+use {
+    'lewis6991/gitsigns.nvim',
+    requires = {'nvim-lua/plenary.nvim'},
+    config = [[require('config.gitsigns')]],
+}
+
+-- Telescope
 use {
     'nvim-telescope/telescope.nvim',
     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
     config = [[require('config.telescope')]],
 }
 
-use {'nvim-lua/completion-nvim'}
-use {'norcalli/snippets.nvim', config = [[require('config.snippets')]]}
+-- Rust
 
+-- Python
+
+-- Julia
 use {'JuliaEditorSupport/julia-vim'}
+
+end)

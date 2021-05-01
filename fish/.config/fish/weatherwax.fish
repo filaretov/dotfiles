@@ -5,6 +5,8 @@ if test -f $HOME/.conda/etc/fish/conf.d/conda.fish
     source $HOME/.conda/etc/fish/conf.d/conda.fish
 end
 
+set -g fish_greeting "Don't panic!"
+
 set -x PATH ~/.cargo/bin $PATH
 set -x PATH ~/.local/bin $PATH
 set -x PATH ~/.local/bin/stowed $PATH
@@ -32,8 +34,9 @@ eval (ssh-agent -c) >/dev/null; and ssh-add-all
 
 source "$fish_path/conda.fish"
 
+source "$fish_path/themes/fish_tokyonight_storm.fish"
+
 if type -q shellmark
     shellmark --out fish plug | source
 end
 
-theme_gruvbox dark medium

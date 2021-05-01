@@ -36,13 +36,40 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/completion-nvim"
   },
+  ["gitsigns.nvim"] = {
+    config = { "require('config.gitsigns')" },
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/gitsigns.nvim"
+  },
   gruvbox = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/gruvbox"
   },
+  ["hecate-theme"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/hecate-theme"
+  },
   ["julia-vim"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/julia-vim"
+  },
+  ["lsp-colors.nvim"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lsp-colors.nvim"
+  },
+  ["lsp-trouble.nvim"] = {
+    config = { "\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ftrouble\frequire\0" },
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lsp-trouble.nvim"
+  },
+  ["lush.nvim"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lush.nvim"
+  },
+  ["nvim-compe"] = {
+    config = { "require('config.compe')" },
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-compe"
   },
   ["nvim-lspconfig"] = {
     config = { "require('config.lsp')" },
@@ -54,10 +81,17 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-treesitter"
   },
+  ["nvim-web-devicons"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-web-devicons"
+  },
   ["packer.nvim"] = {
-    loaded = false,
-    needs_bufread = false,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/opt/packer.nvim"
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/packer.nvim"
+  },
+  playground = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/playground"
   },
   ["plenary.nvim"] = {
     loaded = true,
@@ -77,6 +111,10 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/telescope.nvim"
   },
+  ["tokyonight.nvim"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/tokyonight.nvim"
+  },
   ["vim-eunuch"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/vim-eunuch"
@@ -92,17 +130,27 @@ _G.packer_plugins = {
   ["vim-surround"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/vim-surround"
+  },
+  ["weatherwax-theme"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/weatherwax-theme"
   }
 }
 
 -- Config for: telescope.nvim
 require('config.telescope')
--- Config for: nvim-lspconfig
-require('config.lsp')
--- Config for: nvim-treesitter
-require('config.treesitter')
 -- Config for: snippets.nvim
 require('config.snippets')
+-- Config for: lsp-trouble.nvim
+try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ftrouble\frequire\0", "config", "lsp-trouble.nvim")
+-- Config for: nvim-treesitter
+require('config.treesitter')
+-- Config for: gitsigns.nvim
+require('config.gitsigns')
+-- Config for: nvim-compe
+require('config.compe')
+-- Config for: nvim-lspconfig
+require('config.lsp')
 END
 
 catch

@@ -4,7 +4,7 @@ require('ensure_packer')
 require('plugins')
 
 -- Options
-vim.cmd 'colorscheme gruvbox'
+vim.cmd 'colorscheme tokyonight'
 v.opt('o', 'hidden', true)
 v.opt('o', 'termguicolors', true)
 v.opt('o', 'ignorecase', true)
