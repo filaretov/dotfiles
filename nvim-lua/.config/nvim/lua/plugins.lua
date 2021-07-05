@@ -19,10 +19,11 @@ use {'wbthomason/packer.nvim'}
 -- colorscheme
 use {'morhetz/gruvbox'}
 use {'~/dev/yaks/weatherwax-theme'}
-use {'~/dev/yaks/hecate-theme'}
+use {'~/dev/yaks/hecatheme/neovim'}
 use {'folke/lsp-colors.nvim'}
 use {'rktjmp/lush.nvim'}
 use {'folke/tokyonight.nvim'}
+use {'shaunsingh/nord.nvim'}
 
 -- tpope stuff
 use {'tpope/vim-surround'}
@@ -65,6 +66,10 @@ use {
     config = [[require('config.telescope')]],
 }
 
+-- Neovimming
+use {"rafcamlet/nvim-luapad"}
+use { "folke/lua-dev.nvim", config = [[require('config.luadev')]], }
+
 -- Rust
 
 -- Python
@@ -73,3 +78,4 @@ use {
 use {'JuliaEditorSupport/julia-vim'}
 
 end)
+

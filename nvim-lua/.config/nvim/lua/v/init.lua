@@ -13,5 +13,13 @@ function utils.map(mode, lhs, rhs, opts)
     vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
+function utils.copy(t)
+    local new = {}
+    for k, v in pairs(t) do
+        new[k] = v
+    end
+    return new
+end
+
 
 return utils

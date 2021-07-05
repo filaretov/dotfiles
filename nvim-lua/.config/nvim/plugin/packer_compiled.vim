@@ -45,10 +45,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/gruvbox"
   },
-  ["hecate-theme"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/hecate-theme"
-  },
   ["julia-vim"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/julia-vim"
@@ -62,9 +58,22 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lsp-trouble.nvim"
   },
+  ["lua-dev.nvim"] = {
+    config = { "require('config.luadev')" },
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lua-dev.nvim"
+  },
   ["lush.nvim"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lush.nvim"
+  },
+  neovim = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/neovim"
+  },
+  ["nord.nvim"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nord.nvim"
   },
   ["nvim-compe"] = {
     config = { "require('config.compe')" },
@@ -75,6 +84,10 @@ _G.packer_plugins = {
     config = { "require('config.lsp')" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-lspconfig"
+  },
+  ["nvim-luapad"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-luapad"
   },
   ["nvim-treesitter"] = {
     config = { "require('config.treesitter')" },
@@ -137,20 +150,22 @@ _G.packer_plugins = {
   }
 }
 
--- Config for: telescope.nvim
-require('config.telescope')
 -- Config for: snippets.nvim
 require('config.snippets')
--- Config for: lsp-trouble.nvim
-try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ftrouble\frequire\0", "config", "lsp-trouble.nvim")
--- Config for: nvim-treesitter
-require('config.treesitter')
--- Config for: gitsigns.nvim
-require('config.gitsigns')
--- Config for: nvim-compe
-require('config.compe')
 -- Config for: nvim-lspconfig
 require('config.lsp')
+-- Config for: telescope.nvim
+require('config.telescope')
+-- Config for: lsp-trouble.nvim
+try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ftrouble\frequire\0", "config", "lsp-trouble.nvim")
+-- Config for: nvim-compe
+require('config.compe')
+-- Config for: nvim-treesitter
+require('config.treesitter')
+-- Config for: lua-dev.nvim
+require('config.luadev')
+-- Config for: gitsigns.nvim
+require('config.gitsigns')
 END
 
 catch

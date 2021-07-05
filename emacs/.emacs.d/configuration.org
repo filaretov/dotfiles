@@ -206,13 +206,15 @@ like Emacs to revert the buffer to the state on disk.
 #+end_src
 
 ** Show parens
+Immediately.
 #+begin_src emacs-lisp
 (show-paren-mode 1)
+(setq show-paren-delay 0.0)
 #+end_src
 
 ** Immediately show parens
 #+begin_src emacs-lisp
-(setq show-paren-delay 0.0)
+
 #+end_src
 
 ** Don't automatically add newlines at the end of files

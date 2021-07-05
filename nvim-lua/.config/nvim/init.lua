@@ -3,8 +3,8 @@ local v = require('v')
 require('ensure_packer')
 require('plugins')
 
+require('nord').set()
 -- Options
-vim.cmd 'colorscheme tokyonight'
 v.opt('o', 'hidden', true)
 v.opt('o', 'termguicolors', true)
 v.opt('o', 'ignorecase', true)

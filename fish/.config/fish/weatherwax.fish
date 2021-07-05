@@ -29,12 +29,13 @@ set -x PATH ~/.local/bin/stowed $PATH
 set -x FZF_DEFAULT_COMMAND "rg --files"
 
 alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"
+alias code code-insiders
 alias kj kajero
 eval (ssh-agent -c) >/dev/null; and ssh-add-all
 
 source "$fish_path/conda.fish"
 
-source "$fish_path/themes/fish_tokyonight_storm.fish"
+source "$fish_path/themes/nord.fish"
 
 if type -q shellmark
     shellmark --out fish plug | source
