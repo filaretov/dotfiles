@@ -29,6 +29,7 @@ set -x PATH ~/.local/bin/stowed $PATH
 set -x FZF_DEFAULT_COMMAND "rg --files"
 
 alias ydl "~/.miniconda/envs/ydl/bin/youtube-dl"
+alias e nvim
 alias code code-insiders
 alias kj kajero
 eval (ssh-agent -c) >/dev/null; and ssh-add-all
