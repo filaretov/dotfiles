@@ -27,18 +27,24 @@ v.map('n', 'st', '<cmd>terminal<cr>i')
 v.map('n', 'gb', ':<C-u>b ')
 v.map('n', 'gcc', v.cmd("v.edit('$MYVIMRC')"))
 v.map('n', 'gcp', v.cmd("v.edit(v.config('lua/plugins.lua'))"))
-v.map('n', '<c-s>', '<cmd>w<cr>')
-v.map('n', '<c-h>', ':help ')
-v.map('n', 'L', '$')
-v.map('n', 'H', '^')
-v.map('v', 'L', '$')
-v.map('v', 'H', '^')
+v.map('ni', '<c-s>', v.cmd("v.save_buffer()"))
+v.map('n', '<c-h>', "<cmd>Telescope help_tags<cr>")
+v.map('nv', 'L', '$')
+v.map('nv', 'H', '^')
 v.map('n', 'gl', '<cmd>luafile %<cr>')
 v.map('n', '<space>g', "<cmd>Neogit<cr>")
 
+
+-- Some ugly hacks for which we need VimScript
+-- Otherwise known as calling lua from vimscript from lua
+v.au("TextYankPost * lua vim.highlight.on_yank {on_visual = false}")
+
 -- Terminal
 v.map('t', '<esc>', '<C-\\><C-n>')
-
--- Some ugly hacks we need VimScript for
--- Otherwise known as calling lua from vimscript from lua
-vim.cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = false}'
+v.augroup(
+"terminal",
+{ 
+    "TermOpen * setlocal nonumber",
+    "TermOpen * setlocal matchpairs=",
+    "TermOpen * setlocal scrolloff=0",
+})

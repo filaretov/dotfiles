@@ -1,11 +1,11 @@
-vim.api.nvim_exec([[
-augroup Packer
-  autocmd!
-  autocmd BufWritePost plugins.lua luafile %
-  autocmd BufWritePost plugins.lua PackerInstall
-  autocmd BufWritePost plugins.lua PackerCompile
-augroup end
-]], false)
+local v = require('v')
+v.augroup(
+"Packer",
+{
+    "BufWritePost plugins.lua luafile %",
+    "BufWritePost plugins.lua PackerInstall",
+    "BufWritePost plugins.lua PackerCompile",
+})
 
 return require('packer').startup(function()
 
@@ -65,14 +65,5 @@ use {
 
 -- Neovimming
 use {"rafcamlet/nvim-luapad"}
--- use { "folke/lua-dev.nvim", config = [[require('config.luadev')]], }
-
--- Rust
-
--- Python
-
--- Julia
--- use {'JuliaEditorSupport/julia-vim'}
-
 end)
 
