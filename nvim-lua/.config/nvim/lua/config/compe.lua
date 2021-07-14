@@ -14,4 +14,6 @@ require('compe').setup {
     }
 }
 
-map('i', '<C-Space>', 'compe#complete()', {expr = true, silent = true})
+map('i', '<c-n>', 'compe#complete()', {expr = true, silent = true})
+
+

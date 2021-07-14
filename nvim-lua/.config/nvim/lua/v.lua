@@ -63,7 +63,7 @@ end
 function v.augroup(name, cmds)
     local open = "augroup " .. name
     local clear = "autocmd!"
-    local aus = table.concat(v.tmap(cmds, function(s) return ("autocmd " .. s) end, "\n"))
+    local aus = table.concat(v.tmap(cmds, function(s) return ("autocmd " .. s) end), "\n")
     local close = "augroup end"
     local cmd = table.concat({open, clear, aus, close}, "\n")
     vim.api.nvim_exec(cmd, false)

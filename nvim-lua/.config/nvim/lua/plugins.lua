@@ -45,7 +45,7 @@ use {'neovim/nvim-lspconfig', config = [[require('config.lsp')]]}
 
 -- use {'nvim-lua/completion-nvim'}
 
--- use {'hrsh7th/nvim-compe', config = [[require('config.compe')]]}
+use {'hrsh7th/nvim-compe', config = [[require('config.compe')]]}
 
 -- use {'norcalli/snippets.nvim', config = [[require('config.snippets')]]}
 
@@ -64,6 +64,7 @@ use {
 }
 
 -- Neovimming
+use {"folke/lua-dev.nvim", config = "require('config.luadev')"}
 use {"rafcamlet/nvim-luapad"}
 end)
 
