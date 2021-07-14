@@ -1,9 +1,7 @@
-local v = require('v')
+_G.v = require('v')
 
-require('ensure_packer')
 require('plugins')
 
-require('nord').set()
 -- Options
 v.opt('o', 'hidden', true)
 v.opt('o', 'termguicolors', true)
@@ -25,13 +23,18 @@ v.opt('w', 'wrap', false)
 -- Mappings
 -- Normal mode
 v.map('n', 's', '<C-w>')
-v.map('n', 'st', '<cmd>terminal<cr>')
-v.map('n', 'sT', '<cmd>split | execute "normal <c-w>j" | terminal<cr>')
-v.map('n', 'ge', ':<C-u>edit %:h')
-v.map('n', 'gc', '<cmd>edit $MYVIMRC<cr>')
+v.map('n', 'st', '<cmd>terminal<cr>i')
 v.map('n', 'gb', ':<C-u>b ')
+v.map('n', 'gcc', v.cmd("v.edit('$MYVIMRC')"))
+v.map('n', 'gcp', v.cmd("v.edit(v.config('lua/plugins.lua'))"))
 v.map('n', '<c-s>', '<cmd>w<cr>')
 v.map('n', '<c-h>', ':help ')
+v.map('n', 'L', '$')
+v.map('n', 'H', '^')
+v.map('v', 'L', '$')
+v.map('v', 'H', '^')
+v.map('n', 'gl', '<cmd>luafile %<cr>')
+v.map('n', '<space>g', "<cmd>Neogit<cr>")
 
 -- Terminal
 v.map('t', '<esc>', '<C-\\><C-n>')

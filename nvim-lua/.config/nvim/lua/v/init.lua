@@ -21,5 +21,28 @@ function utils.copy(t)
     return new
 end
 
+function utils.cmd(fun)
+    return "<cmd>lua " .. fun .. "<cr>"
+end
+
+function utils.config(filename)
+    return vim.fn.stdpath("config") .. "/" .. filename
+end
+
+function utils.edit(filename)
+    vim.cmd("edit " .. filename)
+end
+
+function utils.save_buffer()
+    vim.cmd("w")
+end
+
+function utils.eol()
+    vim.cmd("normal $")
+end
+
+function utils.bol()
+    vim.cmd("normal ^")
+end
 
 return utils

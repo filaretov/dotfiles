@@ -69,53 +69,23 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
-  ["completion-nvim"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/completion-nvim"
-  },
   ["gitsigns.nvim"] = {
     config = { "require('config.gitsigns')" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/gitsigns.nvim"
   },
-  gruvbox = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/gruvbox"
-  },
-  ["julia-vim"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/julia-vim"
-  },
   ["lsp-colors.nvim"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lsp-colors.nvim"
   },
-  ["lsp-trouble.nvim"] = {
-    config = { "\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ftrouble\frequire\0" },
+  neogit = {
     loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lsp-trouble.nvim"
-  },
-  ["lua-dev.nvim"] = {
-    config = { "require('config.luadev')" },
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lua-dev.nvim"
-  },
-  ["lush.nvim"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lush.nvim"
-  },
-  neovim = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/neovim"
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/neogit"
   },
   ["nord.nvim"] = {
+    config = { 'require"nord".set()' },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nord.nvim"
-  },
-  ["nvim-compe"] = {
-    config = { "require('config.compe')" },
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-compe"
   },
   ["nvim-lspconfig"] = {
     config = { "require('config.lsp')" },
@@ -126,22 +96,9 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-luapad"
   },
-  ["nvim-treesitter"] = {
-    config = { "require('config.treesitter')" },
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-treesitter"
-  },
-  ["nvim-web-devicons"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-web-devicons"
-  },
   ["packer.nvim"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/packer.nvim"
-  },
-  playground = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/playground"
   },
   ["plenary.nvim"] = {
     loaded = true,
@@ -151,23 +108,18 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/popup.nvim"
   },
-  ["snippets.nvim"] = {
-    config = { "require('config.snippets')" },
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/snippets.nvim"
-  },
   ["telescope.nvim"] = {
     config = { "require('config.telescope')" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/telescope.nvim"
   },
-  ["tokyonight.nvim"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/tokyonight.nvim"
-  },
   ["vim-eunuch"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/vim-eunuch"
+  },
+  ["vim-exchange"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/vim-exchange"
   },
   ["vim-fugitive"] = {
     loaded = true,
@@ -180,46 +132,26 @@ _G.packer_plugins = {
   ["vim-surround"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/vim-surround"
-  },
-  ["weatherwax-theme"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/weatherwax-theme"
   }
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: lua-dev.nvim
-time([[Config for lua-dev.nvim]], true)
-require('config.luadev')
-time([[Config for lua-dev.nvim]], false)
--- Config for: snippets.nvim
-time([[Config for snippets.nvim]], true)
-require('config.snippets')
-time([[Config for snippets.nvim]], false)
--- Config for: nvim-lspconfig
-time([[Config for nvim-lspconfig]], true)
-require('config.lsp')
-time([[Config for nvim-lspconfig]], false)
 -- Config for: telescope.nvim
 time([[Config for telescope.nvim]], true)
 require('config.telescope')
 time([[Config for telescope.nvim]], false)
--- Config for: lsp-trouble.nvim
-time([[Config for lsp-trouble.nvim]], true)
-try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\ftrouble\frequire\0", "config", "lsp-trouble.nvim")
-time([[Config for lsp-trouble.nvim]], false)
+-- Config for: nvim-lspconfig
+time([[Config for nvim-lspconfig]], true)
+require('config.lsp')
+time([[Config for nvim-lspconfig]], false)
 -- Config for: gitsigns.nvim
 time([[Config for gitsigns.nvim]], true)
 require('config.gitsigns')
 time([[Config for gitsigns.nvim]], false)
--- Config for: nvim-treesitter
-time([[Config for nvim-treesitter]], true)
-require('config.treesitter')
-time([[Config for nvim-treesitter]], false)
--- Config for: nvim-compe
-time([[Config for nvim-compe]], true)
-require('config.compe')
-time([[Config for nvim-compe]], false)
+-- Config for: nord.nvim
+time([[Config for nord.nvim]], true)
+require"nord".set()
+time([[Config for nord.nvim]], false)
 if should_profile then save_profiles() end
 
 end)
