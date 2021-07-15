@@ -83,6 +83,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lua-dev.nvim"
   },
+  ["lualine.nvim"] = {
+    config = { "require('config.lualine')" },
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lualine.nvim"
+  },
   neogit = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/neogit"
@@ -105,6 +110,10 @@ _G.packer_plugins = {
   ["nvim-luapad"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-luapad"
+  },
+  ["nvim-web-devicons"] = {
+    loaded = true,
+    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-web-devicons"
   },
   ["packer.nvim"] = {
     loaded = true,
@@ -146,30 +155,34 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: nord.nvim
-time([[Config for nord.nvim]], true)
-require"nord".set()
-time([[Config for nord.nvim]], false)
 -- Config for: gitsigns.nvim
 time([[Config for gitsigns.nvim]], true)
 require('config.gitsigns')
 time([[Config for gitsigns.nvim]], false)
--- Config for: nvim-lspconfig
-time([[Config for nvim-lspconfig]], true)
-require('config.lsp')
-time([[Config for nvim-lspconfig]], false)
 -- Config for: telescope.nvim
 time([[Config for telescope.nvim]], true)
 require('config.telescope')
 time([[Config for telescope.nvim]], false)
--- Config for: lua-dev.nvim
-time([[Config for lua-dev.nvim]], true)
-require('config.luadev')
-time([[Config for lua-dev.nvim]], false)
+-- Config for: nord.nvim
+time([[Config for nord.nvim]], true)
+require"nord".set()
+time([[Config for nord.nvim]], false)
+-- Config for: lualine.nvim
+time([[Config for lualine.nvim]], true)
+require('config.lualine')
+time([[Config for lualine.nvim]], false)
 -- Config for: nvim-compe
 time([[Config for nvim-compe]], true)
 require('config.compe')
 time([[Config for nvim-compe]], false)
+-- Config for: lua-dev.nvim
+time([[Config for lua-dev.nvim]], true)
+require('config.luadev')
+time([[Config for lua-dev.nvim]], false)
+-- Config for: nvim-lspconfig
+time([[Config for nvim-lspconfig]], true)
+require('config.lsp')
+time([[Config for nvim-lspconfig]], false)
 if should_profile then save_profiles() end
 
 end)

@@ -27,21 +27,15 @@ use {
     requires = {'nvim-lua/plenary.nvim'},
 }
 
--- syntax highlighting and objects
--- use {'nvim-treesitter/nvim-treesitter', config = [[require('config.treesitter')]]}
--- use {'nvim-treesitter/playground'}
+-- statusline
+use {
+    'hoob3rt/lualine.nvim',
+    config = "require('config.lualine')",
+    requires = {'kyazdani42/nvim-web-devicons', opt = true},
+}
 
 -- LSP
 use {'neovim/nvim-lspconfig', config = [[require('config.lsp')]]}
-
---[[use {
-  "folke/lsp-trouble.nvim",
-  requires = "kyazdani42/nvim-web-devicons",
-  config = function()
-    require("trouble").setup()
-  end
-}
---]]
 
 -- use {'nvim-lua/completion-nvim'}
 
