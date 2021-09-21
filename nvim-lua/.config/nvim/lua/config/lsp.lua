@@ -10,4 +10,3 @@ for _, server in ipairs(servers) do
     lsp[server].setup { on_attach = lsp_on_attach }
 end
 
-

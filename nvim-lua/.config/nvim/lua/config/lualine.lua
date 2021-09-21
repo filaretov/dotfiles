@@ -19,6 +19,8 @@ require("lualine").setup {
         lualine_z = {}
     },
     sections = {
+        lualine_b = {},
+        lualine_c = {'filename', 'branch'},
         lualine_x = {'encoding', 'filetype'},
         lualine_y = {},
         lualine_z = {},

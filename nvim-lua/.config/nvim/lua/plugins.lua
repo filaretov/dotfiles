@@ -1,64 +1,44 @@
-local v = require('v')
-v.augroup(
-"Packer",
-{
-    "BufWritePost plugins.lua luafile %",
-    "BufWritePost plugins.lua PackerInstall",
-    "BufWritePost plugins.lua PackerCompile",
-})
+local function r(name)
+	return function() require(name) end
+end
 
-return require('packer').startup(function()
+local function s(name)
+	return function() require(name).setup() end
+end
 
-use {'wbthomason/packer.nvim'}
+require("packer").startup(function()
+    use {"wbthomason/packer.nvim"}
+    use {"folke/lsp-colors.nvim"}
+    use {"shaunsingh/nord.nvim", run=function() require("nord").set() end}
 
--- colorscheme
-use {'folke/lsp-colors.nvim'}
-use {'shaunsingh/nord.nvim', config = 'require"nord".set()'}
+    -- The basics
+    use {"tpope/vim-surround"}
+    use {"tpope/vim-eunuch"}
+    use {"tpope/vim-rsi"}
+    use {"tpope/vim-fugitive"}
+    use {"tpope/vim-repeat"}
+    use {"tommcdo/vim-exchange"}
 
--- tpope stuff
-use {'tpope/vim-surround'}
-use {'tpope/vim-eunuch'}
-use {'tpope/vim-rsi'}
-use {'tpope/vim-fugitive'}
-use {'tommcdo/vim-exchange'}
+    -- common dependencies
+    use {"nvim-lua/plenary.nvim"}
+    use {"nvim-lua/popup.nvim"}
+    use {"kyazdani42/nvim-web-devicons"}
 
-use {
-    'timuntersberger/neogit',
-    requires = {'nvim-lua/plenary.nvim'},
-}
+    -- Fun UI stuff
+    use {"timuntersberger/neogit"}
+    use {"hoob3rt/lualine.nvim"}
+    use {"lewis6991/gitsigns.nvim", requires = {'nvim-lua/plenary.nvim'}, config = s"gitsigns"}
+    use {"nvim-telescope/telescope.nvim", run=r"config.telescope"}
 
--- statusline
-use {
-    'hoob3rt/lualine.nvim',
-    config = "require('config.lualine')",
-    requires = {'kyazdani42/nvim-web-devicons', opt = true},
-}
+    -- LSP
+    use {"neovim/nvim-lspconfig", run=r"config.lsp"}
+    use {"hrsh7th/nvim-compe", run=r"config.compe"}
 
--- LSP
-use {'neovim/nvim-lspconfig', config = [[require('config.lsp')]]}
+    -- Filetypes
+    use {"kristijanhusak/orgmode.nvim"}
 
--- use {'nvim-lua/completion-nvim'}
-
-use {'hrsh7th/nvim-compe', config = [[require('config.compe')]]}
-
--- use {'norcalli/snippets.nvim', config = [[require('config.snippets')]]}
-
--- UI improvements
-use {
-    'lewis6991/gitsigns.nvim',
-    requires = {'nvim-lua/plenary.nvim'},
-    config = [[require('config.gitsigns')]],
-}
-
--- Telescope
-use {
-    'nvim-telescope/telescope.nvim',
-    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
-    config = [[require('config.telescope')]],
-}
-
--- Neovimming
-use {"folke/lua-dev.nvim", config = "require('config.luadev')"}
-use {"rafcamlet/nvim-luapad"}
+    -- Neovim
+    use {"folke/lua-dev.nvim"}
+    use {"rafcamlet/nvim-luapad"}
 end)
 
