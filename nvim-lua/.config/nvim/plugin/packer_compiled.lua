@@ -70,7 +70,7 @@ time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
   ["gitsigns.nvim"] = {
-    config = { "require('gitsigns').setup()" },
+    config = { "\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/gitsigns.nvim"
   },
@@ -82,23 +82,23 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lua-dev.nvim"
   },
-  ["lualine.nvim"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/lualine.nvim"
-  },
   neogit = {
+    config = { "\27LJ\2\n4\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\vneogit\frequire\0" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/neogit"
   },
   ["nord.nvim"] = {
+    config = { "\27LJ\2\n0\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\bset\tnord\frequire\0" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nord.nvim"
   },
   ["nvim-compe"] = {
+    config = { "\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17config.compe\frequire\0" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-compe"
   },
   ["nvim-lspconfig"] = {
+    config = { "\27LJ\2\n*\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\15config.lsp\frequire\0" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/nvim-lspconfig"
   },
@@ -127,6 +127,7 @@ _G.packer_plugins = {
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/popup.nvim"
   },
   ["telescope.nvim"] = {
+    config = { "\27LJ\2\n0\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\21config.telescope\frequire\0" },
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/telescope.nvim"
   },
@@ -137,10 +138,6 @@ _G.packer_plugins = {
   ["vim-exchange"] = {
     loaded = true,
     path = "/home/hgf/.local/share/nvim/site/pack/packer/start/vim-exchange"
-  },
-  ["vim-fugitive"] = {
-    loaded = true,
-    path = "/home/hgf/.local/share/nvim/site/pack/packer/start/vim-fugitive"
   },
   ["vim-repeat"] = {
     loaded = true,
@@ -157,9 +154,29 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: nvim-compe
+time([[Config for nvim-compe]], true)
+try_loadstring("\27LJ\2\n,\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\17config.compe\frequire\0", "config", "nvim-compe")
+time([[Config for nvim-compe]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+try_loadstring("\27LJ\2\n0\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\21config.telescope\frequire\0", "config", "telescope.nvim")
+time([[Config for telescope.nvim]], false)
+-- Config for: nord.nvim
+time([[Config for nord.nvim]], true)
+try_loadstring("\27LJ\2\n0\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\bset\tnord\frequire\0", "config", "nord.nvim")
+time([[Config for nord.nvim]], false)
+-- Config for: nvim-lspconfig
+time([[Config for nvim-lspconfig]], true)
+try_loadstring("\27LJ\2\n*\0\0\3\0\2\0\0046\0\0\0'\2\1\0B\0\2\1K\0\1\0\15config.lsp\frequire\0", "config", "nvim-lspconfig")
+time([[Config for nvim-lspconfig]], false)
+-- Config for: neogit
+time([[Config for neogit]], true)
+try_loadstring("\27LJ\2\n4\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\vneogit\frequire\0", "config", "neogit")
+time([[Config for neogit]], false)
 -- Config for: gitsigns.nvim
 time([[Config for gitsigns.nvim]], true)
-require('gitsigns').setup()
+try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
 time([[Config for gitsigns.nvim]], false)
 if should_profile then save_profiles() end
 

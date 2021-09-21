@@ -25,7 +25,8 @@ wo.foldexpr = "nvim_treesitter#foldexpr()"
 wo.foldtext= [[getline(v:foldstart).'...'.getline(v:foldend)]]
 wo.fillchars = "fold:\\"
 wo.foldnestmax = 3
-wo.foldminlines = 1
+wo.signcolumn = "yes"
+wo.number = true
 
 
 

@@ -89,40 +89,12 @@ function! CleverTab()
 endfunction
 inoremap <Tab> <C-R>=CleverTab()<CR>
 
-" Change ; and :
-nnoremap ; :
-"nnoremap : ;
-nnoremap : %
-" Fold
-nnoremap <space> za
-" Escape mode
-inoremap jk <ESC>
-" Move line once down
-nnoremap - ddp
-" Move line once up
-nnoremap _ ddkP
-" Toggle case on word
-nnoremap <leader>u viw~
-" Edit vimrc
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-" Source vimrc
-nnoremap <leader>sv :source $MYVIMRC<cr>
 " Turn off highlighting
 nnoremap <leader>h :noh<cr>
 " Strong left
 nnoremap H ^
 " Strong right
 nnoremap L $
-" Enclose inner word in single-quotes
-nnoremap <leader>' mqviw<Esc>a'<Esc>bi'<Esc>`q
-" Enclose inner word in double-quotes
-nnoremap <leader>" mqviw<Esc>a"<Esc>bi"<Esc>`q
-" Enclose inner big word in single-quotes
-nnoremap <leader>W' mqviW<Esc>a'<Esc>Bi'<Esc>`q
-" Enclose inner big word in double-quotes
-nnoremap <leader>W" mqviW<Esc>a"<Esc>Bi"<Esc>`q
-" Add manual fold to next curly bracket
-nnoremap <leader>f V}zf
 " }}}
 
 " Command and Functions {{{

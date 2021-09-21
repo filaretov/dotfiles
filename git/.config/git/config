@@ -15,6 +15,7 @@
 	c = commit
 	p = pull
 	pp = push
+	ppu = push -u origin main
 	cm = commit -m
 	cam = commit -am
 	can = commit --amend --no-edit
