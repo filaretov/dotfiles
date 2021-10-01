@@ -10,6 +10,7 @@ o.ignorecase =  true
 o.smartcase =  true
 o.wildmode =  'list:longest'
 o.completeopt =  'menuone,noselect'
+o.grepprg = "rg --vimgrep --no-heading"
 
 -- Buffer local
 local indent = 4
@@ -20,11 +21,14 @@ bo.smartindent =  true
 
 -- Window local
 wo.wrap = false
+
 wo.foldmethod = "expr"
 wo.foldexpr = "nvim_treesitter#foldexpr()"
 wo.foldtext= [[getline(v:foldstart).'...'.getline(v:foldend)]]
-wo.fillchars = "fold:\\"
-wo.foldnestmax = 3
+wo.fillchars = "fold: "
+wo.foldnestmax = 2
+o.foldlevelstart = 99
+
 wo.signcolumn = "yes"
 wo.number = true
 

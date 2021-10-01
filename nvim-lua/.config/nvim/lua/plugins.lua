@@ -1,9 +1,21 @@
 require("packer").startup(function()
     use {"wbthomason/packer.nvim"}
-    use {"folke/lsp-colors.nvim"}
     use {
         "shaunsingh/nord.nvim",
         config = function() require("nord").set() end
+    }
+
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate',
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = "maintained",
+                highlight = {
+                    enable = true
+                }
+            })
+        end
     }
 
     -- The basics
@@ -16,13 +28,21 @@ require("packer").startup(function()
     -- common dependencies
     use {"nvim-lua/plenary.nvim"}
     use {"nvim-lua/popup.nvim"}
-    use {"kyazdani42/nvim-web-devicons"}
 
-    -- Fun UI stuff
+    -- A file tree
+    use {
+        'kyazdani42/nvim-tree.lua',
+        requires = 'kyazdani42/nvim-web-devicons',
+        config = function() require'nvim-tree'.setup {} end
+    }
+
+
     use {
         "timuntersberger/neogit",
-        requires = {'nvim-lua/plenary.nvim'},
-        config = function() require("neogit").setup() end
+        requires = {'nvim-lua/plenary.nvim'}
+        -- This makes neovim crash on startup with a filename
+        -- argument, which is not great
+        -- config = function() require("neogit").setup() end
     }
     use {
         "lewis6991/gitsigns.nvim",
@@ -40,16 +60,12 @@ require("packer").startup(function()
         "neovim/nvim-lspconfig",
         config = function() require("config.lsp") end
     }
+
+    -- Rust
     use {
-        "hrsh7th/nvim-compe",
-        config = function() require("config.compe") end
+        "simrat39/rust-tools.nvim",
+        requires = {"nvim-lua/popup.nvim", "nvim-lua/plenary.nvim"},
+        config = function() require('rust-tools').setup({}) end
     }
-
-    -- Filetypes
-    use {"kristijanhusak/orgmode.nvim"}
-
-    -- Neovim
-    use {"folke/lua-dev.nvim"}
-    use {"rafcamlet/nvim-luapad"}
 end)
 

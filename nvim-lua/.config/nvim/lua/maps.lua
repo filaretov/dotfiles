@@ -17,6 +17,7 @@ v.map('nv', 'L', '$')
 v.map('nv', 'H', '^')
 v.map('n', 'gl', '<cmd>luafile %<cr>')
 v.map('n', '<space>g', "<cmd>Neogit<cr>")
+v.map('n', '<Tab>', 'za')
 
 -- Terminal
 v.map('t', '<esc>', '<C-\\><C-n>')
