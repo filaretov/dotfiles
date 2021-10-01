@@ -29,6 +29,10 @@ require("packer").startup(function()
     use {"nvim-lua/plenary.nvim"}
     use {"nvim-lua/popup.nvim"}
 
+    -- fzf
+    use {'vijaymarupudi/nvim-fzf'}
+
+
     -- A file tree
     use {
         'kyazdani42/nvim-tree.lua',
@@ -48,11 +52,6 @@ require("packer").startup(function()
         "lewis6991/gitsigns.nvim",
         requires = {'nvim-lua/plenary.nvim'},
         config = function() require("gitsigns").setup() end
-    }
-    use {
-        "nvim-telescope/telescope.nvim",
-        requires = {'nvim-lua/plenary.nvim'},
-        config = function() require('config.telescope') end
     }
 
     -- LSP
