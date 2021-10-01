@@ -1,9 +1,0 @@
-# SPDX-FileCopyrightText: 2019 Hristo Filaretov <h.filaretov@campus.tu-berlin.de>
-# SPDX-License-Identifier: MIT
-# -*- mode: snippet -*-
-# name: emacs lisp source code
-# key: es
-# --
-#+begin_src emacs-lisp
-$0
-#+end_src

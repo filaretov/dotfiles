@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Note
-# key: ,n
-# --
-
-\note{$0}

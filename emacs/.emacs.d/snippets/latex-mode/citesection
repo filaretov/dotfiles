@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Citesection
-# key: ,cs
-# --
-
-\citesection{$0}

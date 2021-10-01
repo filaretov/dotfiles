@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: heade
-# key: hd
-# --
-
-#+title: $1
-#+author: $2
-$0

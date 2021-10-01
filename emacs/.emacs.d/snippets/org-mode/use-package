@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: use package
-# key: use
-# --
-
-(use-package $1
-  :config $0)

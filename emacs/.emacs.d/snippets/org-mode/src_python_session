@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: Python Session Snippet
-# key: ps
-# --
-
-#+begin_src python :session
-$0
-#+end_src
