@@ -24,6 +24,7 @@
 	ls = ls-files
 	ciao = checkout -- .
 	purr = pull --rebase
+    origins = remote get-url origin
 
 [diff "odf"]
 	binary = true
