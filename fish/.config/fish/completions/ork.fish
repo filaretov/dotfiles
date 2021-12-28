@@ -1,1 +1,0 @@
-complete --command ork --no-files --arguments "(env _ORK_COMPLETE=complete_fish _TYPER_COMPLETE_FISH_ACTION=get-args _TYPER_COMPLETE_ARGS=(commandline -cp) ork)" --condition "env _ORK_COMPLETE=complete_fish _TYPER_COMPLETE_FISH_ACTION=is-args _TYPER_COMPLETE_ARGS=(commandline -cp) ork"
