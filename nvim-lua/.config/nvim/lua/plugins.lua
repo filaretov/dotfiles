@@ -1,5 +1,6 @@
 require("packer").startup(function()
     use {"wbthomason/packer.nvim"}
+
     use {
         "shaunsingh/nord.nvim",
         config = function() require("nord").set() end
@@ -23,6 +24,9 @@ require("packer").startup(function()
     use {"tpope/vim-eunuch"}
     use {"tpope/vim-rsi"}
     use {"tpope/vim-repeat"}
+    use {"tpope/vim-abolish"}
+    use {"tpope/vim-fugitive"}
+    use {"tpope/vim-unimpaired"}
     use {"tommcdo/vim-exchange"}
 
     -- common dependencies
@@ -33,21 +37,6 @@ require("packer").startup(function()
     use {'vijaymarupudi/nvim-fzf'}
 
 
-    -- A file tree
-    use {
-        'kyazdani42/nvim-tree.lua',
-        requires = 'kyazdani42/nvim-web-devicons',
-        config = function() require'nvim-tree'.setup {} end
-    }
-
-
-    use {
-        "timuntersberger/neogit",
-        requires = {'nvim-lua/plenary.nvim'}
-        -- This makes neovim crash on startup with a filename
-        -- argument, which is not great
-        -- config = function() require("neogit").setup() end
-    }
     use {
         "lewis6991/gitsigns.nvim",
         requires = {'nvim-lua/plenary.nvim'},
