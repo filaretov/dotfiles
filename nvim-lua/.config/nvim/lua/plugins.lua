@@ -6,19 +6,6 @@ require("packer").startup(function()
         config = function() require("nord").set() end
     }
 
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = "maintained",
-                highlight = {
-                    enable = true
-                }
-            })
-        end
-    }
-
     -- The basics
     use {"tpope/vim-surround"}
     use {"tpope/vim-eunuch"}
