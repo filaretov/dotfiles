@@ -5,14 +5,34 @@ require("packer").startup(function()
   use({
     'ellisonleao/gruvbox.nvim',
     config = function()
+      local palette = require('gruvbox.palette')
       require("gruvbox").setup({
         overrides = {
-          String = { italic = false }
+          String = { italic = false },
+          SignColumn = { bg = palette.dark0 },
+          GitSignsAdd = { bg = palette.dark0, fg = palette.faded_green },
+          GitSignsChange = { bg = palette.dark0, fg = palette.faded_yellow },
+          GitSignsDelete = { bg = palette.dark0, fg = palette.faded_red },
         }
       })
       vim.cmd([[colorscheme gruvbox]])
     end
   })
+
+  -- Git stuff
+  use {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup()
+    end
+  }
+
+  use {
+    'rafcamlet/nvim-luapad',
+    config = function()
+      require('luapad').setup()
+    end
+  }
 
   use({
     "kylechui/nvim-surround",
