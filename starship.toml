@@ -1,0 +1,26 @@
+[directory]
+style = "green"
+
+[character]
+success_symbol = "[;](green)"
+error_symbol = "[;](red)"
+
+[python]
+symbol = "py "
+detect_files = ["Pipfile", "__init__.py", "pyproject.toml", "requirements.txt", "setup.py", "tox.ini"]
+
+[rust]
+symbol = ""
+
+[package]
+symbol = ""
+
+[jobs]
+symbol = "+"
+
+
+[git_branch]
+style = "yellow"
+
+[git_status]
+style = "red"

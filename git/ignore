@@ -45,3 +45,5 @@ GTAGS
 Session.vim
 
 .python-version
+
+.DS_Store

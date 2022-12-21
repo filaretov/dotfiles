@@ -1,6 +1,18 @@
 require("packer").startup(function()
   use('wbthomason/packer.nvim')
-  use({ 'shaunsingh/nord.nvim', config = [[vim.cmd("colorscheme nord")]] })
+  use('shaunsingh/nord.nvim')
+  use('Mofiqul/dracula.nvim')
+  use({
+    'ellisonleao/gruvbox.nvim',
+    config = function()
+      require("gruvbox").setup({
+        overrides = {
+          String = { italic = false }
+        }
+      })
+      vim.cmd([[colorscheme gruvbox]])
+    end
+  })
 
   use({
     "kylechui/nvim-surround",

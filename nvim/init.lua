@@ -8,7 +8,6 @@ local function config(filename)
   return vim.fs.normalize(vim.fn.stdpath("config") .. "/" .. filename)
 end
 
-vim.cmd("colorscheme nord")
 vim.o.number = true
 vim.o.foldlevelstart = 99
 vim.o.signcolumn = "yes"
@@ -20,6 +19,8 @@ vim.keymap.set('n', 's', '<C-w>', { remap = false })
 vim.keymap.set('n', 'gcd', '<cmd>cd %:h<cr>')
 vim.keymap.set('n', 'gcc', edit(config("init.lua")))
 vim.keymap.set('n', 'gcp', edit(config("lua/plugins.lua")))
+vim.keymap.set('n', '<space>y', '"+y')
+vim.keymap.set('v', '<space>y', '"+y')
 
 -- Telescope maps
 local function project_files()
