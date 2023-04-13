@@ -1,5 +1,62 @@
 require("plugins")
 
+local function pp(arg)
+  print(vim.inspect(arg))
+end
+
+local function trim(s)
+  return s:gsub("^%s*(.-)%s*$", "%1")
+end
+
+function ssh_to_https(url)
+    -- Check if the URL is an SSH Git URL
+    if url:find("git@") == 1 then
+        -- Replace the ":" separator with a "/"
+        url = url:gsub(":", "/")
+        -- Replace the "git@" prefix with "https://"
+        url = url:gsub("git@", "https://")
+        -- Remove the ".git" suffix, if present
+        url = url:gsub("%.git$", "")
+    end
+    -- Return the modified URL
+    return url
+end
+
+
+local function system(s)
+  return trim(vim.fn['system'](s))
+end
+
+
+function open_github_line()
+  -- Get the URL of the current Git repository
+  local repo_url = vim.fn['systemlist']('git config --get remote.origin.url')[1]
+
+  -- Check if the current file is part of a Git repository
+  if repo_url == '' then
+    print('Error: Current file is not part of a Git repository.')
+    return
+  end
+
+  pp(repo_url)
+
+  -- Get the relative path of the current file
+  local file_path = vim.fn.expand('%:p'):sub(#vim.fn['systemlist']('git rev-parse --show-toplevel')[1] + 2)
+  pp(file_path)
+
+  -- Get the current line number
+  local line_number = vim.fn.line('.')
+  pp(line_number)
+
+  -- Open the URL for the current line in GitHub
+  local partial = ssh_to_https(repo_url)
+  local github_url = partial .. '/blob/' .. system('git rev-parse HEAD') .. '/' .. file_path .. '#L' .. line_number
+  pp(github_url)
+  vim.fn['jobstart']({'open', github_url})
+end
+
+
+
 local function edit(filename)
   return function() vim.cmd("edit " .. filename) end
 end
@@ -15,7 +72,7 @@ vim.keymap.set('t', '<esc>', '<C-\\><C-n>')
 vim.keymap.set('n', 'st', '<cmd>:te nu<cr>')
 vim.keymap.set('n', 'sf', '<cmd>:w<cr>')
 vim.keymap.set('n', 'gl', '<cmd>:luafile %<cr>')
-vim.keymap.set('n', 's', '<C-w>', { remap = false })
+vim.keymap.set('n', 's', '<C-w>')
 vim.keymap.set('n', 'gcd', '<cmd>cd %:h<cr>')
 vim.keymap.set('n', 'gcc', edit(config("init.lua")))
 vim.keymap.set('n', 'gcp', edit(config("lua/plugins.lua")))
