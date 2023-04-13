@@ -38,20 +38,15 @@ function open_github_line()
     return
   end
 
-  -- pp(repo_url)
-
   -- Get the relative path of the current file
   local file_path = vim.fn.resolve(vim.fn.expand('%:p')):sub(#vim.fn.systemlist('git rev-parse --show-toplevel')[1] + 2)
-  -- pp(file_path)
 
   -- Get the current line number
   local line_number = vim.fn.line('.')
-  -- pp(line_number)
 
   -- Open the URL for the current line in GitHub
   local partial = ssh_to_https(repo_url)
   local github_url = partial .. '/blob/' .. system('git rev-parse HEAD') .. '/' .. file_path .. '#L' .. line_number
-  -- pp(github_url)
   vim.fn['jobstart']({'open', github_url})
 end
 
