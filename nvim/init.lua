@@ -24,13 +24,13 @@ end
 
 
 local function system(s)
-  return trim(vim.fn['system'](s))
+  return trim(vim.fn.system(s))
 end
 
 
 function open_github_line()
   -- Get the URL of the current Git repository
-  local repo_url = vim.fn['systemlist']('git config --get remote.origin.url')[1]
+  local repo_url = vim.fn.systemlist('git config --get remote.origin.url')[1]
 
   -- Check if the current file is part of a Git repository
   if repo_url == '' then
@@ -41,7 +41,7 @@ function open_github_line()
   -- pp(repo_url)
 
   -- Get the relative path of the current file
-  local file_path = vim.fn.resolve(vim.fn.expand('%:p')):sub(#vim.fn['systemlist']('git rev-parse --show-toplevel')[1] + 2)
+  local file_path = vim.fn.resolve(vim.fn.expand('%:p')):sub(#vim.fn.systemlist('git rev-parse --show-toplevel')[1] + 2)
   -- pp(file_path)
 
   -- Get the current line number
