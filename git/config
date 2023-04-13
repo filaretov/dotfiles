@@ -52,10 +52,5 @@
 	process = git-lfs filter-process
 	required = true
 
-[gitlab]
-	host = ho-git.ipk.fraunhofer.de
-	token = keeUmxoozdhb5HZgV2AV
-	tls = true
-	format = text
 [pull]
 	rebase = false
