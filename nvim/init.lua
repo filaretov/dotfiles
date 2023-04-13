@@ -22,11 +22,9 @@ function ssh_to_https(url)
     return url
 end
 
-
 local function system(s)
   return trim(vim.fn.system(s))
 end
-
 
 function open_github_line()
   -- Get the URL of the current Git repository
@@ -49,8 +47,6 @@ function open_github_line()
   local github_url = partial .. '/blob/' .. system('git rev-parse HEAD') .. '/' .. file_path .. '#L' .. line_number
   vim.fn['jobstart']({'open', github_url})
 end
-
-
 
 local function edit(filename)
   return function() vim.cmd("edit " .. filename) end
