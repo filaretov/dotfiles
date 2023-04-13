@@ -27,8 +27,16 @@ local function system(s)
 end
 
 function open_github_line()
+  -- Get the relative path of the current file
+  local current_file = vim.fn.resolve(vim.fn.expand('%:p'))
+  local directory = vim.fs.dirname(current_file)
+
   -- Get the URL of the current Git repository
-  local repo_url = vim.fn.systemlist('git config --get remote.origin.url')[1]
+  local function git(s)
+    return system('git -C ' .. directory .. ' ' .. s)
+  end
+
+  local repo_url = git('config --get remote.origin.url')
 
   -- Check if the current file is part of a Git repository
   if repo_url == '' then
@@ -36,15 +44,15 @@ function open_github_line()
     return
   end
 
-  -- Get the relative path of the current file
-  local file_path = vim.fn.resolve(vim.fn.expand('%:p')):sub(#vim.fn.systemlist('git rev-parse --show-toplevel')[1] + 2)
+  local prefix_length = #git('rev-parse --show-toplevel') + 2
+  local file_path = current_file:sub(prefix_length)
 
   -- Get the current line number
   local line_number = vim.fn.line('.')
 
   -- Open the URL for the current line in GitHub
   local partial = ssh_to_https(repo_url)
-  local github_url = partial .. '/blob/' .. system('git rev-parse HEAD') .. '/' .. file_path .. '#L' .. line_number
+  local github_url = partial .. '/blob/' .. git('rev-parse HEAD') .. '/' .. file_path .. '#L' .. line_number
   vim.fn['jobstart']({'open', github_url})
 end
 

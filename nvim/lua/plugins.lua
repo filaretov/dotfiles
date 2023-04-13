@@ -1,6 +1,7 @@
 require("packer").startup(function()
   use('wbthomason/packer.nvim')
   use('shaunsingh/nord.nvim')
+  use('tpope/vim-rsi')
   use('Mofiqul/dracula.nvim')
   use({
     'ellisonleao/gruvbox.nvim',
