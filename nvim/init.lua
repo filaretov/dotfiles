@@ -1,127 +1,120 @@
-require("plugins")
-
-function pp(arg)
-  print(vim.inspect(arg))
+-- Plugins
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
-local function trim(s)
-  return s:gsub("^%s*(.-)%s*$", "%1")
-end
-
-function ssh_to_https(url)
-    -- Check if the URL is an SSH Git URL
-    if url:find("git@") == 1 then
-        -- Replace the ":" separator with a "/"
-        url = url:gsub(":", "/")
-        -- Replace the "git@" prefix with "https://"
-        url = url:gsub("git@", "https://")
-        -- Remove the ".git" suffix, if present
-        url = url:gsub("%.git$", "")
-    end
-    -- Return the modified URL
-    return url
-end
-
-local function system(s)
-  return trim(vim.fn.system(s))
-end
-
-function open_github_line()
-  -- Get the relative path of the current file
-  local current_file = vim.fn.resolve(vim.fn.expand('%:p'))
-  local directory = vim.fs.dirname(current_file)
-
-  -- Get the URL of the current Git repository
-  local function git(s)
-    return system('git -C ' .. directory .. ' ' .. s)
+require('lazy').setup({
+  "ellisonleao/gruvbox.nvim",
+  "tpope/vim-abolish",
+  "tpope/vim-eunuch",
+  "tpope/vim-rsi",
+  "tpope/vim-repeat",
+  "tpope/vim-unimpaired",
+  "tommcdo/vim-exchange",
+  {'aymericbeaumet/vim-symlink', dependencies = { 'moll/vim-bbye' }},
+  {"kylechui/nvim-surround", config = true },
+  -- git stuff
+  "tpope/vim-fugitive",
+  "tpope/vim-rhubarb",
+  {"lewis6991/gitsigns.nvim", dependencies = { "nvim-lua/plenary.nvim" }, config = true},
+  -- visual ui stuff
+  "lukas-reineke/indent-blankline.nvim",
+  "stevearc/dressing.nvim",
+  -- colorscheme
+  "folke/tokyonight.nvim",
+  -- completion
+  "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/nvim-cmp",
+  -- treesitter
+  { "nvim-telescope/telescope.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
+  config = function()
+    local actions = require('telescope.actions')
+    require('telescope').setup({
+      defaults = {
+        mappings = {
+          i = {
+            ["<esc>"] = actions.close
+          }
+        }
+      }
+    })
   end
+}
+})
 
-  local repo_url = git('config --get remote.origin.url')
+-- LSP
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-  -- Check if the current file is part of a Git repository
-  if repo_url == '' then
-    print('Error: Current file is not part of a Git repository.')
-    return
-  end
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
 
-  local prefix_length = #git('rev-parse --show-toplevel') + 2
-  local file_path = current_file:sub(prefix_length)
+-- Completion
+local cmp = require("cmp")
 
-  -- Get the current line number
-  local line_number = vim.fn.line('.')
+cmp.setup({
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+  }, {
+    { name = 'buffer' },
+  }),
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+})
 
-  -- Open the URL for the current line in GitHub
-  local partial = ssh_to_https(repo_url)
-  local github_url = partial .. '/blob/' .. git('rev-parse HEAD') .. '/' .. file_path .. '#L' .. line_number
-  vim.fn['jobstart']({'open', github_url})
-end
-
-local function edit(filename)
-  return function() vim.cmd("edit " .. filename) end
-end
-
-local function config(filename)
-  return vim.fs.normalize(vim.fn.stdpath("config") .. "/" .. filename)
-end
-
-vim.o.number = true
-vim.o.foldlevelstart = 99
-vim.o.signcolumn = "yes"
-vim.keymap.set('t', '<esc>', '<C-\\><C-n>')
+-- Keymaps
+vim.keymap.set('n', 'spl', '<cmd>:luafile %<cr>')
+vim.keymap.set('n', 'sf', '<cmd>:write<cr>')
 vim.keymap.set('n', 'st', '<cmd>:te nu<cr>')
-vim.keymap.set('n', 'sf', '<cmd>:w<cr>')
-vim.keymap.set('n', 'gl', '<cmd>:luafile %<cr>')
-vim.keymap.set('n', 's', '<C-w>')
-vim.keymap.set('n', 'gcd', '<cmd>cd %:h<cr>')
-vim.keymap.set('n', 'gcc', edit(config("init.lua")))
-vim.keymap.set('n', 'gcp', edit(config("lua/plugins.lua")))
-vim.keymap.set('n', '<space>y', '"+y')
-vim.keymap.set('v', '<space>y', '"+y')
+vim.keymap.set('n', 'sh', '<C-w>h')
+vim.keymap.set('n', 'sj', '<C-w>j')
+vim.keymap.set('n', 'sk', '<C-w>k')
+vim.keymap.set('n', 'sl', '<C-w>l')
+vim.keymap.set('n', 'sv', '<C-w>v')
+vim.keymap.set('n', 'ss', '<C-w>s')
+vim.keymap.set('n', 'sq', '<C-w>q')
+vim.keymap.set('t', '<esc>', '<C-\\><C-n>')
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
 
--- Telescope maps
-local function project_files()
-  local opts = {}
-  vim.fn.system('git rev-parse --is-inside-work-tree')
-  if vim.v.shell_error == 0 then
-    require"telescope.builtin".git_files(opts)
-  else
-    require"telescope.builtin".find_files(opts)
-  end
-end
-local telescope = require('telescope.builtin')
-vim.keymap.set('n', 'go', project_files)
-vim.keymap.set('n', 'gpr', telescope.live_grep)
-vim.keymap.set('n', '<C-b>', telescope.buffers)
-vim.keymap.set('n', 'gpb', telescope.buffers)
-vim.keymap.set('n', '<C-h>', telescope.help_tags)
-vim.keymap.set('n', 'gph', telescope.help_tags)
-vim.keymap.set('n', 'gpt', telescope.treesitter)
-
-vim.keymap.set('v', 'v', '<C-v>')
-
-
-vim.cmd([[
-augroup neovim_terminal
-autocmd!
-autocmd TermOpen * startinsert
-autocmd TermOpen * :set nonumber norelativenumber signcolumn=no
-autocmd TermOpen * nnoremap <buffer> <C-c> i<C-c><C-\><C-n>
-augroup END
-]])
-
-
-vim.cmd([[
-function! FoldConfig()
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-endfunction
-
-autocmd BufAdd,BufEnter,BufNew,BufNewFile,BufWinEnter * :call FoldConfig()
-]])
-
-vim.cmd([[
-  augroup packer_user_config
-  autocmd!
-  autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-  augroup end
-]])
+vim.cmd('colorscheme gruvbox')
