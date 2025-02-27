@@ -1,0 +1,2 @@
+default arg:
+	@echo {{ arg }}
