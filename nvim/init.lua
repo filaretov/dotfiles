@@ -145,3 +145,9 @@ local add = require('mini.deps').add
 
 add("lewis6991/gitsigns.nvim")
 require("gitsigns").setup({})
+
+require('mini.surround').setup()
+require('mini.operators').setup()
+require('mini.pick').setup()
+
+vim.keymap.set("n", "<D-p>", MiniPick.builtin.files)
