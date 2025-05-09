@@ -13,6 +13,7 @@ if not vim.loop.fs_stat(mini_path) then
   vim.cmd('packadd mini.nvim | helptags ALL')
 end
 
+vim.cmd.colorscheme("retrobox")
 vim.o.shell = vim.system({ "which", "nu" }, { text = true }):wait().stdout:gsub("\n", "")
 vim.o.shellcmdflag = "--stdin --no-newline -c"
 vim.o.shellpipe = "| tee { save %s }"
@@ -35,7 +36,6 @@ vim.o.cursorlineopt = "number"
 vim.o.number = true
 vim.o.winborder = 'rounded'
 
-vim.o.textwidth = 88
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.o.path = vim.o.path .. ",**"
@@ -139,15 +139,70 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   command = "silent !^kill -SIGUSR1 (pgrep -a kitty)",
 })
 
-vim.lsp.enable({ "luals", "nushell", "ruff", })
+vim.lsp.enable({ "luals", "nushell", "ruff", "rust-analyzer" })
 
 local add = require('mini.deps').add
 
 add("lewis6991/gitsigns.nvim")
 require("gitsigns").setup({})
 
-require('mini.surround').setup()
+require('mini.surround').setup({
+    mappings = {highlight = ''}
+})
 require('mini.operators').setup()
-require('mini.pick').setup()
 
-vim.keymap.set("n", "<D-p>", MiniPick.builtin.files)
+
+local function open_term()
+    vim.fn.termopen([[use nvim-api.nu; fd | lines | input list --fuzzy | nvim-api nvim_cmd [{cmd: 'edit', args: [$in]} {}] | exit]])
+end
+
+local function termterm()
+  local b = vim.api.nvim_create_buf(false, true)
+  local chan = vim.api.nvim_buf_call(b, open_term)
+  vim.api.nvim_win_set_buf(0, b)
+end
+
+vim.keymap.set("n", "ggg", termterm)
+
+
+local function map_cw(letters)
+    for _, letter in ipairs(letters) do
+        vim.keymap.set('n', 's' .. letter, '<C-w>' .. letter)
+    end
+end
+
+map_cw({'h', 'j', 'k', 'l', 's', 'v', 'q', 'w'})
+
+add("ibhagwan/fzf-lua")
+local fzf = require("fzf-lua")
+fzf.setup({'max-perf'})
+vim.keymap.set('n', 's/', fzf.live_grep)
+vim.keymap.set('n', 'sb', fzf.buffers)
+vim.keymap.set("n", "<D-p>", fzf.files)
+
+vim.api.nvim_create_user_command("LspCapabilities", function()
+	local curBuf = vim.api.nvim_get_current_buf()
+	local clients = vim.lsp.get_clients { bufnr = curBuf }
+
+	for _, client in pairs(clients) do
+		if client.name ~= "null-ls" then
+			local capAsList = {}
+			for key, value in pairs(client.server_capabilities) do
+				if value and key:find("Provider") then
+					local capability = key:gsub("Provider$", "")
+					table.insert(capAsList, "- " .. capability)
+				end
+			end
+			table.sort(capAsList) -- sorts alphabetically
+			local msg = "# " .. client.name .. "\n" .. table.concat(capAsList, "\n")
+			vim.notify(msg, vim.log.levels.TRACE, {
+				on_open = function(win)
+					local buf = vim.api.nvim_win_get_buf(win)
+					vim.api.nvim_set_option_value("filetype", "markdown", { buf=buf })
+				end,
+				timeout = 14000,
+			})
+			vim.fn.setreg("+", "Capabilities = " .. vim.inspect(client.server_capabilities))
+		end
+	end
+end, {})

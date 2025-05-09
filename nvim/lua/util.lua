@@ -15,7 +15,8 @@ function M.lua_ls_on_init(client)
             workspace = {
                 checkThirdParty = false,
                 library = {
-                    vim.env.VIMRUNTIME
+                    vim.env.VIMRUNTIME,
+                    vim.api.nvim_get_runtime_file("**/mini.nvim", false)[1],
                     -- Depending on the usage, you might want to add additional paths here.
                     -- "${3rd}/luv/library"
                     -- "${3rd}/busted/library",
